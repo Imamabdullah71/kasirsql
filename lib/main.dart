@@ -2,11 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/data_bindings.dart';
+import 'package:kasirsql/salomon_bottom_bar.dart';
+import 'package:kasirsql/views/barang/barang.dart';
 import 'package:kasirsql/views/barang/tambah_barang.dart';
-import 'views/barang/barang_view.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,8 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BarangView(),
+      home: BottomBar(),
       getPages: [
+        GetPage(
+          name: "/page_barang",
+          page: () => BarangPage(),
+          binding: DataBindings(),
+        ),
         GetPage(
           name: "/tambah_barang",
           page: () => TambahBarang(),
