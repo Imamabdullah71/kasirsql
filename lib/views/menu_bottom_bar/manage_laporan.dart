@@ -19,14 +19,6 @@ class ManageLaporan extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(BootstrapIcons.house),
-            onPressed: () {
-              Get.offAllNamed("/halaman_utama");
-            },
-          ),
-        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),

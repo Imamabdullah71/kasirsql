@@ -6,7 +6,7 @@ import '../models/barang_model.dart';
 
 class BarangController extends GetxController {
   var barangList = <Barang>[].obs;
-  final String apiUrl = 'http://10.10.10.162/flutterapi/api.php';
+  final String apiUrl = 'http://10.10.10.80/flutterapi/api.php';
 
   @override
   void onInit() {
@@ -26,8 +26,6 @@ class BarangController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to parse data');
-      print(e);
     }
   }
 }
-

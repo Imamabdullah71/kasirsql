@@ -1,4 +1,4 @@
-
+// salomon_bottom_bar.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/bottom_bar_controller.dart';
@@ -10,8 +10,8 @@ import 'package:kasirsql/views/menu_bottom_bar/manage_transaksi.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 
-// ignore: use_key_in_widget_constructors
 class BottomBar extends StatelessWidget {
+  BottomBar({super.key});
   final BottomBarController controller = Get.put(BottomBarController());
 
   @override

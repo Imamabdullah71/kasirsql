@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/tambah_barang_controller.dart';
+import 'package:image_picker/image_picker.dart';
 
 class TambahBarang extends StatelessWidget {
   TambahBarang({super.key});
@@ -31,10 +34,99 @@ class TambahBarang extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.all(10),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
+              Obx(() {
+                if (tambahBarangController.selectedImagePath.value == '') {
+                  return Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey[300],
+                    ),
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey,
+                      size: 60,
+                    ),
+                  );
+                } else {
+                  return Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey[300],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(tambahBarangController.selectedImagePath.value),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }
+              }),
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                    ),
+                    onPressed: () {
+                      tambahBarangController.pickImage(ImageSource.gallery);
+                    },
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.image,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Galeri',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                    ),
+                    onPressed: () {
+                      tambahBarangController.pickImage(ImageSource.camera);
+                    },
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.camera_alt_rounded,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Kamera',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -74,58 +166,73 @@ class TambahBarang extends StatelessWidget {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: hargaJualController,
-                  decoration: const InputDecoration(labelText: 'Harga Jual'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Harga Jual tidak boleh kosong';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Harga Jual harus berupa angka';
-                    }
-                    return null;
-                  },
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: hargaBeliController,
+                      decoration:
+                          const InputDecoration(labelText: 'Harga Beli'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Harga Beli tidak boleh kosong';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Harga Beli harus berupa angka';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: TextFormField(
+                      controller: hargaJualController,
+                      decoration:
+                          const InputDecoration(labelText: 'Harga Jual'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Harga Jual tidak boleh kosong';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Harga Jual harus berupa angka';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: hargaBeliController,
-                  decoration: const InputDecoration(labelText: 'Harga Beli'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Harga Beli tidak boleh kosong';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Harga Beli harus berupa angka';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Obx(() {
-                if (tambahBarangController.kategoriList.isEmpty) {
-                  return const Text('No kategori available');
-                }
-                return DropdownButton<int>(
-                  value: selectedKategoriId.value == 0
-                      ? null
-                      : selectedKategoriId.value,
-                  hint: const Text('Pilih Kategori'),
-                  onChanged: (newValue) {
-                    selectedKategoriId.value = newValue!;
-                  },
-                  items: tambahBarangController.kategoriList.map((kategori) {
-                    return DropdownMenuItem<int>(
-                      value: kategori.id,
-                      child: Text(kategori.namaKategori),
-                    );
-                  }).toList(),
-                );
-              }),
+              Row(
+                children: [
+                  Expanded(
+                    child: Obx(() {
+                      if (tambahBarangController.kategoriList.isEmpty) {
+                        return const Text('Belum ada kategori');
+                      }
+                      return DropdownButton<int>(
+                        value: selectedKategoriId.value == 0
+                            ? null
+                            : selectedKategoriId.value,
+                        hint: const Text('Pilih Kategori'),
+                        onChanged: (newValue) {
+                          selectedKategoriId.value = newValue!;
+                        },
+                        items:
+                            tambahBarangController.kategoriList.map((kategori) {
+                          return DropdownMenuItem<int>(
+                            value: kategori.id,
+                            child: Text(kategori.namaKategori),
+                          );
+                        }).toList(),
+                      );
+                    }),
+                  ),
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(BootstrapIcons.plus_lg))
+                ],
+              )
             ],
           ),
         ),
@@ -152,6 +259,13 @@ class TambahBarang extends StatelessWidget {
                 double.parse(hargaJualController.text),
                 double.parse(hargaBeliController.text),
               );
+
+              if (tambahBarangController.croppedImage.value != null) {
+                tambahBarangController
+                    .uploadImage(tambahBarangController.croppedImage.value!);
+              } else {
+                Get.snackbar('Error', 'Please select an image');
+              }
             } else {
               Get.snackbar(
                   'Error', 'Please fill all fields and select a category');

@@ -1,4 +1,3 @@
-// models\barang_model.dart
 class Barang {
   int id;
   String namaBarang;
@@ -10,6 +9,7 @@ class Barang {
   double hargaBeli;
   DateTime createdAt;
   DateTime updatedAt;
+  String? gambar;
 
   Barang({
     required this.id,
@@ -22,6 +22,7 @@ class Barang {
     required this.hargaBeli,
     required this.createdAt,
     required this.updatedAt,
+    this.gambar,
   });
 
   factory Barang.fromJson(Map<String, dynamic> json) {
@@ -36,6 +37,7 @@ class Barang {
       hargaBeli: double.tryParse(json['harga_beli'].toString()) ?? 0.0,
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      gambar: json['gambar'],
     );
   }
 }

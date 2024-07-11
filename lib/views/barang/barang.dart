@@ -26,7 +26,7 @@ class BarangPage extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (barangController.barangList.isEmpty) {
-                return const Center(child: Text('No data available'));
+                return const Center(child: Text('Tidak ada data barang'));
               }
               return ListView.builder(
                 itemCount: barangController.barangList.length,

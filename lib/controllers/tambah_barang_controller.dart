@@ -1,13 +1,24 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:kasirsql/views/barang/edit_image.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 import '../models/kategori_model.dart';
 import '../models/harga_model.dart';
 
 class TambahBarangController extends GetxController {
   var kategoriList = <Kategori>[].obs;
   var hargaList = <Harga>[].obs;
-  final String apiUrl = 'http://10.10.10.162/flutterapi/api.php';
+  var selectedImagePath = ''.obs;
+  var croppedImage = Rx<Uint8List?>(null);
+  final String apiUrl = 'http://10.10.10.80/flutterapi/api.php';
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() {
@@ -29,8 +40,65 @@ class TambahBarangController extends GetxController {
     }
   }
 
+  void pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await _picker.pickImage(source: source);
+      if (pickedFile != null) {
+        // Simpan gambar dengan nama file berdasarkan waktu saat ini
+        final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+        final tempDir = await getTemporaryDirectory();
+        final tempFile = File('${tempDir.path}/$fileName');
+
+        // Kompres gambar sebelum memuatnya ke memori untuk menghindari masalah Out of Memory
+        final compressedFile = await FlutterImageCompress.compressAndGetFile(
+          pickedFile.path,
+          tempFile.path,
+          quality: 50,
+        );
+
+        if (compressedFile != null) {
+          selectedImagePath.value = compressedFile.path;
+          Get.to(() => CropImagePage());
+        } else {
+          Get.snackbar('Error', 'Failed to compress image');
+        }
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to pick image');
+    }
+  }
+
+  Future<String?> uploadImage(Uint8List imageBytes) async {
+    final tempDir = await getTemporaryDirectory();
+    final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+    final file = File('${tempDir.path}/$fileName')..writeAsBytesSync(imageBytes);
+
+    var request = http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
+    request.files.add(await http.MultipartFile.fromPath('image', file.path));
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      var result = json.decode(responseData);
+      if (result['status'] == 'success') {
+        return result['path'];
+      } else {
+        Get.snackbar('Error', 'Failed to upload image');
+        return null;
+      }
+    } else {
+      Get.snackbar('Error', 'Failed to upload image');
+      return null;
+    }
+  }
+
   void createBarang(String namaBarang, int kodeBarang, int stokBarang, int kategoriId, double hargaJual, double hargaBeli) async {
     try {
+      String? gambar;
+      if (croppedImage.value != null) {
+        gambar = await uploadImage(croppedImage.value!);
+      }
+
       final response = await http.post(
         Uri.parse('$apiUrl?action=create_barang'),
         body: {
@@ -38,13 +106,12 @@ class TambahBarangController extends GetxController {
           'kode_barang': kodeBarang.toString(),
           'stok_barang': stokBarang.toString(),
           'kategori_id': kategoriId.toString(),
+          'gambar': gambar ?? '',
         },
       );
+
       if (response.statusCode == 200) {
-        // Get the created barang ID
         var createdBarangId = json.decode(response.body)['id'];
-        
-        // Create harga for the barang
         createHarga(hargaJual, hargaBeli, createdBarangId);
 
         Get.back();
@@ -93,42 +160,40 @@ class TambahBarangController extends GetxController {
   }
 
   void updateHarga(int id, double hargaJual, double hargaBeli) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$apiUrl?action=update_harga'),
-      body: {
-        'id': id.toString(),
-        'harga_jual': hargaJual.toString(),
-        'harga_beli': hargaBeli.toString(),
-      },
-    );
-    if (response.statusCode == 200) {
-      fetchHarga();
-      Get.snackbar('Success', 'Harga updated successfully');
-    } else {
+    try {
+      final response = await http.post(
+        Uri.parse('$apiUrl?action=update_harga'),
+        body: {
+          'id': id.toString(),
+          'harga_jual': hargaJual.toString(),
+          'harga_beli': hargaBeli.toString(),
+        },
+      );
+      if (response.statusCode == 200) {
+        fetchHarga();
+        Get.snackbar('Success', 'Harga updated successfully');
+      } else {
+        Get.snackbar('Error', 'Failed to update harga');
+      }
+    } catch (e) {
       Get.snackbar('Error', 'Failed to update harga');
     }
-  } catch (e) {
-    Get.snackbar('Error', 'Failed to update harga');
-    print('Error updating harga: $e');
   }
-}
 
-void deleteHarga(int id) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$apiUrl?action=delete_harga'),
-      body: {'id': id.toString()},
-    );
-    if (response.statusCode == 200) {
-      fetchHarga();
-      Get.snackbar('Success', 'Harga deleted successfully');
-    } else {
+  void deleteHarga(int id) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$apiUrl?action=delete_harga'),
+        body: {'id': id.toString()},
+      );
+      if (response.statusCode == 200) {
+        fetchHarga();
+        Get.snackbar('Success', 'Harga deleted successfully');
+      } else {
+        Get.snackbar('Error', 'Failed to delete harga');
+      }
+    } catch (e) {
       Get.snackbar('Error', 'Failed to delete harga');
     }
-  } catch (e) {
-    Get.snackbar('Error', 'Failed to delete harga');
-    print('Error deleting harga: $e');
   }
-}
 }
