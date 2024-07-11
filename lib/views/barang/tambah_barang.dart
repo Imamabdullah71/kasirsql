@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kasirsql/controllers/tambah_barang_controller.dart';
+import 'package:kasirsql/controllers/barang_controller/tambah_barang_controller.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TambahBarang extends StatelessWidget {

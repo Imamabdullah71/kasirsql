@@ -1,7 +1,7 @@
 // views\barang\barang.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kasirsql/controllers/barang_controller.dart';
+import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 
 class BarangPage extends StatelessWidget {
   BarangPage({super.key});
@@ -35,7 +35,8 @@ class BarangPage extends StatelessWidget {
                   return ListTile(
                     title: Text(barang.namaBarang),
                     subtitle: Text(
-                        'Harga Jual: ${barang.hargaJual} | Harga Beli: ${barang.hargaBeli}'),
+                      'Harga Jual: ${barang.hargaJual} | Harga Beli: ${barang.hargaBeli}',
+                    ),
                   );
                 },
               );

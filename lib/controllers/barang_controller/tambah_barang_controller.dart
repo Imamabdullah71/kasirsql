@@ -1,23 +1,22 @@
 import 'dart:typed_data';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:kasirsql/models/harga_model.dart';
+import 'package:kasirsql/models/kategori_model.dart';
 import 'package:kasirsql/views/barang/edit_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
-import '../models/kategori_model.dart';
-import '../models/harga_model.dart';
 
 class TambahBarangController extends GetxController {
   var kategoriList = <Kategori>[].obs;
   var hargaList = <Harga>[].obs;
   var selectedImagePath = ''.obs;
   var croppedImage = Rx<Uint8List?>(null);
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api.php';
+  final String apiUrl = 'http://10.10.10.80/flutterapi/api_barang.php';
   final ImagePicker _picker = ImagePicker();
 
   @override

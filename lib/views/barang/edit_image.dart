@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:crop_your_image/crop_your_image.dart';
-import 'package:kasirsql/controllers/tambah_barang_controller.dart';
+import 'package:kasirsql/controllers/barang_controller/tambah_barang_controller.dart';
 
 class CropImagePage extends StatelessWidget {
   CropImagePage({super.key});

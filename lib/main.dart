@@ -5,6 +5,7 @@ import 'package:kasirsql/data_bindings.dart';
 import 'package:kasirsql/salomon_bottom_bar.dart';
 import 'package:kasirsql/views/barang/barang.dart';
 import 'package:kasirsql/views/barang/tambah_barang.dart';
+import 'package:kasirsql/views/kategori/kategori_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BottomBar(),
       getPages: [
+        // Barang
         GetPage(
           name: "/page_barang",
           page: () => BarangPage(),
@@ -27,6 +29,12 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: "/tambah_barang",
           page: () => TambahBarang(),
+          binding: DataBindings(),
+        ),
+        // Kategori
+        GetPage(
+          name: "/page_kategori",
+          page: () => CategoriesPage(),
           binding: DataBindings(),
         ),
       ],
