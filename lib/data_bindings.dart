@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 import 'package:kasirsql/controllers/barang_controller/tambah_barang_controller.dart';
 import 'package:kasirsql/controllers/kategori_controller/kategori_controller.dart';
+import 'package:kasirsql/controllers/kelola_stok_controller/kelola_stok_page_controller.dart';
 import 'package:kasirsql/controllers/supplier_controller/add_supplier_controller.dart';
 import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
 
@@ -12,6 +13,8 @@ class DataBindings extends Bindings {
     // Barang
     Get.lazyPut<BarangController>(() => BarangController());
     Get.lazyPut<TambahBarangController>(() => TambahBarangController());
+    // Kelola Stok
+    Get.lazyPut<KelolaStokPageController>(() => KelolaStokPageController());
     // Kategori
     Get.lazyPut<KategoriController>(() => KategoriController());
     // Supplier

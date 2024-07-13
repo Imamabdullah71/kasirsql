@@ -6,6 +6,7 @@ import 'package:kasirsql/salomon_bottom_bar.dart';
 import 'package:kasirsql/views/barang/barang.dart';
 import 'package:kasirsql/views/barang/tambah_barang.dart';
 import 'package:kasirsql/views/kategori/kategori_page.dart';
+import 'package:kasirsql/views/kelola_stok/kelola_stok.dart';
 import 'package:kasirsql/views/supplier/suppliers_page.dart';
 import 'package:kasirsql/views/supplier/tambah_supplier.dart';
 
@@ -26,6 +27,12 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: "/page_barang",
           page: () => BarangPage(),
+          binding: DataBindings(),
+        ),
+        // Kelola Stok Barang
+        GetPage(
+          name: "/kelola_stok_page",
+          page: () => KelolaStokPage(),
           binding: DataBindings(),
         ),
         GetPage(

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:kasirsql/models/barang_model.dart';
 import 'dart:convert';
 
-class BarangController extends GetxController {
+class KelolaStokPageController extends GetxController {
   var barangList = <Barang>[].obs;
   final String apiUrl = 'http://10.10.10.80/flutterapi/api_barang.php';
 

@@ -40,7 +40,7 @@ class ManageBarang extends StatelessWidget {
           ListTile(
             leading: const Icon(BootstrapIcons.boxes),
             title: const Text("Manajemen stok"),
-            onTap: () => Get.toNamed("/stok_barang_page"),
+            onTap: () => Get.toNamed("/kelola_stok_page"),
           ),
           ListTile(
             leading: const Icon(BootstrapIcons.cart4),

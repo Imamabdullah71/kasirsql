@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:kasirsql/controllers/barang_controller/rupiah_input_formatter.dart';
 import 'package:kasirsql/controllers/barang_controller/tambah_barang_controller.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -166,72 +168,94 @@ class TambahBarang extends StatelessWidget {
                   },
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: hargaBeliController,
-                      decoration:
-                          const InputDecoration(labelText: 'Harga Beli'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Harga Beli tidak boleh kosong';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Harga Beli harus berupa angka';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: TextFormField(
-                      controller: hargaJualController,
-                      decoration:
-                          const InputDecoration(labelText: 'Harga Jual'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Harga Jual tidak boleh kosong';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Harga Jual harus berupa angka';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      if (tambahBarangController.kategoriList.isEmpty) {
-                        return const Text('Belum ada kategori');
-                      }
-                      return DropdownButton<int>(
-                        value: selectedKategoriId.value == 0
-                            ? null
-                            : selectedKategoriId.value,
-                        hint: const Text('Pilih Kategori'),
-                        onChanged: (newValue) {
-                          selectedKategoriId.value = newValue!;
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: hargaBeliController,
+                        decoration: const InputDecoration(
+                          labelText: 'Harga Beli',
+                          prefixText: 'Rp ',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          RupiahInputFormatter(),
+                        ],
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Harga Beli tidak boleh kosong';
+                          }
+                          if (double.tryParse(value.replaceAll('.', '')) ==
+                              null) {
+                            return 'Harga Beli harus berupa angka';
+                          }
+                          return null;
                         },
-                        items:
-                            tambahBarangController.kategoriList.map((kategori) {
-                          return DropdownMenuItem<int>(
-                            value: kategori.id,
-                            child: Text(kategori.namaKategori),
-                          );
-                        }).toList(),
-                      );
-                    }),
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(BootstrapIcons.plus_lg))
-                ],
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: TextFormField(
+                        controller: hargaJualController,
+                        decoration: const InputDecoration(
+                          labelText: 'Harga Jual',
+                          prefixText: 'Rp ',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          RupiahInputFormatter(),
+                        ],
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Harga Jual tidak boleh kosong';
+                          }
+                          if (double.tryParse(value.replaceAll('.', '')) ==
+                              null) {
+                            return 'Harga Jual harus berupa angka';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Obx(() {
+                        if (tambahBarangController.kategoriList.isEmpty) {
+                          return const Text('Belum ada kategori');
+                        }
+                        return DropdownButton<int>(
+                          value: selectedKategoriId.value == 0
+                              ? null
+                              : selectedKategoriId.value,
+                          hint: const Text('Pilih Kategori'),
+                          onChanged: (newValue) {
+                            selectedKategoriId.value = newValue!;
+                          },
+                          items: tambahBarangController.kategoriList
+                              .map((kategori) {
+                            return DropdownMenuItem<int>(
+                              value: kategori.id,
+                              child: Text(kategori.namaKategori),
+                            );
+                          }).toList(),
+                        );
+                      }),
+                    ),
+                    IconButton(
+                        onPressed: () {},
+                        icon: const Icon(BootstrapIcons.plus_lg))
+                  ],
+                ),
               )
             ],
           ),

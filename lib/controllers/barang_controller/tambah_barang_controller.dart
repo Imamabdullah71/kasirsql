@@ -114,9 +114,9 @@ class TambahBarangController extends GetxController {
         createHarga(hargaJual, hargaBeli, createdBarangId);
 
         Get.back();
-        Get.snackbar('Success', 'Barang created successfully');
+        Get.snackbar('Berhasil', 'Berhasil menambahkan data barang');
       } else {
-        Get.snackbar('Error', 'Failed to create barang');
+        Get.snackbar('Gagal', 'Gagal menambahkan data barang');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to create barang');
@@ -135,9 +135,8 @@ class TambahBarangController extends GetxController {
       );
       if (response.statusCode == 200) {
         fetchHarga();
-        Get.snackbar('Success', 'Harga created successfully');
       } else {
-        Get.snackbar('Error', 'Failed to create harga');
+        Get.snackbar('Gagal', 'Gagal menambahkan harga');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to create harga');

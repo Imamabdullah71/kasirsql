@@ -1,11 +1,12 @@
 // views\barang\barang.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
+import 'package:kasirsql/controllers/kelola_stok_controller/kelola_stok_page_controller.dart';
 
-class BarangPage extends StatelessWidget {
-  BarangPage({super.key});
-  final BarangController barangController = Get.find<BarangController>();
+class KelolaStokPage extends StatelessWidget {
+  KelolaStokPage({super.key});
+  final KelolaStokPageController kelolaStokC =
+      Get.find<KelolaStokPageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class BarangPage extends StatelessWidget {
           color: Colors.white,
         ),
         title: const Text(
-          "Daftar Barang",
+          "Kelola Stok Barang",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -25,13 +26,13 @@ class BarangPage extends StatelessWidget {
         children: [
           Expanded(
             child: Obx(() {
-              if (barangController.barangList.isEmpty) {
+              if (kelolaStokC.barangList.isEmpty) {
                 return const Center(child: Text('Tidak ada data barang'));
               }
               return ListView.builder(
-                itemCount: barangController.barangList.length,
+                itemCount: kelolaStokC.barangList.length,
                 itemBuilder: (context, index) {
-                  final barang = barangController.barangList[index];
+                  final barang = kelolaStokC.barangList[index];
                   return ListTile(
                     leading: barang.gambar != null && barang.gambar!.isNotEmpty
                         ? Image.network(
@@ -50,7 +51,7 @@ class BarangPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('${barang.kodeBarang}'),
-                        Text(barangController.formatRupiah(barang.hargaBeli)),
+                        Text(kelolaStokC.formatRupiah(barang.hargaBeli)),
                       ],
                     ),
                     trailing: Column(
@@ -60,7 +61,7 @@ class BarangPage extends StatelessWidget {
                           style: const TextStyle(fontSize: 15),
                         ),
                         Text(
-                          barangController.formatRupiah(barang.hargaJual),
+                          kelolaStokC.formatRupiah(barang.hargaJual),
                           style: const TextStyle(fontSize: 15),
                         ),
                       ],
@@ -71,26 +72,6 @@ class BarangPage extends StatelessWidget {
             }),
           ),
         ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 30),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-            minimumSize: const Size(
-              double.infinity, // Lebar
-              48, // Tinggi
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          ),
-          onPressed: () {
-            Get.toNamed("/tambah_barang");
-          },
-          child: const Text(
-            "Tambah Barang",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        ),
       ),
     );
   }
