@@ -15,10 +15,12 @@ class SupplierController extends GetxController {
 
   void fetchSupplier() async {
     try {
-      final response = await http.get(Uri.parse('$apiUrl?action=read_supplier'));
+      final response =
+          await http.get(Uri.parse('$apiUrl?action=read_supplier'));
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;
-        supplierList.value = data.map((supplier) => Supplier.fromJson(supplier)).toList();
+        supplierList.value =
+            data.map((supplier) => Supplier.fromJson(supplier)).toList();
       } else {
         Get.snackbar('Error', 'Failed to fetch supplier');
       }

@@ -6,6 +6,7 @@ import 'package:kasirsql/controllers/kategori_controller/kategori_controller.dar
 import 'package:kasirsql/controllers/kelola_stok_controller/kelola_stok_page_controller.dart';
 import 'package:kasirsql/controllers/supplier_controller/add_supplier_controller.dart';
 import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
+import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
 
 class DataBindings extends Bindings {
   @override
@@ -20,5 +21,7 @@ class DataBindings extends Bindings {
     // Supplier
     Get.lazyPut<SupplierController>(() => SupplierController());
     Get.lazyPut<AddSupplierController>(() => AddSupplierController());
+    // Transaksi
+    Get.lazyPut<TransaksiController>(() => TransaksiController());
   }
 }

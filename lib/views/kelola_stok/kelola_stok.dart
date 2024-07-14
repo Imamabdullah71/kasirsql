@@ -66,6 +66,9 @@ class KelolaStokPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    onTap: (){
+                      
+                    },
                   );
                 },
               );

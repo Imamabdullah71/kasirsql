@@ -9,6 +9,7 @@ import 'package:kasirsql/views/kategori/kategori_page.dart';
 import 'package:kasirsql/views/kelola_stok/kelola_stok.dart';
 import 'package:kasirsql/views/supplier/suppliers_page.dart';
 import 'package:kasirsql/views/supplier/tambah_supplier.dart';
+import 'package:kasirsql/views/transaksi/transaksi_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,6 +56,12 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: "/add_supplier",
           page: () => AddSupplierPage(),
+          binding: DataBindings(),
+        ),
+        // Transaksi
+        GetPage(
+          name: "/transaksi_page",
+          page: () => TransaksiPage(),
           binding: DataBindings(),
         ),
       ],

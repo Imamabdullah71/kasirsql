@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
 import 'package:kasirsql/models/supplier_model.dart';
+import 'package:kasirsql/views/supplier/supplier_detail_page.dart';
 
 class SuppliersPage extends StatelessWidget {
   SuppliersPage({super.key});
@@ -53,6 +54,9 @@ class SuppliersPage extends StatelessWidget {
                   supplierController.deleteSupplier(supplier.id);
                 },
               ),
+              onTap: () {
+                Get.to(() => SupplierDetailPage(supplier: supplier));
+              },
             );
           },
         );
