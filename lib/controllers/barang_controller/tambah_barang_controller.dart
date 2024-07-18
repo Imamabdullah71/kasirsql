@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 import 'package:kasirsql/models/harga_model.dart';
 import 'package:kasirsql/models/kategori_model.dart';
 import 'package:kasirsql/views/barang/edit_image.dart';
@@ -115,6 +116,7 @@ class TambahBarangController extends GetxController {
 
         Get.back();
         Get.snackbar('Berhasil', 'Berhasil menambahkan data barang');
+        Get.find<BarangController>().fetchBarang();
       } else {
         Get.snackbar('Gagal', 'Gagal menambahkan data barang');
       }
@@ -175,23 +177,6 @@ class TambahBarangController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to update harga');
-    }
-  }
-
-  void deleteHarga(int id) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$apiUrl?action=delete_harga'),
-        body: {'id': id.toString()},
-      );
-      if (response.statusCode == 200) {
-        fetchHarga();
-        Get.snackbar('Success', 'Harga deleted successfully');
-      } else {
-        Get.snackbar('Error', 'Failed to delete harga');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to delete harga');
     }
   }
 }

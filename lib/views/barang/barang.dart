@@ -33,6 +33,8 @@ class BarangPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final barang = barangController.barangList[index];
                   return ListTile(
+                    onTap: () =>
+                        Get.toNamed("/page_detail_barang", arguments: barang),
                     leading: barang.gambar != null && barang.gambar!.isNotEmpty
                         ? Image.network(
                             'http://10.10.10.80/flutterapi/uploads/${barang.gambar}',
@@ -50,13 +52,14 @@ class BarangPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('${barang.kodeBarang}'),
-                        Text(barangController.formatRupiah(barang.hargaBeli)),
+                        Text(
+                            'Harga Beli : ${barangController.formatRupiah(barang.hargaBeli)}'),
                       ],
                     ),
                     trailing: Column(
                       children: [
                         Text(
-                          '${barang.stokBarang}',
+                          'Stok : ${barang.stokBarang}',
                           style: const TextStyle(fontSize: 15),
                         ),
                         Text(
@@ -65,7 +68,7 @@ class BarangPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  );
+                  );  
                 },
               );
             }),

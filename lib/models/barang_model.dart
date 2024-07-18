@@ -40,4 +40,20 @@ class Barang {
       gambar: json['gambar'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nama_barang': namaBarang,
+      'kode_barang': kodeBarang,
+      'stok_barang': stokBarang,
+      'kategori_id': kategoriId,
+      'nama_kategori': namaKategori,
+      'harga_jual': hargaJual,
+      'harga_beli': hargaBeli,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'gambar': gambar,
+    };
+  }
 }

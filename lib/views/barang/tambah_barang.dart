@@ -9,8 +9,7 @@ import 'package:image_picker/image_picker.dart';
 
 class TambahBarang extends StatelessWidget {
   TambahBarang({super.key});
-  final TambahBarangController tambahBarangController =
-      Get.find<TambahBarangController>();
+  final TambahBarangController tambahBarangController = Get.find<TambahBarangController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -20,6 +19,8 @@ class TambahBarang extends StatelessWidget {
     TextEditingController stokBarangController = TextEditingController();
     TextEditingController hargaJualController = TextEditingController();
     TextEditingController hargaBeliController = TextEditingController();
+    TextEditingController hargaJualInputController = TextEditingController();
+    TextEditingController hargaBeliInputController = TextEditingController();
     RxInt selectedKategoriId = 0.obs;
 
     return Scaffold(
@@ -81,8 +82,7 @@ class TambahBarang extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     ),
                     onPressed: () {
                       tambahBarangController.pickImage(ImageSource.gallery);
@@ -106,8 +106,7 @@ class TambahBarang extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     ),
                     onPressed: () {
                       tambahBarangController.pickImage(ImageSource.camera);
@@ -174,7 +173,7 @@ class TambahBarang extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        controller: hargaBeliController,
+                        controller: hargaBeliInputController,
                         decoration: const InputDecoration(
                           labelText: 'Harga Beli',
                           prefixText: 'Rp ',
@@ -184,12 +183,14 @@ class TambahBarang extends StatelessWidget {
                           RupiahInputFormatter(),
                         ],
                         keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          hargaBeliController.text = value.replaceAll('.', '');
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Harga Beli tidak boleh kosong';
                           }
-                          if (double.tryParse(value.replaceAll('.', '')) ==
-                              null) {
+                          if (double.tryParse(value.replaceAll('.', '')) == null) {
                             return 'Harga Beli harus berupa angka';
                           }
                           return null;
@@ -199,7 +200,7 @@ class TambahBarang extends StatelessWidget {
                     const SizedBox(width: 5),
                     Expanded(
                       child: TextFormField(
-                        controller: hargaJualController,
+                        controller: hargaJualInputController,
                         decoration: const InputDecoration(
                           labelText: 'Harga Jual',
                           prefixText: 'Rp ',
@@ -209,12 +210,14 @@ class TambahBarang extends StatelessWidget {
                           RupiahInputFormatter(),
                         ],
                         keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          hargaJualController.text = value.replaceAll('.', '');
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Harga Jual tidak boleh kosong';
                           }
-                          if (double.tryParse(value.replaceAll('.', '')) ==
-                              null) {
+                          if (double.tryParse(value.replaceAll('.', '')) == null) {
                             return 'Harga Jual harus berupa angka';
                           }
                           return null;
@@ -234,15 +237,12 @@ class TambahBarang extends StatelessWidget {
                           return const Text('Belum ada kategori');
                         }
                         return DropdownButton<int>(
-                          value: selectedKategoriId.value == 0
-                              ? null
-                              : selectedKategoriId.value,
+                          value: selectedKategoriId.value == 0 ? null : selectedKategoriId.value,
                           hint: const Text('Pilih Kategori'),
                           onChanged: (newValue) {
                             selectedKategoriId.value = newValue!;
                           },
-                          items: tambahBarangController.kategoriList
-                              .map((kategori) {
+                          items: tambahBarangController.kategoriList.map((kategori) {
                             return DropdownMenuItem<int>(
                               value: kategori.id,
                               child: Text(kategori.namaKategori),
@@ -252,7 +252,9 @@ class TambahBarang extends StatelessWidget {
                       }),
                     ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed("/page_kategori");
+                        },
                         icon: const Icon(BootstrapIcons.plus_lg))
                   ],
                 ),

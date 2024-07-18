@@ -55,8 +55,8 @@ class BottomBar extends StatelessWidget {
                   selectedColor: const Color.fromARGB(255, 114, 94, 225),
                 ),
                 SalomonBottomBarItem(
-                  icon: const Icon(Icons.people),
-                  title: const Text("Profile"),
+                  icon: const Icon(BootstrapIcons.gear),
+                  title: const Text("Pengaturan"),
                   selectedColor: const Color.fromARGB(255, 114, 94, 225),
                 ),
               ],
