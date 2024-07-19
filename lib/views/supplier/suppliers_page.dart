@@ -44,7 +44,7 @@ class SuppliersPage extends StatelessWidget {
                       color: Colors.grey,
                     ),
               title: Text(supplier.namaSupplier),
-              subtitle: Text(supplier.namaTokoSupplier),
+              subtitle: Text(supplier.namaTokoSupplier ?? '-'),
               trailing: IconButton(
                 icon: const Icon(
                   Icons.delete,

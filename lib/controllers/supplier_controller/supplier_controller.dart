@@ -2,10 +2,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:kasirsql/models/supplier_model.dart';
+import 'package:kasirsql/controllers/user_controller/user_controller.dart'; // Import UserController
 
 class SupplierController extends GetxController {
   var supplierList = <Supplier>[].obs;
   final String apiUrl = 'http://10.10.10.80/flutterapi/api_supplier.php';
+  final UserController userController =
+      Get.find<UserController>(); // Dapatkan UserController
 
   @override
   void onInit() {
@@ -15,8 +18,8 @@ class SupplierController extends GetxController {
 
   void fetchSupplier() async {
     try {
-      final response =
-          await http.get(Uri.parse('$apiUrl?action=read_supplier'));
+      final response = await http.get(Uri.parse(
+          '$apiUrl?action=read_supplier&user_id=${userController.currentUser.value?.id}')); // Gunakan user_id
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;
         supplierList.value =
@@ -26,6 +29,7 @@ class SupplierController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to parse supplier');
+      print('Error = $e');
     }
   }
 

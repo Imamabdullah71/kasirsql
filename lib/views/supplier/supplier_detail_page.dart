@@ -58,7 +58,7 @@ class SupplierDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              supplier.namaTokoSupplier,
+              supplier.namaTokoSupplier ?? '-',
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 16),

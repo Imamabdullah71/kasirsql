@@ -22,11 +22,13 @@ class ProfilePage extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text("ID: ${profileController.user!.id}"),
                 Text("Name: ${profileController.user!.name}"),
                 Text("Email: ${profileController.user!.email}"),
-                Text("Nama Toko: ${profileController.user!.namaToko}"),
-                Text("No Telepon: ${profileController.user!.noTelepon}"),
+                Text("Nama Toko: ${profileController.user!.namaToko ?? '-'}"),
+                Text("No Telepon: ${profileController.user!.noTelepon ?? '-'}"),
               ],
             ),
           );

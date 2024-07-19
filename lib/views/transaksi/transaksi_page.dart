@@ -8,7 +8,8 @@ import 'package:kasirsql/views/transaksi/cart_page.dart';
 class TransaksiPage extends StatelessWidget {
   TransaksiPage({super.key});
   final BarangController barangController = Get.find<BarangController>();
-  final TransaksiController transaksiController = Get.find<TransaksiController>();
+  final TransaksiController transaksiController =
+      Get.find<TransaksiController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,8 @@ class TransaksiPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final barang = barangController.barangList[index];
             return Obx(() {
-              var detailBarang = transaksiController.selectedBarangList.firstWhere(
+              var detailBarang =
+                  transaksiController.selectedBarangList.firstWhere(
                 (element) => element['id'] == barang.id,
                 orElse: () => {'jumlah': 0},
               );
@@ -88,7 +90,7 @@ class TransaksiPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             ),
             onPressed: () {
-              Get.to(() => CartPage());
+              Get.toNamed("/cart_page");
             },
             child: Obx(() {
               return Row(

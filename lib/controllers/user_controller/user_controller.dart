@@ -27,19 +27,23 @@ class UserController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userData = prefs.getString('user');
     if (userData != null) {
+      print("Loaded user data: $userData"); // Log data yang diambil
       currentUser.value = UserModel.fromJson(json.decode(userData));
     }
   }
 
   Future<void> saveUserToPreferences(UserModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', json.encode(user.toJson()));
+    String userJson = json.encode(user.toJson());
+    print("Saving user data: $userJson"); // Log data yang disimpan
+    await prefs.setString('user', userJson);
     currentUser.value = user;
   }
 
   Future<void> clearUserPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('user');
+    currentUser.value = null;
   }
 
   Future<void> register() async {
@@ -57,6 +61,8 @@ class UserController extends GetxController {
       },
     );
 
+    isLoading.value = false;
+
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       if (data['status'] == 'success') {
@@ -68,8 +74,6 @@ class UserController extends GetxController {
     } else {
       Get.snackbar('Error', 'Failed to register');
     }
-
-    isLoading.value = false;
   }
 
   Future<bool> login() async {
@@ -84,28 +88,28 @@ class UserController extends GetxController {
       },
     );
 
+    isLoading.value = false;
+
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       if (data['status'] == 'success') {
+        print("Login response data: ${data['user']}"); // Log data respon login
         UserModel user = UserModel.fromJson(data['user']);
         await saveUserToPreferences(user);
         Get.snackbar('Success', 'Logged in successfully');
-        isLoading.value = false;
         return true;
       } else {
         Get.snackbar('Error', data['message']);
+        return false;
       }
     } else {
       Get.snackbar('Error', 'Failed to login');
+      return false;
     }
-
-    isLoading.value = false;
-    return false;
   }
 
   Future<void> logout() async {
     await clearUserPreferences();
-    currentUser.value = null;
     Get.offAllNamed('/login');
     Get.snackbar('Berhasil', 'Berhasil logout');
   }

@@ -9,12 +9,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:kasirsql/views/supplier/crop_image_page.dart';
 import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
+import 'package:kasirsql/controllers/user_controller/user_controller.dart'; // Import UserController
 
 class AddSupplierController extends GetxController {
   var selectedImagePath = ''.obs;
   var croppedImage = Rx<Uint8List?>(null);
   final String apiUrl = 'http://10.10.10.80/flutterapi/api_supplier.php';
   final ImagePicker _picker = ImagePicker();
+  final UserController userController = Get.find<UserController>(); // Dapatkan UserController
 
   void pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
@@ -80,6 +82,7 @@ class AddSupplierController extends GetxController {
           'email': email,
           'alamat': alamat,
           'gambar': gambar ?? '',
+          'user_id': userController.currentUser.value?.id.toString(), // Tambahkan user_id
         },
       );
       if (response.statusCode == 200) {
