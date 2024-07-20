@@ -10,6 +10,7 @@ class Transaksi {
   double totalHarga;
   double bayar;
   double kembali;
+  int userId; // Tambahkan user_id
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -20,6 +21,7 @@ class Transaksi {
     required this.totalHarga,
     required this.bayar,
     required this.kembali,
+    required this.userId, // Inisialisasi user_id
     required this.createdAt,
     required this.updatedAt,
   });

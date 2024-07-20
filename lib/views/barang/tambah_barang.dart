@@ -9,7 +9,8 @@ import 'package:image_picker/image_picker.dart';
 
 class TambahBarang extends StatelessWidget {
   TambahBarang({super.key});
-  final TambahBarangController tambahBarangController = Get.find<TambahBarangController>();
+  final TambahBarangController tambahBarangController =
+      Get.find<TambahBarangController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -37,25 +38,17 @@ class TambahBarang extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 5),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               Obx(() {
                 if (tambahBarangController.selectedImagePath.value == '') {
-                  return Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey[300],
-                    ),
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      color: Colors.grey,
-                      size: 60,
-                    ),
+                  return const Icon(
+                    Icons.broken_image_rounded,
+                    color: Colors.grey,
+                    size: 120,
                   );
                 } else {
                   return Container(
@@ -75,14 +68,15 @@ class TambahBarang extends StatelessWidget {
                   );
                 }
               }),
-              const SizedBox(height: 5),
+              // const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
                     ),
                     onPressed: () {
                       tambahBarangController.pickImage(ImageSource.gallery);
@@ -106,7 +100,8 @@ class TambahBarang extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
                     ),
                     onPressed: () {
                       tambahBarangController.pickImage(ImageSource.camera);
@@ -190,7 +185,8 @@ class TambahBarang extends StatelessWidget {
                           if (value == null || value.isEmpty) {
                             return 'Harga Beli tidak boleh kosong';
                           }
-                          if (double.tryParse(value.replaceAll('.', '')) == null) {
+                          if (double.tryParse(value.replaceAll('.', '')) ==
+                              null) {
                             return 'Harga Beli harus berupa angka';
                           }
                           return null;
@@ -217,7 +213,8 @@ class TambahBarang extends StatelessWidget {
                           if (value == null || value.isEmpty) {
                             return 'Harga Jual tidak boleh kosong';
                           }
-                          if (double.tryParse(value.replaceAll('.', '')) == null) {
+                          if (double.tryParse(value.replaceAll('.', '')) ==
+                              null) {
                             return 'Harga Jual harus berupa angka';
                           }
                           return null;
@@ -237,12 +234,15 @@ class TambahBarang extends StatelessWidget {
                           return const Text('Belum ada kategori');
                         }
                         return DropdownButton<int>(
-                          value: selectedKategoriId.value == 0 ? null : selectedKategoriId.value,
+                          value: selectedKategoriId.value == 0
+                              ? null
+                              : selectedKategoriId.value,
                           hint: const Text('Pilih Kategori'),
                           onChanged: (newValue) {
                             selectedKategoriId.value = newValue!;
                           },
-                          items: tambahBarangController.kategoriList.map((kategori) {
+                          items: tambahBarangController.kategoriList
+                              .map((kategori) {
                             return DropdownMenuItem<int>(
                               value: kategori.id,
                               child: Text(kategori.namaKategori),

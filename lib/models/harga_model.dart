@@ -1,4 +1,3 @@
-// models/harga_model.dart
 class Harga {
   final int id;
   final int barangId;

@@ -15,6 +15,7 @@ Transaksi _$TransaksiFromJson(Map<String, dynamic> json) => Transaksi(
       totalHarga: (json['totalHarga'] as num).toDouble(),
       bayar: (json['bayar'] as num).toDouble(),
       kembali: (json['kembali'] as num).toDouble(),
+      userId: (json['userId'] as num).toInt(),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -26,6 +27,7 @@ Map<String, dynamic> _$TransaksiToJson(Transaksi instance) => <String, dynamic>{
       'totalHarga': instance.totalHarga,
       'bayar': instance.bayar,
       'kembali': instance.kembali,
+      'userId': instance.userId,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

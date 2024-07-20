@@ -24,17 +24,17 @@ class ManageBarang extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         children: [
           ListTile(
-            leading: const Icon(BootstrapIcons.box_seam),
-            title: const Text("Barang"),
-            onTap: () {
-              Get.toNamed("/page_barang");
-            },
-          ),
-          ListTile(
             leading: const Icon(BootstrapIcons.grid),
             title: const Text("Kategori barang"),
             onTap: () {
               Get.toNamed("/page_kategori");
+            },
+          ),
+          ListTile(
+            leading: const Icon(BootstrapIcons.box_seam),
+            title: const Text("Barang"),
+            onTap: () {
+              Get.toNamed("/page_barang");
             },
           ),
           ListTile(
@@ -51,11 +51,6 @@ class ManageBarang extends StatelessWidget {
             leading: const Icon(BootstrapIcons.person_vcard),
             title: const Text("Supplier"),
             onTap: () => Get.toNamed("/page_supplier"),
-          ),
-          ListTile(
-            leading: const Icon(BootstrapIcons.person_vcard),
-            title: const Text("Register"),
-            onTap: () => Get.toNamed("/page_register"),
           ),
         ],
       ),

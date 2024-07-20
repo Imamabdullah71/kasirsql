@@ -5,8 +5,7 @@ import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 
 class PaymentPage extends StatelessWidget {
   PaymentPage({super.key});
-  final TransaksiController transaksiController =
-      Get.find<TransaksiController>();
+  final TransaksiController transaksiController = Get.find<TransaksiController>();
   final TextEditingController uangDibayarController = TextEditingController();
 
   @override
@@ -40,13 +39,10 @@ class PaymentPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                transaksiController.bayar.value =
-                    double.parse(uangDibayarController.text);
-                transaksiController.kembali.value =
-                    transaksiController.bayar.value -
-                        transaksiController.totalHarga.value;
+                transaksiController.bayar.value = double.parse(uangDibayarController.text);
+                transaksiController.kembali.value = transaksiController.bayar.value - transaksiController.totalHarga.value;
                 transaksiController.createTransaksi();
-                Get.to(() => const TransactionSuccessPage());
+                // Get.to(() => const TransactionSuccessPage());
               },
               child: const Text('Bayar'),
             ),

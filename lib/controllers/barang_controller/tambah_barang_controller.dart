@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
+import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/harga_model.dart';
 import 'package:kasirsql/models/kategori_model.dart';
 import 'package:kasirsql/views/barang/edit_image.dart';
@@ -19,6 +20,7 @@ class TambahBarangController extends GetxController {
   var croppedImage = Rx<Uint8List?>(null);
   final String apiUrl = 'http://10.10.10.80/flutterapi/api_barang.php';
   final ImagePicker _picker = ImagePicker();
+  final UserController userController = Get.find<UserController>();
 
   @override
   void onInit() {
@@ -26,17 +28,20 @@ class TambahBarangController extends GetxController {
     super.onInit();
   }
 
-  void fetchKategori() async {
+void fetchKategori() async {
     try {
-      final response = await http.get(Uri.parse('$apiUrl?action=read_kategori'));
+      final response = await http.get(Uri.parse(
+          '$apiUrl?action=read_kategori&user_id=${userController.currentUser.value?.id}'));
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;
-        kategoriList.value = data.map((kategori) => Kategori.fromJson(kategori)).toList();
+        kategoriList.value =
+            data.map((kategori) => Kategori.fromJson(kategori)).toList();
       } else {
         Get.snackbar('Error', 'Failed to fetch kategori');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to parse kategori');
+      print('Error = $e');
     }
   }
 
@@ -44,12 +49,10 @@ class TambahBarangController extends GetxController {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-        // Simpan gambar dengan nama file berdasarkan waktu saat ini
         final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
         final tempDir = await getTemporaryDirectory();
         final tempFile = File('${tempDir.path}/$fileName');
 
-        // Kompres gambar sebelum memuatnya ke memori untuk menghindari masalah Out of Memory
         final compressedFile = await FlutterImageCompress.compressAndGetFile(
           pickedFile.path,
           tempFile.path,
@@ -136,47 +139,12 @@ class TambahBarangController extends GetxController {
         },
       );
       if (response.statusCode == 200) {
-        fetchHarga();
+        // fetchHarga();
       } else {
         Get.snackbar('Gagal', 'Gagal menambahkan harga');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to create harga');
-    }
-  }
-
-  void fetchHarga() async {
-    try {
-      final response = await http.get(Uri.parse('$apiUrl?action=read_harga'));
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List;
-        hargaList.value = data.map((harga) => Harga.fromJson(harga)).toList();
-      } else {
-        Get.snackbar('Error', 'Failed to fetch harga');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to parse harga');
-    }
-  }
-
-  void updateHarga(int id, double hargaJual, double hargaBeli) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$apiUrl?action=update_harga'),
-        body: {
-          'id': id.toString(),
-          'harga_jual': hargaJual.toString(),
-          'harga_beli': hargaBeli.toString(),
-        },
-      );
-      if (response.statusCode == 200) {
-        fetchHarga();
-        Get.snackbar('Success', 'Harga updated successfully');
-      } else {
-        Get.snackbar('Error', 'Failed to update harga');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to update harga');
     }
   }
 }

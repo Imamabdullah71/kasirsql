@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/kategori_controller/kategori_controller.dart';
 import 'package:kasirsql/models/kategori_model.dart';
+import 'package:kasirsql/views/kategori/add_kategori.dart';
 
 class CategoriesPage extends StatelessWidget {
   CategoriesPage({super.key});
@@ -30,6 +31,18 @@ class CategoriesPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final Kategori kategori = kategoriController.kategoriList[index];
             return ListTile(
+              leading: kategori.gambar != null && kategori.gambar!.isNotEmpty
+                  ? Image.network(
+                      'http://10.10.10.80/flutterapi/uploads/${kategori.gambar}',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    )
+                  : const Icon(
+                      Icons.image_not_supported,
+                      size: 50,
+                      color: Colors.grey,
+                    ),
               title: Text(kategori.namaKategori),
               trailing: IconButton(
                 icon: const Icon(
@@ -55,50 +68,13 @@ class CategoriesPage extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           ),
-          onPressed: () {
-            _showAddKategoriDialog(context);
-          },
+          onPressed: () => Get.to(() => AddKategoriPage()), // Pindah ke halaman tambah kategori
           child: const Text(
             "Tambah Kategori",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
       ),
-    );
-  }
-
-  void _showAddKategoriDialog(BuildContext context) {
-    final TextEditingController namaKategoriController =
-        TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Tambah Kategori'),
-          content: TextField(
-            controller: namaKategoriController,
-            decoration: const InputDecoration(labelText: 'Nama Kategori'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final String namaKategori = namaKategoriController.text;
-                if (namaKategori.isNotEmpty) {
-                  kategoriController.createKategori(namaKategori);
-                  Get.back();
-                }
-              },
-              child: const Text('Tambah'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

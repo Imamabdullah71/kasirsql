@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -16,12 +17,14 @@ class AddSupplierController extends GetxController {
   var croppedImage = Rx<Uint8List?>(null);
   final String apiUrl = 'http://10.10.10.80/flutterapi/api_supplier.php';
   final ImagePicker _picker = ImagePicker();
-  final UserController userController = Get.find<UserController>(); // Dapatkan UserController
+  final UserController userController =
+      Get.find<UserController>(); // Dapatkan UserController
 
   void pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+      final fileName =
+          '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
       final tempDir = await getTemporaryDirectory();
       final tempFile = File('${tempDir.path}/$fileName');
 
@@ -44,10 +47,13 @@ class AddSupplierController extends GetxController {
 
   Future<String?> uploadImage(Uint8List imageBytes) async {
     final tempDir = await getTemporaryDirectory();
-    final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
-    final file = File('${tempDir.path}/$fileName')..writeAsBytesSync(imageBytes);
+    final fileName =
+        '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+    final file = File('${tempDir.path}/$fileName')
+      ..writeAsBytesSync(imageBytes);
 
-    var request = http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
     request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
     var response = await request.send();
@@ -66,7 +72,8 @@ class AddSupplierController extends GetxController {
     }
   }
 
-  void createSupplier(String namaSupplier, String namaTokoSupplier, String noTelepon, String email, String alamat) async {
+  void createSupplier(String namaSupplier, String namaTokoSupplier,
+      String noTelepon, String email, String alamat) async {
     try {
       String? gambar;
       if (croppedImage.value != null) {
@@ -82,14 +89,29 @@ class AddSupplierController extends GetxController {
           'email': email,
           'alamat': alamat,
           'gambar': gambar ?? '',
-          'user_id': userController.currentUser.value?.id.toString(), // Tambahkan user_id
+          'user_id': userController.currentUser.value?.id.toString(),
         },
       );
       if (response.statusCode == 200) {
         Get.find<SupplierController>().fetchSupplier();
-        Get.snackbar('Success', 'Supplier created successfully');
+        Get.back();
+        Get.snackbar(
+          "Berhasil menambahkan Supplier",
+          "",
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          borderRadius: 10.0,
+          margin: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          snackPosition: SnackPosition.TOP,
+          forwardAnimationCurve: Curves.easeOut,
+          reverseAnimationCurve: Curves.easeIn,
+          isDismissible: true,
+          showProgressIndicator: false,
+        );
       } else {
-        Get.snackbar('Error', 'Failed to create supplier');
+        Get.snackbar('', 'Gagal menambahkan Supplier');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to create supplier');

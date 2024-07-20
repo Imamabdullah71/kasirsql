@@ -2,11 +2,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kasirsql/models/barang_model.dart';
 import 'dart:convert';
+import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 
 class BarangController extends GetxController {
   var barangList = <Barang>[].obs;
   var selectedBarang = Rxn<Barang>();
   final String apiUrl = 'http://10.10.10.80/flutterapi/api_barang.php';
+  final UserController userController = Get.find<UserController>();
 
   @override
   void onInit() {
@@ -16,7 +18,8 @@ class BarangController extends GetxController {
 
   void fetchBarang() async {
     try {
-      final response = await http.get(Uri.parse('$apiUrl?action=read_barang'));
+      final response = await http.get(Uri.parse(
+          '$apiUrl?action=read_barang&user_id=${userController.currentUser.value?.id}'));
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;
         barangList.value =
@@ -50,6 +53,7 @@ class BarangController extends GetxController {
         var responseData = json.decode(response.body);
         if (responseData['status'] == 'success') {
           fetchBarang();
+          Get.back();
           Get.snackbar('Success', 'Barang berhasil diupdate');
         } else {
           Get.snackbar('Error', responseData['message']);

@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
-import 'package:kasirsql/views/transaksi/cart_page.dart';
 
 class TransaksiPage extends StatelessWidget {
   TransaksiPage({super.key});
   final BarangController barangController = Get.find<BarangController>();
-  final TransaksiController transaksiController =
-      Get.find<TransaksiController>();
+  final TransaksiController transaksiController = Get.find<TransaksiController>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,22 +17,11 @@ class TransaksiPage extends StatelessWidget {
           color: Colors.white,
         ),
         title: const Text(
-          "Data Barang",
+          "Transaksi",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        actions: [
-          Obx(() {
-            return IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () {
-                Get.to(() => CartPage());
-              },
-              tooltip: 'Keranjang (${transaksiController.getTotalBarang()})',
-            );
-          })
-        ],
       ),
       body: Obx(() {
         if (barangController.barangList.isEmpty) {
@@ -45,8 +32,7 @@ class TransaksiPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final barang = barangController.barangList[index];
             return Obx(() {
-              var detailBarang =
-                  transaksiController.selectedBarangList.firstWhere(
+              var detailBarang = transaksiController.selectedBarangList.firstWhere(
                 (element) => element['id'] == barang.id,
                 orElse: () => {'jumlah': 0},
               );
@@ -68,7 +54,7 @@ class TransaksiPage extends StatelessWidget {
                 subtitle: Text(barang.kodeBarang.toString()),
                 trailing: Text(
                   "X${detailBarang['jumlah']}",
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 15),
                 ),
                 onTap: () {
                   transaksiController.addBarangToCart(barang);
@@ -81,32 +67,33 @@ class TransaksiPage extends StatelessWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 30),
         child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-              minimumSize: const Size(
-                double.infinity, // Lebar
-                48, // Tinggi
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+            minimumSize: const Size(
+              double.infinity, // Lebar
+              48, // Tinggi
             ),
-            onPressed: () {
-              Get.toNamed("/cart_page");
-            },
-            child: Obx(() {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    BootstrapIcons.cart3,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    " (${transaksiController.getTotalBarang()})",
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ],
-              );
-            })),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          ),
+          onPressed: () {
+            Get.toNamed("/cart_page");
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                BootstrapIcons.cart3,
+                color: Colors.white,
+              ),
+              Obx(() { 
+                return Text(
+                  " (${transaksiController.totalBarang.value})",
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                );
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }

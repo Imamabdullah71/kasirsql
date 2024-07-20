@@ -34,7 +34,7 @@ class ManageTransaksi extends StatelessWidget {
             leading: const Icon(BootstrapIcons.clock_history),
             title: const Text("History Transaction"),
             onTap: () {
-              Get.toNamed("/history_page_transaction");
+              Get.toNamed("/riwayat_transaksi");
             },
           ),
         ],
