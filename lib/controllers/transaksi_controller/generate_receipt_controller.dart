@@ -8,6 +8,7 @@ import 'package:kasirsql/models/transaksi_model.dart';
 
 class GenerateReceiptController extends GetxController {
   final UserController userController = Get.find<UserController>();
+  
   Future<void> generateReceipt(Transaksi transaksi, int transaksiId) async {
     final recorder = PictureRecorder();
     final canvas = Canvas(recorder);
@@ -19,7 +20,10 @@ class GenerateReceiptController extends GetxController {
 
     try {
       const double width = 300;
-      double height = 400;
+      double yOffset = 10;
+
+      // Calculate canvas height dynamically based on content
+      double height = 120 + transaksi.detailBarang.length * 60 + 100;
 
       canvas.drawRect(
           Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
@@ -27,64 +31,117 @@ class GenerateReceiptController extends GetxController {
       const textStyle = TextStyle(color: Colors.black, fontSize: 12);
       final textPainter = TextPainter(
         textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center,
       );
 
-      textPainter.text = TextSpan(
-        text: '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}\n',
-        style: textStyle,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, const Offset(10, 10));
-
-      textPainter.text = TextSpan(
-        text: 'Waktu: ${transaksi.createdAt}\n',
-        style: textStyle,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, const Offset(10, 50));
-
-      textPainter.text = const TextSpan(
-        text: '----------------------------------------\n',
-        style: textStyle,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, const Offset(10, 70));
-
-      double yOffset = 90;
-      for (var barang in transaksi.detailBarang) {
-        textPainter.text = TextSpan(
-          text:
-              '${barang['nama']} x ${barang['jumlah']} @ ${barang['hjb']} = ${barang['harga_total']}\n',
-          style: textStyle,
+      // Store and calculate the height of each text span
+      double calculateTextHeight(String text, TextStyle style, double width) {
+        final TextPainter tp = TextPainter(
+          text: TextSpan(text: text, style: style),
+          textDirection: TextDirection.ltr,
         );
-        textPainter.layout();
-        textPainter.paint(canvas, Offset(10, yOffset));
-        yOffset += 20;
+        tp.layout(minWidth: width);
+        return tp.height;
       }
 
-      textPainter.text = const TextSpan(
-        text: '----------------------------------------\n',
-        style: textStyle,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(10, yOffset));
-      yOffset += 20;
-
+      // Nama Toko dan Alamat
+      String tokoInfo = '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}';
       textPainter.text = TextSpan(
-        text:
-            'Subtotal: ${transaksi.totalHarga}\nBayar: ${transaksi.bayar}\nKembali: ${transaksi.kembali}\n',
+        text: tokoInfo,
         style: textStyle,
       );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(10, yOffset));
-      yOffset += 60;
+      textPainter.layout(minWidth: width);
+      textPainter.paint(canvas, Offset(0, yOffset));
+      yOffset += calculateTextHeight(tokoInfo, textStyle, width);
 
+      // Waktu
+      String waktu = '${transaksi.createdAt}\n';
       textPainter.text = TextSpan(
-        text: '${user?.noTelepon ?? 'No Telepon'}\nTerima Kasih\n',
+        text: waktu,
         style: textStyle,
       );
-      textPainter.layout();
+      textPainter.layout(minWidth: width);
+      textPainter.paint(canvas, Offset(0, yOffset));
+      yOffset += calculateTextHeight(waktu, textStyle, width);
+
+      // Garis pembatas
+      String garis = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
+      textPainter.text = TextSpan(
+        text: garis,
+        style: textStyle,
+      );
+      textPainter.layout(minWidth: width);
+      textPainter.paint(canvas, Offset(0, yOffset));
+      yOffset += calculateTextHeight(garis, textStyle, width);
+
+      // Detail Barang
+      textPainter.textAlign = TextAlign.left;
+      const double itemDetailWidth = 200; // Set a fixed width for item details
+
+      for (var barang in transaksi.detailBarang) {
+        // Nama Barang
+        final itemName = '${barang['nama']}';
+        textPainter.text = TextSpan(
+          text: itemName,
+          style: textStyle,
+        );
+        textPainter.layout(minWidth: width);
+        textPainter.paint(canvas, Offset(10, yOffset));
+        yOffset += calculateTextHeight(itemName, textStyle, width);
+
+        // Jumlah x HJB
+        final itemDetail = '${barang['jumlah']} x ${barang['hjb']}';
+        textPainter.textAlign = TextAlign.left;
+        textPainter.text = TextSpan(
+          text: itemDetail,
+          style: textStyle,
+        );
+        textPainter.layout(minWidth: itemDetailWidth);
+        textPainter.paint(canvas, Offset(10, yOffset));
+
+        // Harga Total
+        final itemTotal = '${barang['harga_total']}';
+        textPainter.textAlign = TextAlign.right;
+        textPainter.text = TextSpan(
+          text: itemTotal,
+          style: textStyle,
+        );
+        textPainter.layout(minWidth: width - itemDetailWidth - 20);
+        textPainter.paint(canvas, Offset(width - itemDetailWidth - 10, yOffset));
+        
+        yOffset += calculateTextHeight(itemDetail, textStyle, itemDetailWidth);
+      }
+
+      // Garis pembatas
+      textPainter.textAlign = TextAlign.center;
+      textPainter.text = TextSpan(
+        text: garis,
+        style: textStyle,
+      );
+      textPainter.layout(minWidth: width);
+      textPainter.paint(canvas, Offset(0, yOffset));
+      yOffset += calculateTextHeight(garis, textStyle, width);
+
+      // Subtotal, Bayar, Kembali
+      String pembayaran = 'Subtotal : ${transaksi.totalHarga}\nBayar : ${transaksi.bayar}\nKembali : ${transaksi.kembali}\n';
+      textPainter.textAlign = TextAlign.right;
+      textPainter.text = TextSpan(
+        text: pembayaran,
+        style: textStyle,
+      );
+      textPainter.layout(minWidth: width - 20);
       textPainter.paint(canvas, Offset(10, yOffset));
+      yOffset += calculateTextHeight(pembayaran, textStyle, width - 20);
+
+      // Nomor Telepon dan Ucapan Terima Kasih
+      String terimaKasih = '${user?.noTelepon ?? 'No Telepon'}\nTerima Kasih\n';
+      textPainter.textAlign = TextAlign.center;
+      textPainter.text = TextSpan(
+        text: terimaKasih,
+        style: textStyle,
+      );
+      textPainter.layout(minWidth: width);
+      textPainter.paint(canvas, Offset(0, yOffset));
 
       final picture = recorder.endRecording();
       final img = await picture.toImage(width.toInt(), height.toInt());
@@ -99,7 +156,7 @@ class GenerateReceiptController extends GetxController {
       Get.defaultDialog(
         title: 'Receipt',
         content: SingleChildScrollView(
-          child: Text(file.path),
+          child: Image.memory(buffer),
         ),
         textConfirm: 'Okay',
         onConfirm: () => Get.back(),

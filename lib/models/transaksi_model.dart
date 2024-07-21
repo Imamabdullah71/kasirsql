@@ -11,6 +11,7 @@ class Transaksi {
   double totalHargaBeli;
   double bayar;
   double kembali;
+  String? struk;
   int userId;
   DateTime createdAt;
   DateTime updatedAt;
@@ -23,6 +24,7 @@ class Transaksi {
     required this.totalHargaBeli,
     required this.bayar,
     required this.kembali,
+    this.struk,
     required this.userId,
     required this.createdAt,
     required this.updatedAt,

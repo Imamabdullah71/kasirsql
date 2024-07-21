@@ -11,6 +11,7 @@ import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dar
 import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/riwayat_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
+import 'package:kasirsql/controllers/transaksi_controller/upload_struk_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 
 class DataBindings extends Bindings {
@@ -34,6 +35,6 @@ class DataBindings extends Bindings {
     Get.lazyPut<TransaksiController>(() => TransaksiController());
     Get.lazyPut<RiwayatController>(() => RiwayatController());
     Get.lazyPut<GenerateReceiptController>(() => GenerateReceiptController());
-    
+    Get.lazyPut<UploadStrukController>(() => UploadStrukController());
   }
 }

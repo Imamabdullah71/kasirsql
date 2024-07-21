@@ -1,11 +1,15 @@
+// TransaksiController.dart
+import 'dart:io';
 import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kasirsql/controllers/transaksi_controller/upload_struk_controller.dart';
 import 'dart:convert';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/barang_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 class TransaksiController extends GetxController {
   var selectedBarangList = <Map<String, dynamic>>[].obs;
@@ -148,9 +152,9 @@ class TransaksiController extends GetxController {
               Get.snackbar('Success', 'Transaksi berhasil dilakukan');
               var transaksiId = result['transaksi_id'];
               if (transaksiId != null) {
-                // await generateReceipt(transaksi, transaksiId);
-                await Get.find<GenerateReceiptController>()
-                    .generateReceipt(transaksi, transaksiId);
+                await Get.find<GenerateReceiptController>().generateReceipt(transaksi, transaksiId);
+                File receiptFile = File('${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
+                await Get.find<UploadStrukController>().uploadStruk(receiptFile, transaksiId);
               } else {
                 Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
               }

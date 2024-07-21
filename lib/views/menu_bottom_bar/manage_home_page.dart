@@ -51,7 +51,7 @@ class ManageHomePage extends StatelessWidget {
                         child: IconButton(
                           onPressed: () {},
                           icon: const Icon(
-                            BootstrapIcons.upc_scan,
+                            BootstrapIcons.box_seam,
                             size: 50,
                             color: Colors.white,
                           ),
@@ -59,7 +59,7 @@ class ManageHomePage extends StatelessWidget {
                       ),
                     ),
                     const Text(
-                      "Scan",
+                      "Barang",
                       style: TextStyle(
                         fontSize: 20,
                         color: Color.fromARGB(255, 114, 94, 225),
