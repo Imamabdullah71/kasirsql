@@ -1,14 +1,16 @@
+import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'dart:convert';
+import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/barang_model.dart';
 
 class TransaksiController extends GetxController {
   var selectedBarangList = <Map<String, dynamic>>[].obs;
   var totalHarga = 0.0.obs;
+  var totalHargaBeli = 0.0.obs;
   var totalBarang = 0.obs;
   var bayar = 0.0.obs;
   var kembali = 0.0.obs;
@@ -54,6 +56,7 @@ class TransaksiController extends GetxController {
     }
 
     totalHarga.value += barang.hargaJual;
+    totalHargaBeli.value += barang.hargaBeli;
     _updateTotalBarang();
     selectedBarangList.refresh();
     print('Total Barang: ${totalBarang.value}');
@@ -64,6 +67,7 @@ class TransaksiController extends GetxController {
         selectedBarangList.firstWhere((element) => element['id'] == barang.id);
     selectedBarangList.remove(detailBarang);
     totalHarga.value -= barang.hargaJual;
+    totalHargaBeli.value -= barang.hargaBeli;
     _updateTotalBarang();
     selectedBarangList.refresh();
     print('Total Barang: ${totalBarang.value}');
@@ -73,10 +77,12 @@ class TransaksiController extends GetxController {
     var detailBarang =
         selectedBarangList.firstWhere((element) => element['id'] == barang.id);
     totalHarga.value -= detailBarang['harga'] * detailBarang['jumlah'];
+    totalHargaBeli.value -= detailBarang['harga_beli'] * detailBarang['jumlah'];
     detailBarang['jumlah'] = quantity;
     detailBarang['jumlah_harga'] =
         detailBarang['harga'] * detailBarang['jumlah'];
     totalHarga.value += detailBarang['harga'] * detailBarang['jumlah'];
+    totalHargaBeli.value += detailBarang['harga_beli'] * detailBarang['jumlah'];
     _updateTotalBarang();
     selectedBarangList.refresh();
     print('Total Barang: ${totalBarang.value}');
@@ -87,7 +93,7 @@ class TransaksiController extends GetxController {
         0, (sum, item) => sum + item['jumlah'] as int);
   }
 
-  void createTransaksi() async {
+  Future<void> createTransaksi() async {
     var now = DateTime.now();
     var userId = userController.currentUser.value?.id;
 
@@ -96,11 +102,12 @@ class TransaksiController extends GetxController {
       return;
     }
 
-    // Buat peta baru dengan hanya nama barang dan jumlah barang
     var simplifiedDetailBarang = selectedBarangList.map((barang) {
       return {
         'nama': barang['nama'],
         'jumlah': barang['jumlah'],
+        'hjb': barang['harga'],
+        'harga_total': barang['jumlah_harga'],
       };
     }).toList();
 
@@ -108,6 +115,7 @@ class TransaksiController extends GetxController {
       detailBarang: simplifiedDetailBarang,
       totalBarang: totalBarang.value,
       totalHarga: totalHarga.value,
+      totalHargaBeli: totalHargaBeli.value,
       bayar: bayar.value,
       kembali: bayar.value - totalHarga.value,
       userId: userId,
@@ -117,40 +125,57 @@ class TransaksiController extends GetxController {
 
     print(jsonEncode(transaksi.toJson()));
 
-    // Tampilkan data transaksi dalam dialog untuk pengecekan
     Get.defaultDialog(
       title: 'Data Transaksi',
       content: SingleChildScrollView(
-        child: Text(
-          jsonEncode(
-              transaksi.toJson()), // Tampilkan data transaksi dalam bentuk JSON
-        ),
+        child: Text(jsonEncode(transaksi.toJson())),
       ),
       textConfirm: 'OK',
       onConfirm: () async {
         Get.back();
 
-        // Kirim data transaksi ke API
         try {
           var response = await http.post(
             Uri.parse('$apiUrl?action=create_transaksi'),
             headers: {"Content-Type": "application/json"},
             body: jsonEncode(transaksi.toJson()),
           );
+          print('Response status: ${response.statusCode}');
+          print('Response body: ${response.body}');
           if (response.statusCode == 200) {
             var result = json.decode(response.body);
             if (result['status'] == 'success') {
               Get.snackbar('Success', 'Transaksi berhasil dilakukan');
+              var transaksiId = result['transaksi_id'];
+              if (transaksiId != null) {
+                // await generateReceipt(transaksi, transaksiId);
+                await Get.find<GenerateReceiptController>()
+                    .generateReceipt(transaksi, transaksiId);
+              } else {
+                Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
+              }
             } else {
               Get.snackbar('Error', 'Transaksi gagal: ${result['message']}');
             }
           } else {
-            Get.snackbar('Error', 'Failed to create transaksi');
-            print('Error: ${response.body}');
+            Get.defaultDialog(
+              title: 'Gagal',
+              content: SingleChildScrollView(
+                child: Text(response.body),
+              ),
+              textConfirm: 'Okay',
+              onConfirm: () => Get.back(),
+            );
           }
         } catch (e) {
-          Get.snackbar('Error', 'Failed to create transaksi');
-          print('Exception: $e');
+          Get.defaultDialog(
+            title: 'Error',
+            content: SingleChildScrollView(
+              child: Text('$e'),
+            ),
+            textConfirm: 'Okay',
+            onConfirm: () => Get.back(),
+          );
         }
       },
     );

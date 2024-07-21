@@ -17,6 +17,7 @@ import 'package:kasirsql/views/riwayat_transaksi/transaksi_history_page.dart';
 import 'package:kasirsql/views/supplier/suppliers_page.dart';
 import 'package:kasirsql/views/supplier/tambah_supplier.dart';
 import 'package:kasirsql/views/transaksi/cart_page.dart';
+import 'package:kasirsql/views/transaksi/payment_page.dart';
 import 'package:kasirsql/views/transaksi/transaksi_page.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 
@@ -107,6 +108,11 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: "/cart_page",
             page: () => CartPage(),
+            binding: DataBindings(),
+            middlewares: [AuthMiddleware()]),
+        GetPage(
+            name: "/payment_page",
+            page: () => PaymentPage(),
             binding: DataBindings(),
             middlewares: [AuthMiddleware()]),
         // Riwayat Transaksi

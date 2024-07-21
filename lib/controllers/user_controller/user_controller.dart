@@ -15,6 +15,7 @@ class UserController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController namaTokoController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
   TextEditingController noTeleponController = TextEditingController();
 
   @override
@@ -57,6 +58,7 @@ class UserController extends GetxController {
         'email': emailController.text,
         'password': passwordController.text,
         'nama_toko': namaTokoController.text,
+        'alamat': alamatController.text,
         'no_telepon': noTeleponController.text,
       },
     );

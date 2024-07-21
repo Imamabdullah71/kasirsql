@@ -28,6 +28,7 @@ class ProfilePage extends StatelessWidget {
                 Text("Name: ${profileController.user!.name}"),
                 Text("Email: ${profileController.user!.email}"),
                 Text("Nama Toko: ${profileController.user!.namaToko ?? '-'}"),
+                Text("Alamat: ${profileController.user!.alamat ?? '-'}"),
                 Text("No Telepon: ${profileController.user!.noTelepon ?? '-'}"),
               ],
             ),

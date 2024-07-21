@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
-import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 
 class PaymentPage extends StatelessWidget {
   PaymentPage({super.key});
@@ -42,7 +41,6 @@ class PaymentPage extends StatelessWidget {
                 transaksiController.bayar.value = double.parse(uangDibayarController.text);
                 transaksiController.kembali.value = transaksiController.bayar.value - transaksiController.totalHarga.value;
                 transaksiController.createTransaksi();
-                // Get.to(() => const TransactionSuccessPage());
               },
               child: const Text('Bayar'),
             ),

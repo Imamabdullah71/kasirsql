@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
 import 'package:kasirsql/models/barang_model.dart';
-import 'package:kasirsql/views/transaksi/payment_page.dart';
 
 class CartPage extends StatelessWidget {
   CartPage({super.key});
@@ -118,9 +117,7 @@ class CartPage extends StatelessWidget {
         child: Obx(() {
           // Gunakan Obx di sini untuk memastikan UI diperbarui
           return ElevatedButton(
-            onPressed: () {
-              Get.to(() => PaymentPage());
-            },
+            onPressed: () => Get.toNamed("/payment_page"),
             child: Text(
                 'Lanjut ke Pembayaran ${transaksiController.totalBarang.value}'),
           );

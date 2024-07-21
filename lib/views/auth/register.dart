@@ -37,6 +37,10 @@ class RegisterPage extends StatelessWidget {
                 decoration: const InputDecoration(labelText: "Nama Toko"),
               ),
               TextField(
+                controller: userController.alamatController,
+                decoration: const InputDecoration(labelText: "Alamat"),
+              ),
+              TextField(
                 controller: userController.noTeleponController,
                 decoration: const InputDecoration(labelText: "No Telepon"),
               ),

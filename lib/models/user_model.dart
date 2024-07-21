@@ -4,6 +4,7 @@ class UserModel {
   final String email;
   final String? password;
   final String? namaToko;
+  final String? alamat;
   final String? logo;
   final String? noTelepon;
   final DateTime createdAt;
@@ -15,6 +16,7 @@ class UserModel {
     required this.email,
     this.password,
     this.namaToko,
+    this.alamat,
     this.logo,
     this.noTelepon,
     required this.createdAt,
@@ -28,6 +30,7 @@ class UserModel {
       email: json['email'] ?? '',
       password: json['password'],
       namaToko: json['nama_toko'],
+      alamat: json['alamat'],
       logo: json['logo'],
       noTelepon: json['no_telepon'],
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
@@ -42,6 +45,7 @@ class UserModel {
       'email': email,
       'password': password,
       'nama_toko': namaToko,
+      'alamat': alamat,
       'logo': logo,
       'no_telepon': noTelepon,
       'created_at': createdAt.toIso8601String(),
