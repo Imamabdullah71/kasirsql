@@ -33,7 +33,7 @@ class CategoriesPage extends StatelessWidget {
             return ListTile(
               leading: kategori.gambar != null && kategori.gambar!.isNotEmpty
                   ? Image.network(
-                      'http://10.10.10.80/flutterapi/uploads/${kategori.gambar}',
+                      'http://192.168.201.39/flutterapi/uploads/${kategori.gambar}',
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
@@ -68,7 +68,8 @@ class CategoriesPage extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           ),
-          onPressed: () => Get.to(() => AddKategoriPage()), // Pindah ke halaman tambah kategori
+          onPressed: () => Get.to(
+              () => AddKategoriPage()), // Pindah ke halaman tambah kategori
           child: const Text(
             "Tambah Kategori",
             style: TextStyle(color: Colors.white, fontSize: 20),

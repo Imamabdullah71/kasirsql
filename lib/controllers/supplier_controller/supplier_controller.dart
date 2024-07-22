@@ -7,7 +7,7 @@ import 'package:kasirsql/controllers/user_controller/user_controller.dart'; // I
 
 class SupplierController extends GetxController {
   var supplierList = <Supplier>[].obs;
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api_supplier.php';
+  final String apiUrl = 'http://192.168.201.39/flutterapi/api_supplier.php';
   final UserController userController =
       Get.find<UserController>(); // Dapatkan UserController
 

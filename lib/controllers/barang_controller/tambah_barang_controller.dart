@@ -18,7 +18,7 @@ class TambahBarangController extends GetxController {
   var hargaList = <Harga>[].obs;
   var selectedImagePath = ''.obs;
   var croppedImage = Rx<Uint8List?>(null);
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api_barang.php';
+  final String apiUrl = 'http://192.168.201.39/flutterapi/api_barang.php';
   final ImagePicker _picker = ImagePicker();
   final UserController userController = Get.find<UserController>();
 
@@ -28,7 +28,7 @@ class TambahBarangController extends GetxController {
     super.onInit();
   }
 
-void fetchKategori() async {
+  void fetchKategori() async {
     try {
       final response = await http.get(Uri.parse(
           '$apiUrl?action=read_kategori&user_id=${userController.currentUser.value?.id}'));
@@ -49,7 +49,8 @@ void fetchKategori() async {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-        final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+        final fileName =
+            '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
         final tempDir = await getTemporaryDirectory();
         final tempFile = File('${tempDir.path}/$fileName');
 
@@ -73,10 +74,13 @@ void fetchKategori() async {
 
   Future<String?> uploadImage(Uint8List imageBytes) async {
     final tempDir = await getTemporaryDirectory();
-    final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
-    final file = File('${tempDir.path}/$fileName')..writeAsBytesSync(imageBytes);
+    final fileName =
+        '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+    final file = File('${tempDir.path}/$fileName')
+      ..writeAsBytesSync(imageBytes);
 
-    var request = http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
     request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
     var response = await request.send();
@@ -95,7 +99,8 @@ void fetchKategori() async {
     }
   }
 
-  void createBarang(String namaBarang, int kodeBarang, int stokBarang, int kategoriId, double hargaJual, double hargaBeli) async {
+  void createBarang(String namaBarang, int kodeBarang, int stokBarang,
+      int kategoriId, double hargaJual, double hargaBeli) async {
     try {
       String? gambar;
       if (croppedImage.value != null) {
@@ -116,7 +121,6 @@ void fetchKategori() async {
       if (response.statusCode == 200) {
         var createdBarangId = json.decode(response.body)['id'];
         createHarga(hargaJual, hargaBeli, createdBarangId);
-
         Get.back();
         Get.snackbar('Berhasil', 'Berhasil menambahkan data barang');
         Get.find<BarangController>().fetchBarang();
@@ -139,7 +143,7 @@ void fetchKategori() async {
         },
       );
       if (response.statusCode == 200) {
-        // fetchHarga();
+        Get.find<BarangController>().fetchBarang();
       } else {
         Get.snackbar('Gagal', 'Gagal menambahkan harga');
       }

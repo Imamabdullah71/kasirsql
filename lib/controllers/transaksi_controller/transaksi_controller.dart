@@ -18,7 +18,7 @@ class TransaksiController extends GetxController {
   var totalBarang = 0.obs;
   var bayar = 0.0.obs;
   var kembali = 0.0.obs;
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api_transaksi.php';
+  final String apiUrl = 'http://192.168.201.39/flutterapi/api_transaksi.php';
   final UserController userController = Get.find<UserController>();
 
   Future<List> getTransaksi() async {
@@ -152,9 +152,12 @@ class TransaksiController extends GetxController {
               Get.snackbar('Success', 'Transaksi berhasil dilakukan');
               var transaksiId = result['transaksi_id'];
               if (transaksiId != null) {
-                await Get.find<GenerateReceiptController>().generateReceipt(transaksi, transaksiId);
-                File receiptFile = File('${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
-                await Get.find<UploadStrukController>().uploadStruk(receiptFile, transaksiId);
+                await Get.find<GenerateReceiptController>()
+                    .generateReceipt(transaksi, transaksiId);
+                File receiptFile = File(
+                    '${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
+                await Get.find<UploadStrukController>()
+                    .uploadStruk(receiptFile, transaksiId);
               } else {
                 Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
               }

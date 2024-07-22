@@ -8,7 +8,7 @@ import 'package:kasirsql/models/transaksi_model.dart';
 
 class GenerateReceiptController extends GetxController {
   final UserController userController = Get.find<UserController>();
-  
+
   Future<void> generateReceipt(Transaksi transaksi, int transaksiId) async {
     final recorder = PictureRecorder();
     final canvas = Canvas(recorder);
@@ -16,14 +16,12 @@ class GenerateReceiptController extends GetxController {
 
     final user = userController.currentUser.value;
 
-    print('USER ID : ${userController.currentUser.value?.id}');
-
     try {
       const double width = 300;
       double yOffset = 10;
 
       // Calculate canvas height dynamically based on content
-      double height = 120 + transaksi.detailBarang.length * 60 + 100;
+      double height = 120 + transaksi.detailBarang.length * 80 + 100;
 
       canvas.drawRect(
           Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
@@ -31,7 +29,7 @@ class GenerateReceiptController extends GetxController {
       const textStyle = TextStyle(color: Colors.black, fontSize: 12);
       final textPainter = TextPainter(
         textDirection: TextDirection.ltr,
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
       );
 
       // Store and calculate the height of each text span
@@ -46,6 +44,7 @@ class GenerateReceiptController extends GetxController {
 
       // Nama Toko dan Alamat
       String tokoInfo = '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}';
+      textPainter.textAlign = TextAlign.center;
       textPainter.text = TextSpan(
         text: tokoInfo,
         style: textStyle,
@@ -56,6 +55,7 @@ class GenerateReceiptController extends GetxController {
 
       // Waktu
       String waktu = '${transaksi.createdAt}\n';
+      textPainter.textAlign = TextAlign.center;
       textPainter.text = TextSpan(
         text: waktu,
         style: textStyle,
@@ -75,11 +75,11 @@ class GenerateReceiptController extends GetxController {
       yOffset += calculateTextHeight(garis, textStyle, width);
 
       // Detail Barang
-      textPainter.textAlign = TextAlign.left;
-      const double itemDetailWidth = 200; // Set a fixed width for item details
+      const double itemDetailWidth = 150; // Set a fixed width for item details
 
       for (var barang in transaksi.detailBarang) {
         // Nama Barang
+        textPainter.textAlign = TextAlign.left; // Ensure left alignment
         final itemName = '${barang['nama']}';
         textPainter.text = TextSpan(
           text: itemName,
@@ -89,9 +89,9 @@ class GenerateReceiptController extends GetxController {
         textPainter.paint(canvas, Offset(10, yOffset));
         yOffset += calculateTextHeight(itemName, textStyle, width);
 
-        // Jumlah x HJB
-        final itemDetail = '${barang['jumlah']} x ${barang['hjb']}';
-        textPainter.textAlign = TextAlign.left;
+        // Jumlah x HJB dan Harga Total
+        final itemDetail = '${barang['jumlah']} x ${formatRupiahNoRP(barang['hjb'])}';
+        textPainter.textAlign = TextAlign.left; // Ensure left alignment
         textPainter.text = TextSpan(
           text: itemDetail,
           style: textStyle,
@@ -99,9 +99,8 @@ class GenerateReceiptController extends GetxController {
         textPainter.layout(minWidth: itemDetailWidth);
         textPainter.paint(canvas, Offset(10, yOffset));
 
-        // Harga Total
-        final itemTotal = '${barang['harga_total']}';
-        textPainter.textAlign = TextAlign.right;
+        final itemTotal = formatRupiahWithRP(barang['harga_total']);
+        textPainter.textAlign = TextAlign.right; // Ensure right alignment
         textPainter.text = TextSpan(
           text: itemTotal,
           style: textStyle,
@@ -109,11 +108,11 @@ class GenerateReceiptController extends GetxController {
         textPainter.layout(minWidth: width - itemDetailWidth - 20);
         textPainter.paint(canvas, Offset(width - itemDetailWidth - 10, yOffset));
         
-        yOffset += calculateTextHeight(itemDetail, textStyle, itemDetailWidth);
+        yOffset += calculateTextHeight(itemDetail, textStyle, itemDetailWidth) + 10; // Added extra space
       }
 
       // Garis pembatas
-      textPainter.textAlign = TextAlign.center;
+      textPainter.textAlign = TextAlign.center; // Ensure center alignment
       textPainter.text = TextSpan(
         text: garis,
         style: textStyle,
@@ -123,8 +122,8 @@ class GenerateReceiptController extends GetxController {
       yOffset += calculateTextHeight(garis, textStyle, width);
 
       // Subtotal, Bayar, Kembali
-      String pembayaran = 'Subtotal : ${transaksi.totalHarga}\nBayar : ${transaksi.bayar}\nKembali : ${transaksi.kembali}\n';
-      textPainter.textAlign = TextAlign.right;
+      String pembayaran = 'Subtotal : ${formatRupiahWithRP(transaksi.totalHarga)}\nBayar : ${formatRupiahWithRP(transaksi.bayar)}\nKembali : ${formatRupiahWithRP(transaksi.kembali)}\n';
+      textPainter.textAlign = TextAlign.right; // Ensure right alignment
       textPainter.text = TextSpan(
         text: pembayaran,
         style: textStyle,
@@ -135,7 +134,7 @@ class GenerateReceiptController extends GetxController {
 
       // Nomor Telepon dan Ucapan Terima Kasih
       String terimaKasih = '${user?.noTelepon ?? 'No Telepon'}\nTerima Kasih\n';
-      textPainter.textAlign = TextAlign.center;
+      textPainter.textAlign = TextAlign.center; // Ensure center alignment
       textPainter.text = TextSpan(
         text: terimaKasih,
         style: textStyle,
@@ -172,5 +171,15 @@ class GenerateReceiptController extends GetxController {
         onConfirm: () => Get.back(),
       );
     }
+  }
+
+  String formatRupiahNoRP(double amount) {
+    return amount
+        .toStringAsFixed(0)
+        .replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.');
+  }
+
+  String formatRupiahWithRP(double amount) {
+    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
   }
 }

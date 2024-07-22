@@ -33,14 +33,32 @@ class BarangPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final barang = barangController.barangList[index];
                   return ListTile(
+                    //   Container(
+                    //   height: 100,
+                    //   width: 100,
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(8),
+                    //     color: Colors.grey[300],
+                    //   ),
+                    //   child: ClipRRect(
+                    //     borderRadius: BorderRadius.circular(8),
+                    //     child: Image.file(
+                    //       File(tambahBarangController.selectedImagePath.value),
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //   ),
+                    // );
                     onTap: () =>
                         Get.toNamed("/page_detail_barang", arguments: barang),
                     leading: barang.gambar != null && barang.gambar!.isNotEmpty
-                        ? Image.network(
-                            'http://10.10.10.80/flutterapi/uploads/${barang.gambar}',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              'http://192.168.201.39/flutterapi/uploads/${barang.gambar}',
+                              width: 55,
+                              height: 55,
+                              fit: BoxFit.cover,
+                            ),
                           )
                         : const Icon(
                             Icons.image_not_supported,
@@ -68,7 +86,7 @@ class BarangPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  );  
+                  );
                 },
               );
             }),

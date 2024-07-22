@@ -15,7 +15,7 @@ import 'package:kasirsql/controllers/user_controller/user_controller.dart'; // I
 class AddSupplierController extends GetxController {
   var selectedImagePath = ''.obs;
   var croppedImage = Rx<Uint8List?>(null);
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api_supplier.php';
+  final String apiUrl = 'http://192.168.201.39/flutterapi/api_supplier.php';
   final ImagePicker _picker = ImagePicker();
   final UserController userController =
       Get.find<UserController>(); // Dapatkan UserController
