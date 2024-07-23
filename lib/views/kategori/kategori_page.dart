@@ -33,7 +33,7 @@ class CategoriesPage extends StatelessWidget {
             return ListTile(
               leading: kategori.gambar != null && kategori.gambar!.isNotEmpty
                   ? Image.network(
-                      'http://192.168.201.39/flutterapi/uploads/${kategori.gambar}',
+                      'http://10.0.171.198/flutterapi/uploads/${kategori.gambar}',
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,

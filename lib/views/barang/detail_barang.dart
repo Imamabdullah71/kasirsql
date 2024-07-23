@@ -40,7 +40,7 @@ class BarangDetailPage extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          'http://192.168.201.39/flutterapi/uploads/${barang.gambar}',
+                          'http://10.0.171.198/flutterapi/uploads/${barang.gambar}',
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,

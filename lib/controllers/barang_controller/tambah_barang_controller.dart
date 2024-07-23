@@ -18,7 +18,7 @@ class TambahBarangController extends GetxController {
   var hargaList = <Harga>[].obs;
   var selectedImagePath = ''.obs;
   var croppedImage = Rx<Uint8List?>(null);
-  final String apiUrl = 'http://192.168.201.39/flutterapi/api_barang.php';
+  final String apiUrl = 'http://10.0.171.198/flutterapi/api_barang.php';
   final ImagePicker _picker = ImagePicker();
   final UserController userController = Get.find<UserController>();
 

@@ -51,7 +51,7 @@ class UserController extends GetxController {
     isLoading.value = true;
 
     final response = await http.post(
-      Uri.parse('http://192.168.201.39/flutterapi/api_user.php'),
+      Uri.parse('http://10.0.171.198/flutterapi/api_user.php'),
       body: {
         'action': 'register',
         'name': nameController.text,
@@ -82,7 +82,7 @@ class UserController extends GetxController {
     isLoading.value = true;
 
     final response = await http.post(
-      Uri.parse('http://192.168.201.39/flutterapi/api_user.php'),
+      Uri.parse('http://10.0.171.198/flutterapi/api_user.php'),
       body: {
         'action': 'login',
         'email': emailController.text,

@@ -49,7 +49,7 @@ class ManageHomePage extends StatelessWidget {
                       ),
                       child: Center(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () => Get.toNamed("/page_barang"),
                           icon: const Icon(
                             BootstrapIcons.box_seam,
                             size: 50,

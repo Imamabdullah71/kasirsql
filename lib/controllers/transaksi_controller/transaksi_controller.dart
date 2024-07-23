@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/barang_model.dart';
+import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TransaksiController extends GetxController {
@@ -18,7 +19,7 @@ class TransaksiController extends GetxController {
   var totalBarang = 0.obs;
   var bayar = 0.0.obs;
   var kembali = 0.0.obs;
-  final String apiUrl = 'http://192.168.201.39/flutterapi/api_transaksi.php';
+  final String apiUrl = 'http://10.0.171.198/flutterapi/api_transaksi.php';
   final UserController userController = Get.find<UserController>();
 
   Future<List> getTransaksi() async {
@@ -129,63 +130,53 @@ class TransaksiController extends GetxController {
 
     print(jsonEncode(transaksi.toJson()));
 
-    Get.defaultDialog(
-      title: 'Data Transaksi',
-      content: SingleChildScrollView(
-        child: Text(jsonEncode(transaksi.toJson())),
-      ),
-      textConfirm: 'OK',
-      onConfirm: () async {
-        Get.back();
-
-        try {
-          var response = await http.post(
-            Uri.parse('$apiUrl?action=create_transaksi'),
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode(transaksi.toJson()),
-          );
-          print('Response status: ${response.statusCode}');
-          print('Response body: ${response.body}');
-          if (response.statusCode == 200) {
-            var result = json.decode(response.body);
-            if (result['status'] == 'success') {
-              Get.snackbar('Success', 'Transaksi berhasil dilakukan');
-              var transaksiId = result['transaksi_id'];
-              if (transaksiId != null) {
-                await Get.find<GenerateReceiptController>()
-                    .generateReceipt(transaksi, transaksiId);
-                File receiptFile = File(
-                    '${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
-                await Get.find<UploadStrukController>()
-                    .uploadStruk(receiptFile, transaksiId);
-              } else {
-                Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
-              }
-            } else {
-              Get.snackbar('Error', 'Transaksi gagal: ${result['message']}');
-            }
+    try {
+      var response = await http.post(
+        Uri.parse('$apiUrl?action=create_transaksi'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(transaksi.toJson()),
+      );
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+        if (result['status'] == 'success') {
+          Get.snackbar('Success', 'Transaksi berhasil dilakukan');
+          var transaksiId = result['transaksi_id'];
+          if (transaksiId != null) {
+            await Get.find<GenerateReceiptController>()
+                .generateReceipt(transaksi, transaksiId);
+            File receiptFile = File(
+                '${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
+            await Get.find<UploadStrukController>()
+                .uploadStruk(receiptFile, transaksiId);
+            Get.to(() => TransactionSuccessPage(receiptFile: receiptFile));
           } else {
-            Get.defaultDialog(
-              title: 'Gagal',
-              content: SingleChildScrollView(
-                child: Text(response.body),
-              ),
-              textConfirm: 'Okay',
-              onConfirm: () => Get.back(),
-            );
+            Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
           }
-        } catch (e) {
-          Get.defaultDialog(
-            title: 'Error',
-            content: SingleChildScrollView(
-              child: Text('$e'),
-            ),
-            textConfirm: 'Okay',
-            onConfirm: () => Get.back(),
-          );
+        } else {
+          Get.snackbar('Error', 'Transaksi gagal: ${result['message']}');
         }
-      },
-    );
+      } else {
+        Get.defaultDialog(
+          title: 'Gagal',
+          content: SingleChildScrollView(
+            child: Text(response.body),
+          ),
+          textConfirm: 'Okay',
+          onConfirm: () => Get.back(),
+        );
+      }
+    } catch (e) {
+      Get.defaultDialog(
+        title: 'Error',
+        content: SingleChildScrollView(
+          child: Text('$e'),
+        ),
+        textConfirm: 'Okay',
+        onConfirm: () => Get.back(),
+      );
+    }
   }
 
   String formatRupiah(double amount) {
