@@ -14,7 +14,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class KategoriController extends GetxController {
   var kategoriList = <Kategori>[].obs;
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api_kategori.php';
+  final String apiUrl = 'http://10.0.171.198/flutterapi/api_kategori.php';
   final UserController userController = Get.find<UserController>();
 
   var selectedImagePath = ''.obs;

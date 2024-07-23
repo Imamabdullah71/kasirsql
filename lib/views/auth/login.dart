@@ -29,12 +29,12 @@ class LoginPage extends StatelessWidget {
               obscureText: true,
             ),
             Obx(() => CheckboxListTile(
-              title: const Text("Remember Me"),
-              value: rememberMe.value,
-              onChanged: (newValue) {
-                rememberMe.value = newValue!;
-              },
-            )),
+                  title: const Text("Remember Me"),
+                  value: rememberMe.value,
+                  onChanged: (newValue) {
+                    rememberMe.value = newValue!;
+                  },
+                )),
             const SizedBox(height: 20),
             Obx(() {
               if (userController.isLoading.value) {
@@ -44,15 +44,23 @@ class LoginPage extends StatelessWidget {
                   onPressed: () async {
                     bool success = await userController.login();
                     if (success) {
-                      final BottomBarController bottomBarController = Get.find();
+                      final BottomBarController bottomBarController =
+                          Get.find();
                       bottomBarController.resetToHome(); // Reset to Home page
-                      Get.offNamed('/halaman_utama'); // Navigasi ke halaman utama setelah login berhasil
+                      Get.offAllNamed(
+                          '/halaman_utama'); // Navigasi ke halaman utama setelah login berhasil
                     }
                   },
                   child: const Text("Login"),
                 );
               }
             }),
+            ElevatedButton(
+              child: const Text("Register"),
+              onPressed: () {
+                Get.toNamed("/register");
+              },
+            ),
           ],
         ),
       ),

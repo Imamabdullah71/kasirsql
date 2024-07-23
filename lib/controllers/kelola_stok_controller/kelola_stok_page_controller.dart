@@ -7,7 +7,7 @@ import 'dart:convert';
 
 class KelolaStokPageController extends GetxController {
   var barangList = <Barang>[].obs;
-  final String apiUrl = 'http://10.10.10.80/flutterapi/api_barang.php';
+  final String apiUrl = 'http://10.0.171.198/flutterapi/api_barang.php';
   final UserController userController = Get.find<UserController>();
 
   @override
