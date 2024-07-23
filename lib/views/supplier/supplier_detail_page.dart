@@ -38,7 +38,7 @@ class SupplierDetailPage extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          'http://10.10.10.80/flutterapi/uploads/${supplier.gambar}',
+                          'http://192.168.201.39/flutterapi/uploads/${supplier.gambar}',
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,

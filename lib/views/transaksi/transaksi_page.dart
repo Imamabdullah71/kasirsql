@@ -7,7 +7,8 @@ import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.d
 class TransaksiPage extends StatelessWidget {
   TransaksiPage({super.key});
   final BarangController barangController = Get.find<BarangController>();
-  final TransaksiController transaksiController = Get.find<TransaksiController>();
+  final TransaksiController transaksiController =
+      Get.find<TransaksiController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +33,22 @@ class TransaksiPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final barang = barangController.barangList[index];
             return Obx(() {
-              var detailBarang = transaksiController.selectedBarangList.firstWhere(
+              var detailBarang =
+                  transaksiController.selectedBarangList.firstWhere(
                 (element) => element['id'] == barang.id,
                 orElse: () => {'jumlah': 0},
               );
 
               return ListTile(
                 leading: barang.gambar != null && barang.gambar!.isNotEmpty
-                    ? Image.network(
-                        'http://10.10.10.80/flutterapi/uploads/${barang.gambar}',
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          'http://192.168.201.39/flutterapi/uploads/${barang.gambar}',
+                          width: 55,
+                          height: 55,
+                          fit: BoxFit.cover,
+                        ),
                       )
                     : const Icon(
                         Icons.image_not_supported,
@@ -85,7 +90,7 @@ class TransaksiPage extends StatelessWidget {
                 BootstrapIcons.cart3,
                 color: Colors.white,
               ),
-              Obx(() { 
+              Obx(() {
                 return Text(
                   " (${transaksiController.totalBarang.value})",
                   style: const TextStyle(color: Colors.white, fontSize: 20),
