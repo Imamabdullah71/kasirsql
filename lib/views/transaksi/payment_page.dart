@@ -25,10 +25,12 @@ class PaymentPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              'Total Harga: ${transaksiController.totalHarga}',
-              style: const TextStyle(fontSize: 20),
-            ),
+            Obx(() {
+              return Text(
+                'Total Harga: ${transaksiController.totalHarga}',
+                style: const TextStyle(fontSize: 20),
+              );
+            }),
             const SizedBox(height: 16),
             TextFormField(
               controller: uangDibayarController,

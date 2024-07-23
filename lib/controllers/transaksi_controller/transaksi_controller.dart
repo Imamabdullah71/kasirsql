@@ -13,6 +13,7 @@ import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TransaksiController extends GetxController {
+  var isLoading = false.obs;
   var selectedBarangList = <Map<String, dynamic>>[].obs;
   var totalHarga = 0.0.obs;
   var totalHargaBeli = 0.0.obs;
@@ -131,6 +132,18 @@ class TransaksiController extends GetxController {
     print(jsonEncode(transaksi.toJson()));
 
     try {
+      isLoading.value = true; // Set loading to true
+      Get.defaultDialog(
+        title: 'Loading...',
+        content: const Column(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Proses transaksi sedang berlangsung'),
+          ],
+        ),
+        barrierDismissible: false,
+      );
       var response = await http.post(
         Uri.parse('$apiUrl?action=create_transaksi'),
         headers: {"Content-Type": "application/json"},
@@ -176,9 +189,11 @@ class TransaksiController extends GetxController {
         textConfirm: 'Okay',
         onConfirm: () => Get.back(),
       );
+    } finally {
+      isLoading.value = false; // Set loading to false
+      Get.back(); // Close loading dialog
     }
   }
-
   String formatRupiah(double amount) {
     return amount
         .toStringAsFixed(0)
