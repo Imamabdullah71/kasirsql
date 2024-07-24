@@ -152,14 +152,14 @@ class GenerateReceiptController extends GetxController {
       await file.writeAsBytes(buffer);
       print('Receipt saved: ${file.path}');
 
-      Get.defaultDialog(
-        title: 'Receipt',
-        content: SingleChildScrollView(
-          child: Image.memory(buffer),
-        ),
-        textConfirm: 'Okay',
-        onConfirm: () => Get.back(),
-      );
+      // Get.defaultDialog(
+      //   title: 'Receipt',
+      //   content: SingleChildScrollView(
+      //     child: Image.memory(buffer),
+      //   ),
+      //   textConfirm: 'Okay',
+      //   onConfirm: () => Get.back(),
+      // );
     } catch (e) {
       print('Error generating receipt: $e');
       Get.defaultDialog(

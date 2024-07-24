@@ -1,11 +1,9 @@
-// TransaksiController.dart
+import 'dart:convert';
 import 'dart:io';
-import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:kasirsql/controllers/transaksi_controller/upload_struk_controller.dart';
-import 'dart:convert';
+import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/barang_model.dart';
@@ -155,15 +153,32 @@ class TransaksiController extends GetxController {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
           Get.snackbar('Success', 'Transaksi berhasil dilakukan');
+          print('RESPON: ${response.body}');
+
           var transaksiId = result['transaksi_id'];
           if (transaksiId != null) {
             await Get.find<GenerateReceiptController>()
                 .generateReceipt(transaksi, transaksiId);
             File receiptFile = File(
                 '${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
-            await Get.find<UploadStrukController>()
-                .uploadStruk(receiptFile, transaksiId);
-            Get.to(() => TransactionSuccessPage(receiptFile: receiptFile));
+
+            var uri = Uri.parse('$apiUrl?action=upload_struk');
+            var request = http.MultipartRequest('POST', uri)
+              ..fields['transaksi_id'] = transaksiId.toString()
+              ..files.add(await http.MultipartFile.fromPath('struk', receiptFile.path));
+
+            var uploadResponse = await request.send();
+            if (uploadResponse.statusCode == 200) {
+              var responseData = await uploadResponse.stream.bytesToString();
+              var uploadResult = json.decode(responseData);
+              if (uploadResult['status'] == 'success') {
+                Get.to(() => TransactionSuccessPage(receiptFile: receiptFile));
+              } else {
+                Get.snackbar('Error', 'Gagal mengunggah struk: ${uploadResult['message']}');
+              }
+            } else {
+              Get.snackbar('Error', 'Gagal mengunggah struk');
+            }
           } else {
             Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
           }
@@ -194,6 +209,7 @@ class TransaksiController extends GetxController {
       Get.back(); // Close loading dialog
     }
   }
+
   String formatRupiah(double amount) {
     return amount
         .toStringAsFixed(0)
