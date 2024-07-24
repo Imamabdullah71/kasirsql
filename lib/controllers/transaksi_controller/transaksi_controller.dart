@@ -20,7 +20,7 @@ class TransaksiController extends GetxController {
   var totalBarang = 0.obs;
   var bayar = 0.0.obs;
   var kembali = 0.0.obs;
-  final String apiUrl = 'http://10.0.171.198/flutterapi/api_transaksi.php';
+  final String apiUrl = 'http://10.10.10.129/flutterapi/api_transaksi.php';
   final UserController userController = Get.find<UserController>();
 
   Future<List> getTransaksi() async {

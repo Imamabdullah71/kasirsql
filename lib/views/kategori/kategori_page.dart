@@ -32,11 +32,14 @@ class CategoriesPage extends StatelessWidget {
             final Kategori kategori = kategoriController.kategoriList[index];
             return ListTile(
               leading: kategori.gambar != null && kategori.gambar!.isNotEmpty
-                  ? Image.network(
-                      'http://10.0.171.198/flutterapi/uploads/${kategori.gambar}',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        'http://10.10.10.129/flutterapi/uploads/${kategori.gambar}',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
                     )
                   : const Icon(
                       Icons.image_not_supported,

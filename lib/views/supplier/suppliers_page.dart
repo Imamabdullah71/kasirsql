@@ -33,7 +33,7 @@ class SuppliersPage extends StatelessWidget {
             return ListTile(
               leading: supplier.gambar != null && supplier.gambar!.isNotEmpty
                   ? Image.network(
-                      'http://10.0.171.198/flutterapi/uploads/${supplier.gambar}',
+                      'http://192.168.201.39/flutterapi/uploads/${supplier.gambar}',
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,

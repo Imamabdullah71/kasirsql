@@ -258,48 +258,47 @@ class TambahBarang extends StatelessWidget {
                         icon: const Icon(BootstrapIcons.plus_lg))
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 30),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-            minimumSize: const Size(
-              double.infinity, // Lebar
-              48, // Tinggi
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          ),
-          onPressed: () {
-            if (_formKey.currentState!.validate() &&
-                selectedKategoriId.value != 0) {
-              tambahBarangController.createBarang(
-                namaBarangController.text,
-                int.parse(kodeBarangController.text),
-                int.parse(stokBarangController.text),
-                selectedKategoriId.value,
-                double.parse(hargaJualController.text),
-                double.parse(hargaBeliController.text),
-              );
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+                  minimumSize: const Size(
+                    double.infinity, // Lebar
+                    10, // Tinggi
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                ),
+                onPressed: () {
+                  if (_formKey.currentState!.validate() &&
+                      selectedKategoriId.value != 0) {
+                    tambahBarangController.createBarang(
+                      namaBarangController.text,
+                      int.parse(kodeBarangController.text),
+                      int.parse(stokBarangController.text),
+                      selectedKategoriId.value,
+                      double.parse(hargaJualController.text),
+                      double.parse(hargaBeliController.text),
+                    );
 
-              if (tambahBarangController.croppedImage.value != null) {
-                tambahBarangController
-                    .uploadImage(tambahBarangController.croppedImage.value!);
-              } else {
-                Get.snackbar('Error', 'Please select an image');
-              }
-            } else {
-              Get.snackbar(
-                  'Error', 'Please fill all fields and select a category');
-            }
-          },
-          child: const Text(
-            "Tambahkan",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+                    if (tambahBarangController.croppedImage.value != null) {
+                      tambahBarangController.uploadImage(
+                          tambahBarangController.croppedImage.value!);
+                    } else {
+                      Get.snackbar('Error', 'Please select an image');
+                    }
+                  } else {
+                    Get.snackbar('Error',
+                        'Please fill all fields and select a category');
+                  }
+                },
+                child: const Text(
+                  "Tambahkan",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ],
           ),
         ),
       ),

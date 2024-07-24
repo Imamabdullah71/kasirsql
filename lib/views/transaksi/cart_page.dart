@@ -39,6 +39,21 @@ class CartPage extends StatelessWidget {
                   final detailBarang =
                       transaksiController.selectedBarangList[index];
                   return ListTile(
+                    leading: detailBarang['gambar'] != null && detailBarang['gambar']!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          'http://10.10.10.129/flutterapi/uploads/${detailBarang['gambar']}',
+                          width: 55,
+                          height: 55,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                     title: Text(detailBarang['nama']),
                     subtitle: Text(
                         '${transaksiController.formatRupiah(detailBarang['harga'])} x ${detailBarang['jumlah']} = ${transaksiController.formatRupiah(detailBarang['jumlah_harga'])}'),
