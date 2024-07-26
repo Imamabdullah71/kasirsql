@@ -31,7 +31,7 @@ class ManageLaporan extends StatelessWidget {
           ListTile(
             leading: const Icon(BootstrapIcons.graph_up),
             title: const Text("Laporan Laba Rugi"),
-            onTap: () => Get.toNamed("/laporan_laba_rugi_page"),
+            onTap: () => Get.toNamed("/laporan_page"),
           ),
           ListTile(
             leading: const Icon(BootstrapIcons.file_earmark_bar_graph),

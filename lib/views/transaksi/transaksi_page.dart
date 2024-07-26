@@ -7,8 +7,7 @@ import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.d
 class TransaksiPage extends StatelessWidget {
   TransaksiPage({super.key});
   final BarangController barangController = Get.find<BarangController>();
-  final TransaksiController transaksiController =
-      Get.find<TransaksiController>();
+  final TransaksiController transaksiController = Get.find<TransaksiController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +32,9 @@ class TransaksiPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final barang = barangController.barangList[index];
             return Obx(() {
-              var detailBarang =
-                  transaksiController.selectedBarangList.firstWhere(
+              var detailBarang = transaksiController.selectedBarangList.firstWhere(
                 (element) => element['id'] == barang.id,
-                orElse: () => {'jumlah': 0},
+                orElse: () => {'jumlah_barang': 0},
               );
 
               return ListTile(
@@ -44,7 +42,7 @@ class TransaksiPage extends StatelessWidget {
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          'http://10.10.10.129/flutterapi/uploads/${barang.gambar}',
+                          'http://192.168.135.56/flutterapi/uploads/${barang.gambar}',
                           width: 55,
                           height: 55,
                           fit: BoxFit.cover,
@@ -58,7 +56,7 @@ class TransaksiPage extends StatelessWidget {
                 title: Text(barang.namaBarang),
                 subtitle: Text(barang.kodeBarang.toString()),
                 trailing: Text(
-                  "X${detailBarang['jumlah']}",
+                  "X${detailBarang['jumlah_barang']}",
                   style: const TextStyle(fontSize: 15),
                 ),
                 onTap: () {

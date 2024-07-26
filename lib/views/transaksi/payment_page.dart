@@ -27,7 +27,7 @@ class PaymentPage extends StatelessWidget {
           children: [
             Obx(() {
               return Text(
-                'Total Harga: ${transaksiController.totalHarga}',
+                'Total Harga: ${transaksiController.formatRupiah(transaksiController.totalHarga.value)}',
                 style: const TextStyle(fontSize: 20),
               );
             }),

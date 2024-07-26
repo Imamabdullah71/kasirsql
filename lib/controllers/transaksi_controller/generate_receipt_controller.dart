@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
+import 'package:kasirsql/models/detail_transaksi_model.dart';
 
 class GenerateReceiptController extends GetxController {
   final UserController userController = Get.find<UserController>();
 
-  Future<void> generateReceipt(Transaksi transaksi, int transaksiId) async {
+  Future<void> generateReceipt(Transaksi transaksi, List<DetailTransaksi> detailTransaksiList, int transaksiId) async {
     final recorder = PictureRecorder();
     final canvas = Canvas(recorder);
     final paint = Paint();
@@ -21,7 +22,7 @@ class GenerateReceiptController extends GetxController {
       double yOffset = 10;
 
       // Calculate canvas height dynamically based on content
-      double height = 120 + transaksi.detailBarang.length * 80 + 100;
+      double height = 120 + detailTransaksiList.length * 80 + 100;
 
       canvas.drawRect(
           Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
@@ -77,10 +78,10 @@ class GenerateReceiptController extends GetxController {
       // Detail Barang
       const double itemDetailWidth = 150; // Set a fixed width for item details
 
-      for (var barang in transaksi.detailBarang) {
+      for (var detail in detailTransaksiList) {
         // Nama Barang
         textPainter.textAlign = TextAlign.left; // Ensure left alignment
-        final itemName = '${barang['nama']}';
+        final itemName = '${detail.namaBarang}';
         textPainter.text = TextSpan(
           text: itemName,
           style: textStyle,
@@ -89,8 +90,8 @@ class GenerateReceiptController extends GetxController {
         textPainter.paint(canvas, Offset(10, yOffset));
         yOffset += calculateTextHeight(itemName, textStyle, width);
 
-        // Jumlah x HJB dan Harga Total
-        final itemDetail = '${barang['jumlah']} x ${formatRupiahNoRP(barang['hjb'])}';
+        // Jumlah x Harga Barang dan Harga Total
+        final itemDetail = '${detail.jumlahBarang} x ${formatRupiahNoRP(detail.hargaBarang)}';
         textPainter.textAlign = TextAlign.left; // Ensure left alignment
         textPainter.text = TextSpan(
           text: itemDetail,
@@ -99,7 +100,7 @@ class GenerateReceiptController extends GetxController {
         textPainter.layout(minWidth: itemDetailWidth);
         textPainter.paint(canvas, Offset(10, yOffset));
 
-        final itemTotal = formatRupiahWithRP(barang['harga_total']);
+        final itemTotal = formatRupiahWithRP(detail.jumlahHarga);
         textPainter.textAlign = TextAlign.right; // Ensure right alignment
         textPainter.text = TextSpan(
           text: itemTotal,
@@ -152,14 +153,6 @@ class GenerateReceiptController extends GetxController {
       await file.writeAsBytes(buffer);
       print('Receipt saved: ${file.path}');
 
-      // Get.defaultDialog(
-      //   title: 'Receipt',
-      //   content: SingleChildScrollView(
-      //     child: Image.memory(buffer),
-      //   ),
-      //   textConfirm: 'Okay',
-      //   onConfirm: () => Get.back(),
-      // );
     } catch (e) {
       print('Error generating receipt: $e');
       Get.defaultDialog(

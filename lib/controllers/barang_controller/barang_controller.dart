@@ -7,7 +7,7 @@ import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 class BarangController extends GetxController {
   var barangList = <Barang>[].obs;
   var selectedBarang = Rxn<Barang>();
-  final String apiUrl = 'http://10.10.10.129/flutterapi/api_barang.php';
+  final String apiUrl = 'http://192.168.135.56/flutterapi/api_barang.php';
   final UserController userController = Get.find<UserController>();
 
   @override

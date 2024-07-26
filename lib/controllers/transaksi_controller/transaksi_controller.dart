@@ -7,6 +7,7 @@ import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_contr
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/barang_model.dart';
+import 'package:kasirsql/models/detail_transaksi_model.dart';
 import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -18,7 +19,7 @@ class TransaksiController extends GetxController {
   var totalBarang = 0.obs;
   var bayar = 0.0.obs;
   var kembali = 0.0.obs;
-  final String apiUrl = 'http://10.10.10.129/flutterapi/api_transaksi.php';
+  final String apiUrl = 'http://192.168.135.56/flutterapi/api_transaksi.php';
   final UserController userController = Get.find<UserController>();
 
   Future<List> getTransaksi() async {
@@ -41,9 +42,9 @@ class TransaksiController extends GetxController {
     if (existingBarangIndex == -1) {
       selectedBarangList.add({
         'id': barang.id,
-        'nama': barang.namaBarang,
-        'harga': barang.hargaJual,
-        'jumlah': 1,
+        'nama_barang': barang.namaBarang,
+        'harga_barang': barang.hargaJual,
+        'jumlah_barang': 1,
         'jumlah_harga': barang.hargaJual,
         'kode_barang': barang.kodeBarang,
         'stok_barang': barang.stokBarang,
@@ -53,9 +54,9 @@ class TransaksiController extends GetxController {
       });
     } else {
       var existingBarang = selectedBarangList[existingBarangIndex];
-      existingBarang['jumlah'] += 1;
+      existingBarang['jumlah_barang'] += 1;
       existingBarang['jumlah_harga'] =
-          existingBarang['jumlah'] * existingBarang['harga'];
+          existingBarang['jumlah_barang'] * existingBarang['harga_barang'];
       selectedBarangList[existingBarangIndex] = existingBarang;
     }
 
@@ -80,13 +81,17 @@ class TransaksiController extends GetxController {
   void updateBarangQuantity(Barang barang, int quantity) {
     var detailBarang =
         selectedBarangList.firstWhere((element) => element['id'] == barang.id);
-    totalHarga.value -= detailBarang['harga'] * detailBarang['jumlah'];
-    totalHargaBeli.value -= detailBarang['harga_beli'] * detailBarang['jumlah'];
-    detailBarang['jumlah'] = quantity;
+    totalHarga.value -=
+        detailBarang['harga_barang'] * detailBarang['jumlah_barang'];
+    totalHargaBeli.value -=
+        detailBarang['harga_beli'] * detailBarang['jumlah_barang'];
+    detailBarang['jumlah_barang'] = quantity;
     detailBarang['jumlah_harga'] =
-        detailBarang['harga'] * detailBarang['jumlah'];
-    totalHarga.value += detailBarang['harga'] * detailBarang['jumlah'];
-    totalHargaBeli.value += detailBarang['harga_beli'] * detailBarang['jumlah'];
+        detailBarang['harga_barang'] * detailBarang['jumlah_barang'];
+    totalHarga.value +=
+        detailBarang['harga_barang'] * detailBarang['jumlah_barang'];
+    totalHargaBeli.value +=
+        detailBarang['harga_beli'] * detailBarang['jumlah_barang'];
     _updateTotalBarang();
     selectedBarangList.refresh();
     print('Total Barang: ${totalBarang.value}');
@@ -94,7 +99,7 @@ class TransaksiController extends GetxController {
 
   void _updateTotalBarang() {
     totalBarang.value = selectedBarangList.fold<int>(
-        0, (sum, item) => sum + item['jumlah'] as int);
+        0, (sum, item) => sum + item['jumlah_barang'] as int);
   }
 
   Future<void> createTransaksi() async {
@@ -106,17 +111,7 @@ class TransaksiController extends GetxController {
       return;
     }
 
-    var simplifiedDetailBarang = selectedBarangList.map((barang) {
-      return {
-        'nama': barang['nama'],
-        'jumlah': barang['jumlah'],
-        'hjb': barang['harga'],
-        'harga_total': barang['jumlah_harga'],
-      };
-    }).toList();
-
     var transaksi = Transaksi(
-      detailBarang: simplifiedDetailBarang,
       totalBarang: totalBarang.value,
       totalHarga: totalHarga.value,
       totalHargaBeli: totalHargaBeli.value,
@@ -157,8 +152,24 @@ class TransaksiController extends GetxController {
 
           var transaksiId = result['transaksi_id'];
           if (transaksiId != null) {
+            await _saveDetailTransaksi(transaksiId);
+
+            // Fetch the saved detail transaksi
+            List<DetailTransaksi> detailTransaksiList = selectedBarangList.map((barang) {
+              return DetailTransaksi(
+                transaksiId: transaksiId,
+                namaBarang: barang['nama_barang'],
+                jumlahBarang: barang['jumlah_barang'],
+                hargaBarang: barang['harga_barang'],
+                jumlahHarga: barang['jumlah_harga'],
+                createdAt: now,
+                updatedAt: now,
+              );
+            }).toList();
+
             await Get.find<GenerateReceiptController>()
-                .generateReceipt(transaksi, transaksiId);
+                .generateReceipt(transaksi, detailTransaksiList, transaksiId);
+
             File receiptFile = File(
                 '${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
 
@@ -210,9 +221,45 @@ class TransaksiController extends GetxController {
     }
   }
 
+  Future<void> _saveDetailTransaksi(int transaksiId) async {
+    for (var barang in selectedBarangList) {
+      var detailTransaksi = DetailTransaksi(
+        transaksiId: transaksiId,
+        namaBarang: barang['nama_barang'],
+        jumlahBarang: barang['jumlah_barang'],
+        hargaBarang: barang['harga_barang'],
+        jumlahHarga: barang['jumlah_harga'],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      try {
+        var response = await http.post(
+          Uri.parse('$apiUrl?action=create_detail_transaksi'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(detailTransaksi.toJson()),
+        );
+
+        if (response.statusCode != 200) {
+          throw Exception('Failed to save detail transaksi');
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Gagal menyimpan detail transaksi: $e');
+      }
+    }
+  }
+
   String formatRupiah(double amount) {
     return amount
         .toStringAsFixed(0)
         .replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.');
+  }
+
+  void resetCart() {
+    selectedBarangList.clear();
+    totalHarga.value = 0.0;
+    totalBarang.value = 0;
+    bayar.value = 0.0;
+    kembali.value = 0.0;
   }
 }
