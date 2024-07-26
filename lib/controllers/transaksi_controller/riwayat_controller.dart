@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RiwayatController extends GetxController {
-  final String apiUrl = 'http://192.168.135.56/flutterapi/api_transaksi.php';
+  final String apiUrl = 'http://192.168.148.238/flutterapi/api_transaksi.php';
 
   Future<List> getTransaksi() async {
     final response = await http.post(

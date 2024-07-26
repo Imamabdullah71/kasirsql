@@ -42,7 +42,7 @@ class TransaksiPage extends StatelessWidget {
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          'http://192.168.135.56/flutterapi/uploads/${barang.gambar}',
+                          'http://192.168.148.238/flutterapi/uploads/${barang.gambar}',
                           width: 55,
                           height: 55,
                           fit: BoxFit.cover,
