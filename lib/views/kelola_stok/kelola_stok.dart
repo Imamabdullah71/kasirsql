@@ -36,7 +36,7 @@ class KelolaStokPage extends StatelessWidget {
                   return ListTile(
                     leading: barang.gambar != null && barang.gambar!.isNotEmpty
                         ? Image.network(
-                            'http://192.168.148.238/flutterapi/uploads/${barang.gambar}',
+                            'http://10.10.10.129/flutterapi/uploads/${barang.gambar}',
                             width: 50,
                             height: 50,
                             fit: BoxFit.cover,

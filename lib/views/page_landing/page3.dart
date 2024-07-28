@@ -32,10 +32,10 @@ PageViewModel viewThree() {
                         // color: Colors.amber,
                         height: 25,
                         width: 25,
-                        child: Image.asset(
-                          'assets/images/logo/logoTimKasir.png',
-                          fit: BoxFit.cover,
-                        ),
+                        // child: Image.asset(
+                        //   'assets/images/logo/logoTimKasir.png',
+                        //   fit: BoxFit.cover,
+                        // ),
                       ),
                       const SizedBox(width: 5),
                       Text(
@@ -53,10 +53,10 @@ PageViewModel viewThree() {
                   SizedBox(
                     height: 450,
                     width: double.infinity,
-                    child: Image.asset(
-                      'assets/images/kasir4.png',
-                      fit: BoxFit.cover,
-                    ),
+                    // child: Image.asset(
+                    //   'assets/images/kasir4.png',
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                 ],
               ),

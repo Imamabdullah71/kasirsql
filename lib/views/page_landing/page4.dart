@@ -31,10 +31,10 @@ PageViewModel viewFour() {
                 SizedBox(
                   height: 25,
                   width: 25,
-                  child: Image.asset(
-                    'assets/images/logo/logoTimKasir.png',
-                    fit: BoxFit.cover,
-                  ),
+                  // child: Image.asset(
+                  //   'assets/images/logo/logoTimKasir.png',
+                  //   fit: BoxFit.cover,
+                  // ),
                 ),
                 const SizedBox(width: 5),
                 Text(
@@ -52,10 +52,10 @@ PageViewModel viewFour() {
             SizedBox(
               height: 450,
               width: double.infinity,
-              child: Image.asset(
-                'assets/images/kasir5.png',
-                fit: BoxFit.cover,
-              ),
+              // child: Image.asset(
+              //   'assets/images/kasir5.png',
+              //   fit: BoxFit.cover,
+              // ),
             ),
           ],
         ),

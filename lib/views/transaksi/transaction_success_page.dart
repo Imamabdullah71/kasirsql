@@ -47,7 +47,10 @@ class TransactionSuccessPage extends StatelessWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Get.offAllNamed("/transaksi_page");
+                  Get.back();
+                  Get.back();
+                  Get.back();
+                  Get.back();
                 },
                 child: const Text('Transaksi Kembali'),
               ),

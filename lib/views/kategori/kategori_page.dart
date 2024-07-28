@@ -35,7 +35,7 @@ class CategoriesPage extends StatelessWidget {
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
-                        'http://192.168.148.238/flutterapi/uploads/${kategori.gambar}',
+                        'http://10.10.10.129/flutterapi/uploads/${kategori.gambar}',
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,

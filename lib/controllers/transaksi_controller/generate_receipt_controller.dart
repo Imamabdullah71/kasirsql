@@ -24,27 +24,54 @@ class GenerateReceiptController extends GetxController {
       // Calculate canvas height dynamically based on content
       double height = 120 + detailTransaksiList.length * 80 + 100;
 
-      canvas.drawRect(
-          Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
-
+      // Nama Toko dan Alamat
       const textStyle = TextStyle(color: Colors.black, fontSize: 12);
+      String tokoInfo = '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}';
+      double tokoInfoHeight = calculateTextHeight(tokoInfo, textStyle, width);
+
+      // Waktu
+      String waktu = '${transaksi.createdAt}\n';
+      double waktuHeight = calculateTextHeight(waktu, textStyle, width);
+
+      // Garis pembatas
+      String garis = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
+      double garisHeight = calculateTextHeight(garis, textStyle, width);
+
+      // Detail Barang
+      double detailHeight = 0;
+      for (var detail in detailTransaksiList) {
+        // Nama Barang
+        final itemName = detail.namaBarang;
+        detailHeight += calculateTextHeight(itemName, textStyle, width);
+
+        // Jumlah x Harga Barang dan Harga Total
+        final itemDetail = '${detail.jumlahBarang} x ${formatRupiahNoRP(detail.hargaBarang)}';
+        detailHeight += calculateTextHeight(itemDetail, textStyle, width);
+
+        // Add extra space
+        detailHeight += 10;
+      }
+
+      // Subtotal, Bayar, Kembali
+      String pembayaran = 'Subtotal : ${formatRupiahWithRP(transaksi.totalHarga)}\nBayar : ${formatRupiahWithRP(transaksi.bayar)}\nKembali : ${formatRupiahWithRP(transaksi.kembali)}\n';
+      double pembayaranHeight = calculateTextHeight(pembayaran, textStyle, width);
+
+      // Nomor Telepon dan Ucapan Terima Kasih
+      String terimaKasih = '${user?.noTelepon ?? 'No Telepon'}\nTerima Kasih\n';
+      double terimaKasihHeight = calculateTextHeight(terimaKasih, textStyle, width);
+
+      // Calculate total height
+      height = tokoInfoHeight + waktuHeight + garisHeight + detailHeight + garisHeight + pembayaranHeight + terimaKasihHeight + 50;
+
+      // Draw canvas background
+      canvas.drawRect(Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
+
       final textPainter = TextPainter(
         textDirection: TextDirection.ltr,
         textAlign: TextAlign.left,
       );
 
-      // Store and calculate the height of each text span
-      double calculateTextHeight(String text, TextStyle style, double width) {
-        final TextPainter tp = TextPainter(
-          text: TextSpan(text: text, style: style),
-          textDirection: TextDirection.ltr,
-        );
-        tp.layout(minWidth: width);
-        return tp.height;
-      }
-
       // Nama Toko dan Alamat
-      String tokoInfo = '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}';
       textPainter.textAlign = TextAlign.center;
       textPainter.text = TextSpan(
         text: tokoInfo,
@@ -52,10 +79,9 @@ class GenerateReceiptController extends GetxController {
       );
       textPainter.layout(minWidth: width);
       textPainter.paint(canvas, Offset(0, yOffset));
-      yOffset += calculateTextHeight(tokoInfo, textStyle, width);
+      yOffset += tokoInfoHeight;
 
       // Waktu
-      String waktu = '${transaksi.createdAt}\n';
       textPainter.textAlign = TextAlign.center;
       textPainter.text = TextSpan(
         text: waktu,
@@ -63,17 +89,16 @@ class GenerateReceiptController extends GetxController {
       );
       textPainter.layout(minWidth: width);
       textPainter.paint(canvas, Offset(0, yOffset));
-      yOffset += calculateTextHeight(waktu, textStyle, width);
+      yOffset += waktuHeight;
 
       // Garis pembatas
-      String garis = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
       textPainter.text = TextSpan(
         text: garis,
         style: textStyle,
       );
       textPainter.layout(minWidth: width);
       textPainter.paint(canvas, Offset(0, yOffset));
-      yOffset += calculateTextHeight(garis, textStyle, width);
+      yOffset += garisHeight;
 
       // Detail Barang
       const double itemDetailWidth = 150; // Set a fixed width for item details
@@ -81,7 +106,7 @@ class GenerateReceiptController extends GetxController {
       for (var detail in detailTransaksiList) {
         // Nama Barang
         textPainter.textAlign = TextAlign.left; // Ensure left alignment
-        final itemName = '${detail.namaBarang}';
+        final itemName = detail.namaBarang;
         textPainter.text = TextSpan(
           text: itemName,
           style: textStyle,
@@ -123,7 +148,6 @@ class GenerateReceiptController extends GetxController {
       yOffset += calculateTextHeight(garis, textStyle, width);
 
       // Subtotal, Bayar, Kembali
-      String pembayaran = 'Subtotal : ${formatRupiahWithRP(transaksi.totalHarga)}\nBayar : ${formatRupiahWithRP(transaksi.bayar)}\nKembali : ${formatRupiahWithRP(transaksi.kembali)}\n';
       textPainter.textAlign = TextAlign.right; // Ensure right alignment
       textPainter.text = TextSpan(
         text: pembayaran,
@@ -131,10 +155,9 @@ class GenerateReceiptController extends GetxController {
       );
       textPainter.layout(minWidth: width - 20);
       textPainter.paint(canvas, Offset(10, yOffset));
-      yOffset += calculateTextHeight(pembayaran, textStyle, width - 20);
+      yOffset += pembayaranHeight;
 
       // Nomor Telepon dan Ucapan Terima Kasih
-      String terimaKasih = '${user?.noTelepon ?? 'No Telepon'}\nTerima Kasih\n';
       textPainter.textAlign = TextAlign.center; // Ensure center alignment
       textPainter.text = TextSpan(
         text: terimaKasih,
@@ -164,6 +187,15 @@ class GenerateReceiptController extends GetxController {
         onConfirm: () => Get.back(),
       );
     }
+  }
+
+  double calculateTextHeight(String text, TextStyle style, double width) {
+    final TextPainter tp = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    );
+    tp.layout(minWidth: width);
+    return tp.height;
   }
 
   String formatRupiahNoRP(double amount) {

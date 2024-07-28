@@ -12,7 +12,7 @@ class LaporanController extends GetxController {
   Future<void> getLaporan({required String startDate, required String endDate}) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.148.238/flutterapi/api_laporan.php?action=get_laporan'),
+        Uri.parse('http://10.10.10.129/flutterapi/api_laporan.php?action=get_laporan'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"start_date": startDate, "end_date": endDate}),
       );
@@ -36,7 +36,7 @@ class LaporanController extends GetxController {
   Future<void> fetchYears() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.148.238/flutterapi/api_laporan.php?action=get_years'),
+        Uri.parse('http://10.10.10.129/flutterapi/api_laporan.php?action=get_years'),
       );
 
       if (response.statusCode == 200) {
@@ -54,7 +54,7 @@ class LaporanController extends GetxController {
   Future<void> fetchMonths(int year) async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.148.238/flutterapi/api_laporan.php?action=get_months&year=$year'),
+        Uri.parse('http://10.10.10.129/flutterapi/api_laporan.php?action=get_months&year=$year'),
       );
 
       if (response.statusCode == 200) {
