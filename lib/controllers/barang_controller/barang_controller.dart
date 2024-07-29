@@ -19,6 +19,7 @@ class BarangController extends GetxController {
   }
 
   void fetchBarang() async {
+    isLoading.value = true;
     try {
       final response = await http.get(Uri.parse(
           '$apiUrl?action=read_barang&user_id=${userController.currentUser.value?.id}'));
@@ -31,6 +32,8 @@ class BarangController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to parse data');
+    } finally {
+      isLoading.value = false;
     }
   }
 

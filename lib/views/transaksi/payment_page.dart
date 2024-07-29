@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/barang_controller/rupiah_input_formatter.dart';
+import 'package:kasirsql/controllers/switch_controller/switch_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
 
 class PaymentPage extends StatelessWidget {
@@ -9,6 +10,8 @@ class PaymentPage extends StatelessWidget {
   final TransaksiController transaksiController =
       Get.find<TransaksiController>();
   final TextEditingController uangDibayarController = TextEditingController();
+  final TextEditingController daftarController = TextEditingController();
+  final SwitchController switchController = Get.find<SwitchController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +27,9 @@ class PaymentPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 114, 94, 225),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,40 +86,108 @@ class PaymentPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            Obx(
+              () => Row(
+                children: [
+                  Switch(
+                    value: switchController.isSwitched.value,
+                    onChanged: switchController.toggleSwitch,
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 20,
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () {
-                  transaksiController.bayar.value = double.parse(
-                      uangDibayarController.text.replaceAll('.', ''));
-                  transaksiController.kembali.value =
-                      transaksiController.bayar.value -
-                          transaksiController.totalHarga.value;
-                  transaksiController.createTransaksi();
-                },
-                child: const Text(
-                  'Bayar',
-                  style: TextStyle(color: Colors.white),
-                ),
+                  const SizedBox(width: 5),
+                  const Text("Hutang"),
+                ],
               ),
+            ),
+            const SizedBox(height: 20),
+            Obx(
+              () {
+                if (switchController.isSwitched.value) {
+                  return TextFormField(
+                    controller: daftarController,
+                    decoration: InputDecoration(
+                      labelText: 'Nama penghutang',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 114, 94, 225),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            Obx(
+              () {
+                return Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 20,
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      if (switchController.isSwitched.value) {
+                        masukkanKeDaftar();
+                      } else {
+                        bayar();
+                      }
+                    },
+                    child: Text(
+                      switchController.isSwitched.value
+                          ? 'Masukkan ke daftar'
+                          : 'Bayar',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void bayar() {
+    transaksiController.bayar.value =
+        double.parse(uangDibayarController.text.replaceAll('.', ''));
+    transaksiController.kembali.value =
+        transaksiController.bayar.value - transaksiController.totalHarga.value;
+    transaksiController.createTransaksi();
+  }
+
+  void masukkanKeDaftar() {
+    // Logika untuk 'Masukkan ke daftar'
+    print('Masukkan ke daftar: ${daftarController.text}');
+    // Tambahkan logika lain jika diperlukan
   }
 }

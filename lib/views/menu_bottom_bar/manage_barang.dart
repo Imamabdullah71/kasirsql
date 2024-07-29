@@ -52,6 +52,11 @@ class ManageBarang extends StatelessWidget {
             title: const Text("Supplier"),
             onTap: () => Get.toNamed("/page_supplier"),
           ),
+          ListTile(
+            leading: const Icon(BootstrapIcons.bug_fill),
+            title: const Text("TESTING"),
+            onTap: () => Get.toNamed("/testing_page"),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

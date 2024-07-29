@@ -9,6 +9,7 @@ import 'package:kasirsql/controllers/laporan_controller/laporan_controller.dart'
 import 'package:kasirsql/controllers/profile_controller/profile_controller.dart';
 import 'package:kasirsql/controllers/supplier_controller/add_supplier_controller.dart';
 import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
+import 'package:kasirsql/controllers/switch_controller/switch_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/riwayat_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
@@ -22,6 +23,7 @@ class DataBindings extends Bindings {
     Get.lazyPut<UserController>(() => UserController());
     Get.lazyPut<BottomBarController>(() => BottomBarController());
     Get.lazyPut<ProfileController>(() => ProfileController());
+    Get.lazyPut<SwitchController>(() => SwitchController());
     // Barang
     Get.lazyPut<BarangController>(() => BarangController());
     Get.lazyPut<TambahBarangController>(() => TambahBarangController());

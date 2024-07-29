@@ -10,6 +10,7 @@ import 'package:kasirsql/views/barang/barang.dart';
 import 'package:kasirsql/views/barang/detail_barang.dart';
 import 'package:kasirsql/views/barang/edit_barang.dart';
 import 'package:kasirsql/views/barang/tambah_barang.dart';
+import 'package:kasirsql/views/barang/testting_page.dart';
 import 'package:kasirsql/views/kategori/kategori_page.dart';
 import 'package:kasirsql/views/kelola_stok/kelola_stok.dart';
 import 'package:kasirsql/views/laporan/laporan_page.dart';
@@ -64,6 +65,11 @@ class MyApp extends StatelessWidget {
                 binding: DataBindings(),
               ),
               GetPage(name: "/register", page: () => RegisterPage()),
+              GetPage(
+                  name: "/testing_page",
+                  page: () => const TesttingPage(),
+                  binding: DataBindings(),
+                  middlewares: [AuthMiddleware()]),
               GetPage(
                   name: "/halaman_utama",
                   page: () => BottomBar(),

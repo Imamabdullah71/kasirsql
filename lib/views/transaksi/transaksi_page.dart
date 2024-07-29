@@ -7,7 +7,8 @@ import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.d
 class TransaksiPage extends StatelessWidget {
   TransaksiPage({super.key});
   final BarangController barangController = Get.find<BarangController>();
-  final TransaksiController transaksiController = Get.find<TransaksiController>();
+  final TransaksiController transaksiController =
+      Get.find<TransaksiController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,8 @@ class TransaksiPage extends StatelessWidget {
           itemBuilder: (context, index) {
             final barang = barangController.barangList[index];
             return Obx(() {
-              var detailBarang = transaksiController.selectedBarangList.firstWhere(
+              var detailBarang =
+                  transaksiController.selectedBarangList.firstWhere(
                 (element) => element['id'] == barang.id,
                 orElse: () => {'jumlah_barang': 0},
               );
@@ -56,7 +58,7 @@ class TransaksiPage extends StatelessWidget {
                 title: Text(barang.namaBarang),
                 subtitle: Text(barang.kodeBarang.toString()),
                 trailing: Text(
-                  "X${detailBarang['jumlah_barang']}",
+                  "X${detailBarang['jumlah_barang'] ?? 0}",
                   style: const TextStyle(fontSize: 15),
                 ),
                 onTap: () {

@@ -22,48 +22,87 @@ class TransaksiController extends GetxController {
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_transaksi.php';
   final UserController userController = Get.find<UserController>();
 
-  Future<List> getTransaksi() async {
-    final response = await http.post(
-      Uri.parse('$apiUrl?action=get_transaksi'),
-    );
-
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      return data;
-    } else {
-      throw Exception('Failed to load transaksi');
-    }
-  }
-
   void addBarangToCart(Barang barang) {
     var existingBarangIndex =
         selectedBarangList.indexWhere((element) => element['id'] == barang.id);
 
     if (existingBarangIndex == -1) {
-      selectedBarangList.add({
-        'id': barang.id,
-        'nama_barang': barang.namaBarang,
-        'harga_barang': barang.hargaJual,
-        'jumlah_barang': 1,
-        'jumlah_harga': barang.hargaJual,
-        'kode_barang': barang.kodeBarang,
-        'stok_barang': barang.stokBarang,
-        'kategori_id': barang.kategoriId,
-        'nama_kategori': barang.namaKategori,
-        'harga_beli': barang.hargaBeli,
-      });
+      if (barang.stokBarang > 0) {
+        selectedBarangList.add({
+          'id': barang.id,
+          'gambar': barang.gambar,
+          'nama_barang': barang.namaBarang,
+          'harga_barang': barang.hargaJual,
+          'jumlah_barang': 1,
+          'jumlah_harga': barang.hargaJual,
+          'kode_barang': barang.kodeBarang,
+          'stok_barang': barang.stokBarang,
+          'kategori_id': barang.kategoriId,
+          'nama_kategori': barang.namaKategori,
+          'harga_beli': barang.hargaBeli,
+        });
+        totalHarga.value += barang.hargaJual;
+        totalHargaBeli.value += barang.hargaBeli;
+        _updateTotalBarang();
+        selectedBarangList.refresh();
+      } else {
+        Get.snackbar(
+          'Stok Tidak Cukup',
+          'Tidak bisa melebihi stok barang.',
+          backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+          colorText: Colors.black,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.black),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+      }
     } else {
       var existingBarang = selectedBarangList[existingBarangIndex];
-      existingBarang['jumlah_barang'] += 1;
-      existingBarang['jumlah_harga'] =
-          existingBarang['jumlah_barang'] * existingBarang['harga_barang'];
-      selectedBarangList[existingBarangIndex] = existingBarang;
+      if (existingBarang['jumlah_barang'] < barang.stokBarang) {
+        existingBarang['jumlah_barang'] += 1;
+        existingBarang['jumlah_harga'] =
+            existingBarang['jumlah_barang'] * existingBarang['harga_barang'];
+        selectedBarangList[existingBarangIndex] = existingBarang;
+
+        totalHarga.value += barang.hargaJual;
+        totalHargaBeli.value += barang.hargaBeli;
+        _updateTotalBarang();
+        selectedBarangList.refresh();
+      } else {
+        Get.snackbar(
+          'Stok Tidak Cukup',
+          'Tidak bisa melebihi stok barang.',
+          backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+          colorText: Colors.black,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.black),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+      }
     }
 
-    totalHarga.value += barang.hargaJual;
-    totalHargaBeli.value += barang.hargaBeli;
-    _updateTotalBarang();
-    selectedBarangList.refresh();
     print('Total Barang: ${totalBarang.value}');
   }
 
@@ -81,6 +120,31 @@ class TransaksiController extends GetxController {
   void updateBarangQuantity(Barang barang, int quantity) {
     var detailBarang =
         selectedBarangList.firstWhere((element) => element['id'] == barang.id);
+
+    if (quantity > barang.stokBarang) {
+      Get.snackbar(
+        'Stok Tidak Cukup',
+        'Tidak bisa melebihi stok barang.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.black),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+      return;
+    }
+
     totalHarga.value -=
         detailBarang['harga_barang'] * detailBarang['jumlah_barang'];
     totalHargaBeli.value -=
@@ -102,7 +166,7 @@ class TransaksiController extends GetxController {
         0, (sum, item) => sum + item['jumlah_barang'] as int);
   }
 
-  Future<void> createTransaksi() async {
+    Future<void> createTransaksi() async {
     var now = DateTime.now();
     var userId = userController.currentUser.value?.id;
 
@@ -152,10 +216,12 @@ class TransaksiController extends GetxController {
 
           var transaksiId = result['transaksi_id'];
           if (transaksiId != null) {
+            // Mengirim detail transaksi ke server
             await _saveDetailTransaksi(transaksiId);
 
             // Fetch the saved detail transaksi
-            List<DetailTransaksi> detailTransaksiList = selectedBarangList.map((barang) {
+            List<DetailTransaksi> detailTransaksiList =
+                selectedBarangList.map((barang) {
               return DetailTransaksi(
                 transaksiId: transaksiId,
                 namaBarang: barang['nama_barang'],
@@ -176,7 +242,8 @@ class TransaksiController extends GetxController {
             var uri = Uri.parse('$apiUrl?action=upload_struk');
             var request = http.MultipartRequest('POST', uri)
               ..fields['transaksi_id'] = transaksiId.toString()
-              ..files.add(await http.MultipartFile.fromPath('struk', receiptFile.path));
+              ..files.add(
+                  await http.MultipartFile.fromPath('struk', receiptFile.path));
 
             var uploadResponse = await request.send();
             if (uploadResponse.statusCode == 200) {
@@ -185,7 +252,8 @@ class TransaksiController extends GetxController {
               if (uploadResult['status'] == 'success') {
                 Get.to(() => TransactionSuccessPage(receiptFile: receiptFile));
               } else {
-                Get.snackbar('Error', 'Gagal mengunggah struk: ${uploadResult['message']}');
+                Get.snackbar('Error',
+                    'Gagal mengunggah struk: ${uploadResult['message']}');
               }
             } else {
               Get.snackbar('Error', 'Gagal mengunggah struk');
@@ -243,11 +311,26 @@ class TransaksiController extends GetxController {
         if (response.statusCode != 200) {
           throw Exception('Failed to save detail transaksi');
         }
+
+        // Menyampaikan informasi ke server untuk mengurangi stok barang
+        var updateStockResponse = await http.post(
+          Uri.parse('$apiUrl?action=update_stok_barang'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({
+            'id': barang['id'],
+            'jumlah_barang': barang['jumlah_barang'],
+          }),
+        );
+
+        if (updateStockResponse.statusCode != 200) {
+          throw Exception('Failed to update stock');
+        }
       } catch (e) {
         Get.snackbar('Error', 'Gagal menyimpan detail transaksi: $e');
       }
     }
   }
+
 
   String formatRupiah(double amount) {
     return amount
