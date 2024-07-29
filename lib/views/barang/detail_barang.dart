@@ -114,20 +114,6 @@ class BarangDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Expanded(
-                  child: Text("Harga Beli", style: TextStyle(fontSize: 18)),
-                ),
-                const Text(": ", style: TextStyle(fontSize: 18)),
-                Expanded(
-                  child: Text(barangController.formatRupiah(barang.hargaBeli),
-                      style: const TextStyle(fontSize: 18)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Expanded(
                   child: Text("Harga Jual", style: TextStyle(fontSize: 18)),
                 ),
                 const Text(": ", style: TextStyle(fontSize: 18)),
@@ -137,51 +123,74 @@ class BarangDetailPage extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(left: 30),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  minimumSize: const Size(
-                    double.infinity, // Lebar
-                    48, // Tinggi
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            const SizedBox(height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Expanded(
+                  child: Text("Harga Beli", style: TextStyle(fontSize: 18)),
                 ),
-                onPressed: () {},
-                child: const Text(
-                  "Hapus",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                const Text(": ", style: TextStyle(fontSize: 18)),
+                Expanded(
+                  child: Text(barangController.formatRupiah(barang.hargaBeli),
+                      style: const TextStyle(fontSize: 18)),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  minimumSize: const Size(
-                    double.infinity, // Lebar
-                    48, // Tinggi
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.toNamed('/barang-edit', arguments: barang);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+                    ),
+                    child: const Text('Edit Barang'),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 ),
-                onPressed: () {
-                  Get.toNamed('/edit_barang', arguments: barang);
-                },
-                child: const Text(
-                  "Edit Barang",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                const SizedBox(width: 16),
+                // Button widget inside your UI
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Konfirmasi'),
+                            content: const Text(
+                                'Apakah Anda yakin ingin menghapus barang ini?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: const Text('Batal'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  barangController.deleteBarang(barang.id);
+                                  Get.back();
+                                },
+                                child: const Text('Hapus'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('Hapus Barang'),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

@@ -52,4 +52,30 @@ class UserModel {
       'updated_at': updatedAt.toIso8601String(),
     };
   }
+
+  UserModel copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? password,
+    String? namaToko,
+    String? alamat,
+    String? logo,
+    String? noTelepon,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      namaToko: namaToko ?? this.namaToko,
+      alamat: alamat ?? this.alamat,
+      logo: logo ?? this.logo,
+      noTelepon: noTelepon ?? this.noTelepon,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

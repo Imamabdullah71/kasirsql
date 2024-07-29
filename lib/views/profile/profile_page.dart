@@ -24,7 +24,7 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 114, 94, 225),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Get.toNamed("/edit_profile"),
             icon: const Icon(
               BootstrapIcons.person_gear,
               size: 30,

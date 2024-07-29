@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,11 +10,12 @@ import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/harga_model.dart';
 import 'package:kasirsql/models/kategori_model.dart';
-import 'package:kasirsql/views/barang/edit_image.dart';
+import 'package:kasirsql/views/barang/crop_image_barang.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 
 class TambahBarangController extends GetxController {
+  var isLoading = false.obs;
   var kategoriList = <Kategori>[].obs;
   var hargaList = <Harga>[].obs;
   var selectedImagePath = ''.obs;
@@ -29,6 +31,7 @@ class TambahBarangController extends GetxController {
   }
 
   void fetchKategori() async {
+    isLoading.value = true;
     try {
       final response = await http.get(Uri.parse(
           '$apiUrl?action=read_kategori&user_id=${userController.currentUser.value?.id}'));
@@ -42,10 +45,24 @@ class TambahBarangController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Failed to parse kategori');
       print('Error = $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 
   void pickImage(ImageSource source) async {
+    isLoading.value = true; // Mulai indikator pemuatan
+    Get.defaultDialog(
+      title: 'Loading...',
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+        ],
+      ),
+      barrierDismissible: false,
+    );
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
@@ -62,13 +79,19 @@ class TambahBarangController extends GetxController {
 
         if (compressedFile != null) {
           selectedImagePath.value = compressedFile.path;
-          Get.to(() => CropImagePage());
+          Get.back(); // Pastikan dialog ditutup
+          Get.to(() => CropImageBarang());
         } else {
           Get.snackbar('Error', 'Failed to compress image');
         }
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to pick image');
+    } finally {
+      isLoading.value = false; // Hentikan indikator pemuatan
+      if (Get.isDialogOpen!) {
+        Get.back(); // Pastikan dialog ditutup jika masih terbuka
+      }
     }
   }
 
@@ -101,6 +124,18 @@ class TambahBarangController extends GetxController {
 
   void createBarang(String namaBarang, int kodeBarang, int stokBarang,
       int kategoriId, double hargaJual, double hargaBeli) async {
+    isLoading.value = true; // Mulai indikator pemuatan
+    Get.defaultDialog(
+      title: 'Loading...',
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+        ],
+      ),
+      barrierDismissible: false,
+    );
     try {
       String? gambar;
       if (croppedImage.value != null) {
@@ -121,14 +156,40 @@ class TambahBarangController extends GetxController {
       if (response.statusCode == 200) {
         var createdBarangId = json.decode(response.body)['id'];
         createHarga(hargaJual, hargaBeli, createdBarangId);
-        Get.back();
-        Get.snackbar('Berhasil', 'Berhasil menambahkan data barang');
         Get.find<BarangController>().fetchBarang();
+        Get.back();
+        Get.back();
+        Get.snackbar(
+          'Success',
+          'Berhasil menambahkan data barang',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+
+        // Tunggu durasi snackbar sebelum kembali ke halaman sebelumnya
+        await Future.delayed(const Duration(seconds: 3));
       } else {
         Get.snackbar('Gagal', 'Gagal menambahkan data barang');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to create barang');
+    } finally {
+      isLoading.value = false; // Hentikan indikator pemuatan
+      Get.back(); // Pastikan dialog ditutup
     }
   }
 
