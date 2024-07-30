@@ -6,6 +6,7 @@ import 'package:kasirsql/models/barang_model.dart';
 import 'dart:convert';
 
 class KelolaStokPageController extends GetxController {
+  var isLoading = false.obs;
   var barangList = <Barang>[].obs;
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_barang.php';
   final UserController userController = Get.find<UserController>();
@@ -15,8 +16,8 @@ class KelolaStokPageController extends GetxController {
     fetchBarang();
     super.onInit();
   }
-
-  void fetchBarang() async {
+void fetchBarang() async {
+    isLoading.value = true;
     try {
       final response = await http.get(Uri.parse(
           '$apiUrl?action=read_barang&user_id=${userController.currentUser.value?.id}'));
@@ -29,6 +30,8 @@ class KelolaStokPageController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to parse data');
+    } finally {
+      isLoading.value = false;
     }
   }
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/transaksi_controller/riwayat_controller.dart';
-import 'package:kasirsql/views/riwayat_transaksi/transaksi_detail_page.dart';
+import 'transaksi_detail_page.dart';
 
 class TransaksiHistoryPage extends StatelessWidget {
-  final RiwayatController riwayatController = Get.find<RiwayatController>();
+  final RiwayatController controller = Get.put(RiwayatController());
 
   TransaksiHistoryPage({super.key});
 
@@ -12,43 +12,35 @@ class TransaksiHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Riwayat Transaksi'),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: const Text(
+          "Riwayat Transaksi",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 114, 94, 225),
       ),
-      body: FutureBuilder(
-        future: riwayatController.getTransaksi(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: Text('Tidak ada data transaksi.'));
-          }
-
-          List transaksiList = snapshot.data as List;
-
+      body: Obx(() {
+        if (controller.transaksiList.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
           return ListView.builder(
-            itemCount: transaksiList.length,
+            itemCount: controller.transaksiList.length,
             itemBuilder: (context, index) {
-              var transaksi = transaksiList[index];
-              double totalHarga =
-                  double.tryParse(transaksi['total_harga'].toString()) ?? 0.0;
+              final transaksi = controller.transaksiList[index];
               return ListTile(
-                title: Text('Transaksi ${transaksi['id']}'),
-                // Text('Total Harga: ${riwayatController.formatRupiah(totalHarga)}'),
-                subtitle: Text(
-                    'Total: ${riwayatController.formatRupiah(totalHarga)}'),
+                title: Text(controller.formatTanggal(transaksi.createdAt)),
                 onTap: () {
+                  controller.fetchDetailTransaksi(transaksi.id!);
                   Get.to(() => TransaksiDetailPage(transaksi: transaksi));
                 },
               );
             },
           );
-        },
-      ),
+        }
+      }),
     );
   }
 }

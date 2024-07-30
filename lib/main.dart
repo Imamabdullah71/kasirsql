@@ -15,6 +15,7 @@ import 'package:kasirsql/views/kategori/kategori_page.dart';
 import 'package:kasirsql/views/kelola_stok/kelola_stok.dart';
 import 'package:kasirsql/views/laporan/laporan_page.dart';
 import 'package:kasirsql/views/page_landing/main_landing.dart';
+import 'package:kasirsql/views/pembelian_barang/buy_stuff.dart';
 import 'package:kasirsql/views/profile/edit_profile_page.dart';
 import 'package:kasirsql/views/profile/profile_page.dart';
 import 'package:kasirsql/views/riwayat_transaksi/transaksi_history_page.dart';
@@ -159,6 +160,12 @@ class MyApp extends StatelessWidget {
               GetPage(
                   name: "/laporan_page",
                   page: () => LaporanPage(),
+                  binding: DataBindings(),
+                  middlewares: [AuthMiddleware()]),
+              // Pembelian Barang
+              GetPage(
+                  name: "/buy_stuff_page",
+                  page: () => BuyStuff(),
                   binding: DataBindings(),
                   middlewares: [AuthMiddleware()]),
             ],

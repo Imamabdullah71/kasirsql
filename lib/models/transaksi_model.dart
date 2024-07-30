@@ -37,13 +37,13 @@ class Transaksi {
 
   factory Transaksi.fromJson(Map<String, dynamic> json) {
     return Transaksi(
-      id: json['id'],
-      totalBarang: json['total_barang'],
-      totalHarga: json['total_harga'],
-      totalHargaBeli: json['total_harga_beli'],
-      bayar: json['bayar'],
-      kembali: json['kembali'],
-      userId: json['user_id'],
+      id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
+      totalBarang: int.parse(json['total_barang'].toString()),
+      totalHarga: double.parse(json['total_harga'].toString()),
+      totalHargaBeli: double.parse(json['total_harga_beli'].toString()),
+      bayar: double.parse(json['bayar'].toString()),
+      kembali: double.parse(json['kembali'].toString()),
+      userId: int.parse(json['user_id'].toString()),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );

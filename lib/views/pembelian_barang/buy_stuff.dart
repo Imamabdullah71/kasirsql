@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kasirsql/controllers/kelola_stok_controller/kelola_stok_page_controller.dart';
+import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 
-class KelolaStokPage extends StatelessWidget {
-  KelolaStokPage({super.key});
-  final KelolaStokPageController kelolaStokC =
-      Get.find<KelolaStokPageController>();
+class BuyStuff extends StatelessWidget {
+  BuyStuff({super.key});
+  final BarangController barangController = Get.find<BarangController>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +24,55 @@ class KelolaStokPage extends StatelessWidget {
         children: [
           Expanded(
             child: Obx(() {
-              if (kelolaStokC.barangList.isEmpty) {
+              if (barangController.barangList.isEmpty) {
                 return const Center(child: Text('Tidak ada data barang'));
               }
               return ListView.builder(
-                itemCount: kelolaStokC.barangList.length,
+                itemCount: barangController.barangList.length,
                 itemBuilder: (context, index) {
-                  final barang = kelolaStokC.barangList[index];
+                  final barang = barangController.barangList[index];
                   return ListTile(
-                    onTap: () => Get.defaultDialog(
-                        title: 'Tambah stok \n / Kurangi stok'),
+                    onTap: () {
+                      Get.dialog(
+                        AlertDialog(
+                          title: const Text("Masukan jumlah"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.remove),
+                                    color: Colors.red,
+                                  ),
+                                  const Text("11"),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.add),
+                                    color: Colors.green,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                     leading: barang.gambar != null && barang.gambar!.isNotEmpty
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
@@ -101,19 +139,7 @@ class KelolaStokPage extends StatelessWidget {
                       children: [
                         Text('${barang.kodeBarang}'),
                         Text(
-                            'Harga Beli : ${kelolaStokC.formatRupiah(barang.hargaBeli)}'),
-                      ],
-                    ),
-                    trailing: Column(
-                      children: [
-                        Text(
-                          'Stok : ${barang.stokBarang}',
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                        Text(
-                          kelolaStokC.formatRupiah(barang.hargaJual),
-                          style: const TextStyle(fontSize: 15),
-                        ),
+                            'Harga Beli : ${barangController.formatRupiah(barang.hargaBeli)}'),
                       ],
                     ),
                   );

@@ -33,11 +33,11 @@ class ManageLaporan extends StatelessWidget {
             title: const Text("Laporan Laba Rugi"),
             onTap: () => Get.toNamed("/laporan_page"),
           ),
-          ListTile(
-            leading: const Icon(BootstrapIcons.file_earmark_bar_graph),
-            title: const Text("Laporan Penjualan"),
-            onTap: () {},
-          ),
+          // ListTile(
+          //   leading: const Icon(BootstrapIcons.file_earmark_bar_graph),
+          //   title: const Text("Laporan Penjualan"),
+          //   onTap: () {},
+          // ),
           ListTile(
             leading: const Icon(BootstrapIcons.boxes),
             title: const Text("Laporan Persediaan"),
