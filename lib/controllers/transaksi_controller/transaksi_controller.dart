@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kasirsql/controllers/bottom_bar_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/barang_model.dart';
 import 'package:kasirsql/models/detail_transaksi_model.dart';
+import 'package:kasirsql/models/hutang_model.dart'; // Import model hutang
 import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -46,6 +49,7 @@ class TransaksiController extends GetxController {
         _updateTotalBarang();
         selectedBarangList.refresh();
       } else {
+        // Peringatan
         Get.snackbar(
           'Stok Tidak Cukup',
           'Tidak bisa melebihi stok barang.',
@@ -54,7 +58,8 @@ class TransaksiController extends GetxController {
           borderRadius: 10,
           margin: const EdgeInsets.all(10),
           snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.black),
+          icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+              color: Colors.black),
           duration: const Duration(seconds: 3),
           snackStyle: SnackStyle.FLOATING,
           boxShadows: [
@@ -88,7 +93,8 @@ class TransaksiController extends GetxController {
           borderRadius: 10,
           margin: const EdgeInsets.all(10),
           snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.black),
+          icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+              color: Colors.black),
           duration: const Duration(seconds: 3),
           snackStyle: SnackStyle.FLOATING,
           boxShadows: [
@@ -130,7 +136,8 @@ class TransaksiController extends GetxController {
         borderRadius: 10,
         margin: const EdgeInsets.all(10),
         snackPosition: SnackPosition.TOP,
-        icon: const Icon(Icons.error, color: Colors.black),
+        icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+            color: Colors.black),
         duration: const Duration(seconds: 3),
         snackStyle: SnackStyle.FLOATING,
         boxShadows: [
@@ -166,12 +173,32 @@ class TransaksiController extends GetxController {
         0, (sum, item) => sum + item['jumlah_barang'] as int);
   }
 
-    Future<void> createTransaksi() async {
+  Future<void> createTransaksi() async {
     var now = DateTime.now();
     var userId = userController.currentUser.value?.id;
 
     if (userId == null) {
-      Get.snackbar('Error', 'User tidak ditemukan. Silakan login kembali.');
+      // Peringatan
+      Get.snackbar(
+        'Stok Tidak Cukup',
+        'User tidak ditemukan. Silakan login kembali.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.black),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
       return;
     }
 
@@ -189,7 +216,7 @@ class TransaksiController extends GetxController {
     print(jsonEncode(transaksi.toJson()));
 
     try {
-      isLoading.value = true; // Set loading to true
+      isLoading.value = true;
       Get.defaultDialog(
         title: 'Loading...',
         content: const Column(
@@ -211,15 +238,33 @@ class TransaksiController extends GetxController {
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
-          Get.snackbar('Success', 'Transaksi berhasil dilakukan');
+          Get.snackbar(
+            'Success',
+            'Transaksi berhasil dilakukan',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
+
           print('RESPON: ${response.body}');
 
           var transaksiId = result['transaksi_id'];
           if (transaksiId != null) {
-            // Mengirim detail transaksi ke server
             await _saveDetailTransaksi(transaksiId);
 
-            // Fetch the saved detail transaksi
             List<DetailTransaksi> detailTransaksiList =
                 selectedBarangList.map((barang) {
               return DetailTransaksi(
@@ -252,40 +297,143 @@ class TransaksiController extends GetxController {
               if (uploadResult['status'] == 'success') {
                 Get.to(() => TransactionSuccessPage(receiptFile: receiptFile));
               } else {
-                Get.snackbar('Error',
-                    'Gagal mengunggah struk: ${uploadResult['message']}');
+                // Gagal / Error
+                Get.snackbar(
+                  'Error',
+                  'Gagal mengunggah struk',
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                  borderRadius: 10,
+                  margin: const EdgeInsets.all(10),
+                  snackPosition: SnackPosition.TOP,
+                  icon: const Icon(Icons.error, color: Colors.white),
+                  duration: const Duration(seconds: 3),
+                  snackStyle: SnackStyle.FLOATING,
+                  boxShadows: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                );
               }
             } else {
-              Get.snackbar('Error', 'Gagal mengunggah struk');
+              Get.snackbar(
+                'Error',
+                'Gagal mengunggah struk',
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+                borderRadius: 10,
+                margin: const EdgeInsets.all(10),
+                snackPosition: SnackPosition.TOP,
+                icon: const Icon(Icons.error, color: Colors.white),
+                duration: const Duration(seconds: 3),
+                snackStyle: SnackStyle.FLOATING,
+                boxShadows: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              );
             }
           } else {
-            Get.snackbar('Error', 'Transaksi ID tidak ditemukan.');
+            // Gagal / Error
+            Get.snackbar(
+              'Error',
+              'Transaksi ID tidak ditemukan',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              borderRadius: 10,
+              margin: const EdgeInsets.all(10),
+              snackPosition: SnackPosition.TOP,
+              icon: const Icon(Icons.error, color: Colors.white),
+              duration: const Duration(seconds: 3),
+              snackStyle: SnackStyle.FLOATING,
+              boxShadows: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            );
           }
         } else {
-          Get.snackbar('Error', 'Transaksi gagal: ${result['message']}');
+          // Gagal / Error
+          Get.snackbar(
+            'Error',
+            'Transaksi gagal',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.error, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
         }
       } else {
-        Get.defaultDialog(
-          title: 'Gagal',
-          content: SingleChildScrollView(
-            child: Text(response.body),
-          ),
-          textConfirm: 'Okay',
-          onConfirm: () => Get.back(),
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Transaksi gagal',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         );
       }
     } catch (e) {
-      Get.defaultDialog(
-        title: 'Error',
-        content: SingleChildScrollView(
-          child: Text('$e'),
-        ),
-        textConfirm: 'Okay',
-        onConfirm: () => Get.back(),
+      Get.snackbar(
+        'Error',
+        'Transaksi gagal',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       );
     } finally {
-      isLoading.value = false; // Set loading to false
-      Get.back(); // Close loading dialog
+      isLoading.value = false;
+      Get.back();
     }
   }
 
@@ -312,7 +460,6 @@ class TransaksiController extends GetxController {
           throw Exception('Failed to save detail transaksi');
         }
 
-        // Menyampaikan informasi ke server untuk mengurangi stok barang
         var updateStockResponse = await http.post(
           Uri.parse('$apiUrl?action=update_stok_barang'),
           headers: {"Content-Type": "application/json"},
@@ -326,11 +473,384 @@ class TransaksiController extends GetxController {
           throw Exception('Failed to update stock');
         }
       } catch (e) {
-        Get.snackbar('Error', 'Gagal menyimpan detail transaksi: $e');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          '$e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     }
   }
 
+  // Fungsi createTransaksiWithNoReceipt diubah untuk mengembalikan transaksiId
+  Future<int?> createTransaksiWithNoReceipt() async {
+    var now = DateTime.now();
+    var userId = userController.currentUser.value?.id;
+
+    if (userId == null) {
+      // Peringatan
+      Get.snackbar(
+        'Stok Tidak Cukup',
+        'User tidak ditemukan. Silakan login kembali.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.black),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+      return null;
+    }
+
+    var transaksi = Transaksi(
+      totalBarang: totalBarang.value,
+      totalHarga: totalHarga.value,
+      totalHargaBeli: totalHargaBeli.value,
+      bayar: bayar.value,
+      kembali: bayar.value - totalHarga.value,
+      userId: userId,
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    print(jsonEncode(transaksi.toJson()));
+
+    try {
+      isLoading.value = true;
+      Get.defaultDialog(
+        title: 'Loading...',
+        content: const Column(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Proses transaksi sedang berlangsung'),
+          ],
+        ),
+        barrierDismissible: false,
+      );
+      var response = await http.post(
+        Uri.parse('$apiUrl?action=create_transaksi'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(transaksi.toJson()),
+      );
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+        if (result['status'] == 'success') {
+          Get.snackbar(
+            'Success',
+            'Transaksi berhasil dilakukan',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
+
+          var transaksiId = result['transaksi_id'];
+          if (transaksiId != null) {
+            await _saveDetailTransaksi(transaksiId);
+
+            selectedBarangList.map((barang) {
+              return DetailTransaksi(
+                transaksiId: transaksiId,
+                namaBarang: barang['nama_barang'],
+                jumlahBarang: barang['jumlah_barang'],
+                hargaBarang: barang['harga_barang'],
+                jumlahHarga: barang['jumlah_harga'],
+                createdAt: now,
+                updatedAt: now,
+              );
+            }).toList();
+
+            isLoading.value = false;
+            Get.back();
+
+            Get.defaultDialog(
+              title: 'Berhasil',
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Berhasil menambahkan data!',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      final BottomBarController bottomBarController =
+                          Get.find();
+                      bottomBarController.resetToHome();
+                      Get.offAllNamed('/halaman_utama');
+                    },
+                    child: const Text('Halaman Utama'),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                      Get.back();
+                      Get.back();
+                      Get.back();
+                    },
+                    child: const Text('Transaksi Kembali'),
+                  ),
+                ],
+              ),
+              barrierDismissible: false,
+            );
+
+            return transaksiId;
+          } else {
+            // Peringatan
+            Get.snackbar(
+              'Stok Tidak Cukup',
+              'Transaksi ID tidak ditemukan.',
+              backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+              colorText: Colors.black,
+              borderRadius: 10,
+              margin: const EdgeInsets.all(10),
+              snackPosition: SnackPosition.TOP,
+              icon: const Icon(Icons.error, color: Colors.black),
+              duration: const Duration(seconds: 3),
+              snackStyle: SnackStyle.FLOATING,
+              boxShadows: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            );
+            return null;
+          }
+        } else {
+          // Gagal / Error
+          Get.snackbar(
+            'Error',
+            'Transaksi gagal',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.error, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
+          return null;
+        }
+      } else {
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Transaksi gagal',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+        return null;
+      }
+    } catch (e) {
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+      return null;
+    } finally {
+      isLoading.value = false;
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+    }
+  }
+
+  // Fungsi createHutang diubah untuk menerima transaksiId sebagai parameter
+  Future<void> createHutang(
+      int transaksiId, String nama, double sisaHutang) async {
+    var hutang = Hutang(
+      transaksiId: transaksiId,
+      nama: nama,
+      sisaHutang: sisaHutang,
+      status: 'belum lunas',
+      tanggalMulai: DateTime.now(),
+    );
+
+    print(jsonEncode(hutang.toJson()));
+
+    try {
+      var response = await http.post(
+        Uri.parse('$apiUrl?action=create_hutang'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(hutang.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        var result = json.decode(response.body);
+        if (result['status'] == 'success') {
+          Get.snackbar(
+            'Success',
+            'Hutang berhasil disimpan',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
+        } else {
+          // Gagal / Error
+          Get.snackbar(
+            'Error',
+            'Gagal menyimpan hutang',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.error, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
+        }
+      } else {
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal menyimpan hutang',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+      }
+    } catch (e) {
+      // Gagal / Error
+        Get.snackbar('Error', '$e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+    }
+  }
 
   String formatRupiah(double amount) {
     return amount

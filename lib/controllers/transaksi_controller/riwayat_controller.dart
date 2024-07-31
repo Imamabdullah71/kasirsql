@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 class RiwayatController extends GetxController {
   var transaksiList = <Transaksi>[].obs;
   var detailTransaksiList = <DetailTransaksi>[].obs;
+  var isPressed = false.obs; // Observable for button press state
 
   @override
   void onInit() {
@@ -17,8 +18,7 @@ class RiwayatController extends GetxController {
 
   void fetchTransaksi() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://10.10.10.129/flutterapi/api_riwayat.php'));
+      final response = await http.get(Uri.parse('http://10.10.10.129/flutterapi/api_riwayat.php'));
 
       if (response.statusCode == 200) {
         final responseBody = response.body;
@@ -27,8 +27,7 @@ class RiwayatController extends GetxController {
 
         if (isJson(responseBody)) {
           List jsonResponse = json.decode(responseBody);
-          transaksiList.value =
-              jsonResponse.map((data) => Transaksi.fromJson(data)).toList();
+          transaksiList.value = jsonResponse.map((data) => Transaksi.fromJson(data)).toList();
         } else {
           throw Exception('Unexpected response format');
         }
@@ -42,8 +41,7 @@ class RiwayatController extends GetxController {
 
   void fetchDetailTransaksi(int transaksiId) async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://10.10.10.129/flutterapi/api_riwayat.php?transaksi_id=$transaksiId'));
+      final response = await http.get(Uri.parse('http://10.10.10.129/flutterapi/api_riwayat.php?transaksi_id=$transaksiId'));
 
       if (response.statusCode == 200) {
         final responseBody = response.body;
@@ -52,15 +50,12 @@ class RiwayatController extends GetxController {
 
         if (isJson(responseBody)) {
           List jsonResponse = json.decode(responseBody);
-          detailTransaksiList.value = jsonResponse
-              .map((data) => DetailTransaksi.fromJson(data))
-              .toList();
+          detailTransaksiList.value = jsonResponse.map((data) => DetailTransaksi.fromJson(data)).toList();
         } else {
           throw Exception('Unexpected response format');
         }
       } else {
-        throw Exception(
-            'Failed to load detail transaksi: ${response.statusCode}');
+        throw Exception('Failed to load detail transaksi: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching detail transaksi: $e');
@@ -83,5 +78,9 @@ class RiwayatController extends GetxController {
 
   String formatRupiah(double amount) {
     return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
+  }
+
+  void toggleButtonPress() {
+    isPressed.value = !isPressed.value;
   }
 }

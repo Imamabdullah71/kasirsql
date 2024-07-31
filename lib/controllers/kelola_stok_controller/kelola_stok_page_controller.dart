@@ -1,4 +1,5 @@
 // controllers\barang_controller.dart
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
@@ -26,10 +27,46 @@ void fetchBarang() async {
         barangList.value =
             data.map((barang) => Barang.fromJson(barang)).toList();
       } else {
-        Get.snackbar('Error', 'Failed to fetch data');
+        // Gagal / Error
+        Get.snackbar('Error', 'Gagal mengambil data',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to parse data');
+      // Gagal / Error
+        Get.snackbar('Error', '$e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
     } finally {
       isLoading.value = false;
     }

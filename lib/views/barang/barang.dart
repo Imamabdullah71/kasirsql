@@ -27,6 +27,9 @@ class BarangPage extends StatelessWidget {
               if (barangController.barangList.isEmpty) {
                 return const Center(child: Text('Tidak ada data barang'));
               }
+              if (barangController.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
               return ListView.builder(
                 itemCount: barangController.barangList.length,
                 itemBuilder: (context, index) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/barang_controller/rupiah_input_formatter.dart';
+import 'package:kasirsql/controllers/hutang_controller/hutang_controller.dart';
 import 'package:kasirsql/controllers/switch_controller/switch_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
 
@@ -10,8 +11,10 @@ class PaymentPage extends StatelessWidget {
   final TransaksiController transaksiController =
       Get.find<TransaksiController>();
   final TextEditingController uangDibayarController = TextEditingController();
-  final TextEditingController daftarController = TextEditingController();
+  final TextEditingController daftarController =
+      TextEditingController(); // Controller untuk nama penghutang
   final SwitchController switchController = Get.find<SwitchController>();
+  final HutangController hutangController = Get.find<HutangController>();
 
   @override
   Widget build(BuildContext context) {
@@ -185,9 +188,19 @@ class PaymentPage extends StatelessWidget {
     transaksiController.createTransaksi();
   }
 
-  void masukkanKeDaftar() {
-    // Logika untuk 'Masukkan ke daftar'
-    print('Masukkan ke daftar: ${daftarController.text}');
-    // Tambahkan logika lain jika diperlukan
+  void masukkanKeDaftar() async {
+    transaksiController.bayar.value =
+        double.parse(uangDibayarController.text.replaceAll('.', ''));
+    transaksiController.kembali.value =
+        transaksiController.bayar.value - transaksiController.totalHarga.value;
+
+    var transaksiId = await transaksiController.createTransaksiWithNoReceipt();
+    if (transaksiId != null) {
+      transaksiController.createHutang(
+        transaksiId,
+        daftarController.text,
+        transaksiController.bayar.value - transaksiController.totalHarga.value,
+      );
+    }
   }
 }

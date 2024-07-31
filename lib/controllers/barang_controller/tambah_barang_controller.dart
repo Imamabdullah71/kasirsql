@@ -40,11 +40,50 @@ class TambahBarangController extends GetxController {
         kategoriList.value =
             data.map((kategori) => Kategori.fromJson(kategori)).toList();
       } else {
-        Get.snackbar('Error', 'Failed to fetch kategori');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal mengambil data kategori',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to parse kategori');
-      print('Error = $e');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     } finally {
       isLoading.value = false;
     }
@@ -82,11 +121,51 @@ class TambahBarangController extends GetxController {
           Get.back(); // Pastikan dialog ditutup
           Get.to(() => CropImageBarang());
         } else {
-          Get.snackbar('Error', 'Failed to compress image');
+          // Gagal / Error
+          Get.snackbar(
+            'Error',
+            'Gagal kompress gambar',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.error, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
         }
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to pick image');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        'Gagal mengambil gambar',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     } finally {
       isLoading.value = false; // Hentikan indikator pemuatan
       if (Get.isDialogOpen!) {
@@ -113,11 +192,51 @@ class TambahBarangController extends GetxController {
       if (result['status'] == 'success') {
         return result['path'];
       } else {
-        Get.snackbar('Error', 'Failed to upload image');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal mengunggah gambar',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
         return null;
       }
     } else {
-      Get.snackbar('Error', 'Failed to upload image');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        'Gagal mengunggah gambar',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
       return null;
     }
   }
@@ -183,10 +302,50 @@ class TambahBarangController extends GetxController {
         // Tunggu durasi snackbar sebelum kembali ke halaman sebelumnya
         await Future.delayed(const Duration(seconds: 3));
       } else {
-        Get.snackbar('Gagal', 'Gagal menambahkan data barang');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal menambahkan data barang',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create barang');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     } finally {
       isLoading.value = false; // Hentikan indikator pemuatan
       Get.back(); // Pastikan dialog ditutup
@@ -206,10 +365,50 @@ class TambahBarangController extends GetxController {
       if (response.statusCode == 200) {
         Get.find<BarangController>().fetchBarang();
       } else {
-        Get.snackbar('Gagal', 'Gagal menambahkan harga');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal menambahkan harga',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create harga');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        'Gagal membuat harga',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 }

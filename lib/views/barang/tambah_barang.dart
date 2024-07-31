@@ -208,6 +208,7 @@ class TambahBarang extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                keyboardType: TextInputType.text,
                 controller: namaBarangController,
                 decoration: InputDecoration(
                   labelText: 'Nama Barang',

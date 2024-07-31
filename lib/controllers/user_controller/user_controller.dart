@@ -203,6 +203,7 @@ class UserController extends GetxController {
           return false;
         }
       } else {
+        // Gagal / Error
         Get.snackbar('Error', 'Gagal Login',
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -252,6 +253,7 @@ class UserController extends GetxController {
   Future<void> logout() async {
     await clearUserPreferences();
     Get.offAllNamed('/login');
+    // Berhasil
     Get.snackbar(
       'Success',
       'Berhasil logout',

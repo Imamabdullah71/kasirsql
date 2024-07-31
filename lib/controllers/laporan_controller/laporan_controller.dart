@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,7 +31,27 @@ class LaporanController extends GetxController {
       totalPengeluaran.value = pengeluaran;
       labaBersih.value = pemasukan - pengeluaran;
     } else {
-      Get.snackbar('Error', 'Gagal mengambil data laporan');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        'Gagal mengambil data laporan',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 

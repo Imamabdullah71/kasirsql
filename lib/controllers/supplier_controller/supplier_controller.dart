@@ -26,10 +26,50 @@ class SupplierController extends GetxController {
         supplierList.value =
             data.map((supplier) => Supplier.fromJson(supplier)).toList();
       } else {
-        Get.snackbar('Error', 'Gagal menampilkan Supplier');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal menampilkan Supplier',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Gagal memproses supplier');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 
@@ -48,26 +88,70 @@ class SupplierController extends GetxController {
               fetchSupplier();
               Get.back();
               Get.snackbar(
-                "Supplier berhasil dihapus",
-                "",
-                duration: const Duration(seconds: 3),
+                'Success',
+                'Berhasil menghapus supplier',
                 backgroundColor: Colors.green,
                 colorText: Colors.white,
-                borderRadius: 10.0,
-                margin: const EdgeInsets.all(16.0),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 12.0),
+                borderRadius: 10,
+                margin: const EdgeInsets.all(10),
                 snackPosition: SnackPosition.TOP,
-                forwardAnimationCurve: Curves.easeOut,
-                reverseAnimationCurve: Curves.easeIn,
-                isDismissible: true,
-                showProgressIndicator: false,
+                icon: const Icon(Icons.check_circle, color: Colors.white),
+                duration: const Duration(seconds: 3),
+                snackStyle: SnackStyle.FLOATING,
+                boxShadows: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               );
             } else {
-              Get.snackbar('Error', 'Gagal menghapus supplier');
+              // Gagal / Error
+              Get.snackbar(
+                'Error',
+                'Gagal menghapus supplier',
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+                borderRadius: 10,
+                margin: const EdgeInsets.all(10),
+                snackPosition: SnackPosition.TOP,
+                icon: const Icon(Icons.error, color: Colors.white),
+                duration: const Duration(seconds: 3),
+                snackStyle: SnackStyle.FLOATING,
+                boxShadows: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              );
             }
           } catch (e) {
-            Get.snackbar('Error', 'Gagal memproses hapus');
+            // Gagal / Error
+            Get.snackbar(
+              'Error',
+              '$e',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              borderRadius: 10,
+              margin: const EdgeInsets.all(10),
+              snackPosition: SnackPosition.TOP,
+              icon: const Icon(Icons.error, color: Colors.white),
+              duration: const Duration(seconds: 3),
+              snackStyle: SnackStyle.FLOATING,
+              boxShadows: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            );
           }
         },
         textConfirm: "Ya",
@@ -75,7 +159,25 @@ class SupplierController extends GetxController {
         onCancel: () => Get.back(),
       );
     } catch (e) {
-      Get.snackbar('Error', 'Failed to delete supplier');
+      // Gagal / Error
+        Get.snackbar('Error', '$e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
     }
   }
 }

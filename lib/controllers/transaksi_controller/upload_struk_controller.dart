@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +18,8 @@ class UploadStrukController extends GetxController {
       // Create multipart request
       var request = http.MultipartRequest(
           'POST', Uri.parse('$apiUrl?action=upload_struk'));
-      request.files.add(await http.MultipartFile.fromPath('struk', newFile.path));
+      request.files
+          .add(await http.MultipartFile.fromPath('struk', newFile.path));
       request.fields['transaksi_id'] = transaksiId.toString();
 
       // Send request
@@ -27,15 +29,92 @@ class UploadStrukController extends GetxController {
         var result = json.decode(responseData);
 
         if (result['status'] == 'success') {
-          Get.snackbar('Success', 'Struk uploaded successfully');
+          Get.snackbar(
+            'Success',
+            'Berhasil mengunggah struk',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
         } else {
-          Get.snackbar('Error', 'Failed to upload struk: ${result['message']}');
+          // Gagal / Error
+          Get.snackbar(
+            'Error',
+            'Gagal mengunggah struk',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            borderRadius: 10,
+            margin: const EdgeInsets.all(10),
+            snackPosition: SnackPosition.TOP,
+            icon: const Icon(Icons.error, color: Colors.white),
+            duration: const Duration(seconds: 3),
+            snackStyle: SnackStyle.FLOATING,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          );
         }
       } else {
-        Get.snackbar('Error', 'Failed to upload struk: ${response.reasonPhrase}');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal mengunggah struk',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Error uploading struk: $e');
+      // Gagal / Error
+        Get.snackbar('Error', '$e',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
     }
   }
 }

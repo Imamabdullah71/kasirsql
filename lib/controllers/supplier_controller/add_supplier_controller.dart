@@ -38,10 +38,50 @@ class AddSupplierController extends GetxController {
         selectedImagePath.value = compressedFile.path;
         Get.to(() => CropImagePageSupplier());
       } else {
-        Get.snackbar('Error', 'Failed to compress image');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal kompress gambar',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } else {
-      Get.snackbar('Error', 'No image selected');
+      // Gagal / Error
+      Get.snackbar(
+        'Dibatalkan',
+        'Tidak ada gambar yang dipilih',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 
@@ -63,11 +103,51 @@ class AddSupplierController extends GetxController {
       if (result['status'] == 'success') {
         return result['path'];
       } else {
-        Get.snackbar('Error', 'Failed to upload image');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal mengunggah gambar',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
         return null;
       }
     } else {
-      Get.snackbar('Error', 'Failed to upload image');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        'Gagal mengunggah gambar',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
       return null;
     }
   }
@@ -96,25 +176,70 @@ class AddSupplierController extends GetxController {
         Get.find<SupplierController>().fetchSupplier();
         Get.back();
         Get.snackbar(
-          "Berhasil menambahkan Supplier",
-          "",
-          duration: const Duration(seconds: 3),
+          'Success',
+          'Berhasil menambahkan supplier',
           backgroundColor: Colors.green,
           colorText: Colors.white,
-          borderRadius: 10.0,
-          margin: const EdgeInsets.all(16.0),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
           snackPosition: SnackPosition.TOP,
-          forwardAnimationCurve: Curves.easeOut,
-          reverseAnimationCurve: Curves.easeIn,
-          isDismissible: true,
-          showProgressIndicator: false,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         );
       } else {
-        Get.snackbar('', 'Gagal menambahkan Supplier');
+        // Gagal / Error
+        Get.snackbar(
+          'Error',
+          'Gagal menambahkan supplier',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.error, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to create supplier');
+      // Gagal / Error
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 }
