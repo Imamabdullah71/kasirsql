@@ -7,7 +7,10 @@ import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 
 class BarangController extends GetxController {
   var isLoading = false.obs;
-  var barangList = <Barang>[].obs;
+  var isPressed = false.obs; // Observable for button press state
+  var allBarangList = <Barang>[].obs; // Semua barang asli
+  var filteredBarangList = <Barang>[].obs; // Barang yang difilter
+  var kategoriList = <String>[].obs; // Daftar kategori
   var selectedBarang = Rxn<Barang>();
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_barang.php';
   final UserController userController = Get.find<UserController>();
@@ -15,6 +18,7 @@ class BarangController extends GetxController {
   @override
   void onInit() {
     fetchBarang();
+    fetchKategori(); // Panggil fungsi fetchKategori saat inisialisasi
     super.onInit();
   }
 
@@ -25,53 +29,39 @@ class BarangController extends GetxController {
           '$apiUrl?action=read_barang&user_id=${userController.currentUser.value?.id}'));
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;
-        barangList.value =
+        allBarangList.value =
             data.map((barang) => Barang.fromJson(barang)).toList();
+
+        // Mengurutkan allBarangList berdasarkan createdAt dari yang terbaru terlebih dahulu
+        allBarangList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+        filteredBarangList.value =
+            allBarangList; // Set filtered list sama dengan semua barang
       } else {
-        // Gagal / Error
-        Get.snackbar(
-          'Error',
-          'Gagal Mengambil Data',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          borderRadius: 10,
-          margin: const EdgeInsets.all(10),
-          snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.white),
-          duration: const Duration(seconds: 3),
-          snackStyle: SnackStyle.FLOATING,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        );
+        _showErrorSnackbar('Gagal Mengambil Data');
       }
     } catch (e) {
-      // Gagal / Error
-      Get.snackbar(
-        'Error',
-        'Gagal mengumpulkan Data',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: const EdgeInsets.all(10),
-        snackPosition: SnackPosition.TOP,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        snackStyle: SnackStyle.FLOATING,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      );
+      _showErrorSnackbar('Gagal mengumpulkan Data');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void fetchKategori() async {
+    isLoading.value = true;
+    try {
+      final response = await http.get(Uri.parse(
+          '$apiUrl?action=read_kategori&user_id=${userController.currentUser.value?.id}'));
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body) as List;
+        kategoriList.value = data
+            .map((kategori) => kategori['nama_kategori'] as String)
+            .toList();
+      } else {
+        _showErrorSnackbar('Gagal Mengambil Data Kategori');
+      }
+    } catch (e) {
+      _showErrorSnackbar('Gagal mengumpulkan Data Kategori');
     } finally {
       isLoading.value = false;
     }
@@ -79,8 +69,6 @@ class BarangController extends GetxController {
 
   void deleteBarang(int id) async {
     isLoading.value = true;
-
-    // Tampilkan dialog loading
     Get.defaultDialog(
       title: 'Loading...',
       content: const Column(
@@ -96,16 +84,13 @@ class BarangController extends GetxController {
     try {
       final response = await http.post(
         Uri.parse('$apiUrl?action=delete_barang'),
-        body: {
-          'id': id.toString(),
-        },
+        body: {'id': id.toString()},
       );
 
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
         if (responseData['status'] == 'success') {
           fetchBarang();
-          Get.back();
           Get.back();
           Get.snackbar(
             'Success',
@@ -118,89 +103,19 @@ class BarangController extends GetxController {
             icon: const Icon(Icons.check_circle, color: Colors.white),
             duration: const Duration(seconds: 3),
             snackStyle: SnackStyle.FLOATING,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
           );
-
-          // Tunggu durasi snackbar sebelum kembali ke halaman sebelumnya
           await Future.delayed(const Duration(seconds: 3));
         } else {
-          // Gagal / Error
-          Get.snackbar(
-            'Error',
-            responseData['message'],
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            borderRadius: 10,
-            margin: const EdgeInsets.all(10),
-            snackPosition: SnackPosition.TOP,
-            icon: const Icon(Icons.error, color: Colors.white),
-            duration: const Duration(seconds: 3),
-            snackStyle: SnackStyle.FLOATING,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          );
+          _showErrorSnackbar(responseData['message']);
         }
       } else {
-        // Gagal / Error
-        Get.snackbar(
-          'Error',
-          'Gagal menghapus data barang',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          borderRadius: 10,
-          margin: const EdgeInsets.all(10),
-          snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.white),
-          duration: const Duration(seconds: 3),
-          snackStyle: SnackStyle.FLOATING,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        );
+        _showErrorSnackbar('Gagal menghapus data barang');
       }
     } catch (e) {
-      // Gagal / Error
-      Get.snackbar(
-        'Error',
-        '$e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: const EdgeInsets.all(10),
-        snackPosition: SnackPosition.TOP,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        snackStyle: SnackStyle.FLOATING,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      );
+      _showErrorSnackbar('$e');
     } finally {
       isLoading.value = false;
-      Get.back(); // Pastikan dialog ditutup
+      Get.back();
     }
   }
 
@@ -237,87 +152,38 @@ class BarangController extends GetxController {
             icon: const Icon(Icons.check_circle, color: Colors.white),
             duration: const Duration(seconds: 3),
             snackStyle: SnackStyle.FLOATING,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
           );
         } else {
-          // Gagal / Error
-          Get.snackbar(
-            'Error',
-            responseData['message'],
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            borderRadius: 10,
-            margin: const EdgeInsets.all(10),
-            snackPosition: SnackPosition.TOP,
-            icon: const Icon(Icons.error, color: Colors.white),
-            duration: const Duration(seconds: 3),
-            snackStyle: SnackStyle.FLOATING,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          );
+          _showErrorSnackbar(responseData['message']);
         }
       } else {
-        // Gagal / Error
-        Get.snackbar(
-          'Error',
-          'Gagal memperbarui data barang',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          borderRadius: 10,
-          margin: const EdgeInsets.all(10),
-          snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.white),
-          duration: const Duration(seconds: 3),
-          snackStyle: SnackStyle.FLOATING,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        );
+        _showErrorSnackbar('Gagal memperbarui data barang');
       }
     } catch (e) {
-      // Gagal / Error
-      Get.snackbar(
-        'Error',
-        '$e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: const EdgeInsets.all(10),
-        snackPosition: SnackPosition.TOP,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        snackStyle: SnackStyle.FLOATING,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      );
+      _showErrorSnackbar('$e');
     }
+  }
+
+  void _showErrorSnackbar(String message) {
+    Get.snackbar(
+      'Error',
+      message,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      borderRadius: 10,
+      margin: const EdgeInsets.all(10),
+      snackPosition: SnackPosition.TOP,
+      icon: const Icon(Icons.error, color: Colors.white),
+      duration: const Duration(seconds: 3),
+      snackStyle: SnackStyle.FLOATING,
+    );
   }
 
   String formatRupiah(double amount) {
     return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
+  }
+
+  void toggleButtonPress() {
+    isPressed.value = !isPressed.value;
   }
 }

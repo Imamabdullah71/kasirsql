@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/harga_model.dart';
@@ -40,7 +39,6 @@ class TambahBarangController extends GetxController {
         kategoriList.value =
             data.map((kategori) => Kategori.fromJson(kategori)).toList();
       } else {
-        // Gagal / Error
         Get.snackbar(
           'Error',
           'Gagal mengambil data kategori',
@@ -63,7 +61,6 @@ class TambahBarangController extends GetxController {
         );
       }
     } catch (e) {
-      // Gagal / Error
       Get.snackbar(
         'Error',
         '$e',
@@ -90,7 +87,7 @@ class TambahBarangController extends GetxController {
   }
 
   void pickImage(ImageSource source) async {
-    isLoading.value = true; // Mulai indikator pemuatan
+    isLoading.value = true;
     Get.defaultDialog(
       title: 'Loading...',
       content: const Column(
@@ -105,47 +102,11 @@ class TambahBarangController extends GetxController {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-        final fileName =
-            '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
-        final tempDir = await getTemporaryDirectory();
-        final tempFile = File('${tempDir.path}/$fileName');
-
-        final compressedFile = await FlutterImageCompress.compressAndGetFile(
-          pickedFile.path,
-          tempFile.path,
-          quality: 50,
-        );
-
-        if (compressedFile != null) {
-          selectedImagePath.value = compressedFile.path;
-          Get.back(); // Pastikan dialog ditutup
-          Get.to(() => CropImageBarang());
-        } else {
-          // Gagal / Error
-          Get.snackbar(
-            'Error',
-            'Gagal kompress gambar',
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            borderRadius: 10,
-            margin: const EdgeInsets.all(10),
-            snackPosition: SnackPosition.TOP,
-            icon: const Icon(Icons.error, color: Colors.white),
-            duration: const Duration(seconds: 3),
-            snackStyle: SnackStyle.FLOATING,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          );
-        }
+        selectedImagePath.value = pickedFile.path;
+        Get.back();
+        Get.to(() => CropImageBarang());
       }
     } catch (e) {
-      // Gagal / Error
       Get.snackbar(
         'Error',
         'Gagal mengambil gambar',
@@ -167,22 +128,20 @@ class TambahBarangController extends GetxController {
         ],
       );
     } finally {
-      isLoading.value = false; // Hentikan indikator pemuatan
+      isLoading.value = false;
       if (Get.isDialogOpen!) {
-        Get.back(); // Pastikan dialog ditutup jika masih terbuka
+        Get.back();
       }
     }
   }
 
   Future<String?> uploadImage(Uint8List imageBytes) async {
     final tempDir = await getTemporaryDirectory();
-    final fileName =
-        '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+    final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
     final file = File('${tempDir.path}/$fileName')
       ..writeAsBytesSync(imageBytes);
 
-    var request =
-        http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
+    var request = http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
     request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
     var response = await request.send();
@@ -192,7 +151,6 @@ class TambahBarangController extends GetxController {
       if (result['status'] == 'success') {
         return result['path'];
       } else {
-        // Gagal / Error
         Get.snackbar(
           'Error',
           'Gagal mengunggah gambar',
@@ -216,7 +174,6 @@ class TambahBarangController extends GetxController {
         return null;
       }
     } else {
-      // Gagal / Error
       Get.snackbar(
         'Error',
         'Gagal mengunggah gambar',
@@ -243,7 +200,7 @@ class TambahBarangController extends GetxController {
 
   void createBarang(String namaBarang, int kodeBarang, int stokBarang,
       int kategoriId, double hargaJual, double hargaBeli) async {
-    isLoading.value = true; // Mulai indikator pemuatan
+    isLoading.value = true;
     Get.defaultDialog(
       title: 'Loading...',
       content: const Column(
@@ -299,10 +256,8 @@ class TambahBarangController extends GetxController {
           ],
         );
 
-        // Tunggu durasi snackbar sebelum kembali ke halaman sebelumnya
         await Future.delayed(const Duration(seconds: 3));
       } else {
-        // Gagal / Error
         Get.snackbar(
           'Error',
           'Gagal menambahkan data barang',
@@ -325,7 +280,6 @@ class TambahBarangController extends GetxController {
         );
       }
     } catch (e) {
-      // Gagal / Error
       Get.snackbar(
         'Error',
         '$e',
@@ -347,8 +301,8 @@ class TambahBarangController extends GetxController {
         ],
       );
     } finally {
-      isLoading.value = false; // Hentikan indikator pemuatan
-      Get.back(); // Pastikan dialog ditutup
+      isLoading.value = false;
+      Get.back();
     }
   }
 
@@ -365,7 +319,6 @@ class TambahBarangController extends GetxController {
       if (response.statusCode == 200) {
         Get.find<BarangController>().fetchBarang();
       } else {
-        // Gagal / Error
         Get.snackbar(
           'Error',
           'Gagal menambahkan harga',
@@ -388,7 +341,6 @@ class TambahBarangController extends GetxController {
         );
       }
     } catch (e) {
-      // Gagal / Error
       Get.snackbar(
         'Error',
         'Gagal membuat harga',

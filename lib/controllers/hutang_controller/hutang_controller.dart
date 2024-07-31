@@ -98,23 +98,20 @@ class HutangController extends GetxController {
   }
 
   Future<void> fetchRiwayatPembayaran(int hutangId) async {
-    isLoading.value = true;
     try {
       var response = await http.get(Uri.parse(
-          'http://10.10.10.129/flutterapi/api_hutang.php?action=get_riwayat&hutang_id=$hutangId'));
+          'http://10.10.10.129/flutterapi/api_hutang.php?action=get_riwayat_pembayaran&hutang_id=$hutangId'));
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
-        print('Response from API: $result'); // Logging respons API
         if (result['status'] == 'success') {
           riwayatList.value = (result['data'] as List)
               .map((e) => RiwayatPembayaran.fromJson(e))
               .toList();
-          print(
-              'Riwayat list updated: ${riwayatList.length} items'); // Logging jumlah data
         }
       }
     } finally {
       isLoading.value = false;
     }
   }
+
 }

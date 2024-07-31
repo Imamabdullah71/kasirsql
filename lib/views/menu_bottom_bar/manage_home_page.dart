@@ -38,10 +38,6 @@ class ManageHomePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: const Color.fromARGB(255, 114, 94, 225),
-                width: 2.0,
-              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),

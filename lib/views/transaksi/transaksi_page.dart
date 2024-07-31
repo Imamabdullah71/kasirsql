@@ -27,7 +27,7 @@ class TransaksiPage extends StatelessWidget {
         elevation: 0,
       ),
       body: Obx(() {
-        if (barangController.barangList.isEmpty) {
+        if (barangController.filteredBarangList.isEmpty) {
           return const Center(
             child: Text(
               'Tidak ada data barang',
@@ -40,9 +40,9 @@ class TransaksiPage extends StatelessWidget {
         }
         return ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          itemCount: barangController.barangList.length,
+          itemCount: barangController.filteredBarangList.length,
           itemBuilder: (context, index) {
-            final barang = barangController.barangList[index];
+            final barang = barangController.filteredBarangList[index];
             return Obx(() {
               var detailBarang =
                   transaksiController.selectedBarangList.firstWhere(

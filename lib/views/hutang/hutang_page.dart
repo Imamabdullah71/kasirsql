@@ -40,23 +40,27 @@ class HutangPage extends StatelessWidget {
           itemBuilder: (context, index) {
             var hutang = hutangController.hutangList[index];
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 elevation: 3,
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 16.0),
                   title: Text(
                     formatTanggal(hutang.tanggalMulai),
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text(
                     'Sisa Hutang: ${formatRupiah(hutang.sisaHutang)}',
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () => _showDetailDialog(context, hutang),
                 ),
               ),
@@ -229,7 +233,7 @@ class HutangPage extends StatelessWidget {
                   ),
                 );
               }),
-            ),
+            )
           ],
         );
       },

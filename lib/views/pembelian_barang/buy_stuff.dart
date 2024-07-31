@@ -24,13 +24,13 @@ class BuyStuff extends StatelessWidget {
         children: [
           Expanded(
             child: Obx(() {
-              if (barangController.barangList.isEmpty) {
+              if (barangController.filteredBarangList.isEmpty) {
                 return const Center(child: Text('Tidak ada data barang'));
               }
               return ListView.builder(
-                itemCount: barangController.barangList.length,
+                itemCount: barangController.filteredBarangList.length,
                 itemBuilder: (context, index) {
-                  final barang = barangController.barangList[index];
+                  final barang = barangController.filteredBarangList[index];
                   return ListTile(
                     onTap: () {
                       Get.dialog(
