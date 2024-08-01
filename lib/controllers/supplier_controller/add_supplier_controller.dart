@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:kasirsql/views/supplier/crop_image_page.dart';
+import 'package:kasirsql/views/supplier/crop_image_supplier.dart';
 import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart'; // Import UserController
 

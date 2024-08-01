@@ -15,6 +15,7 @@ import 'package:kasirsql/views/transaksi/transaction_success_page.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TransaksiController extends GetxController {
+  var isPressed = false.obs;
   var isLoading = false.obs;
   var selectedBarangList = <Map<String, dynamic>>[].obs;
   var totalHarga = 0.0.obs;
@@ -608,28 +609,52 @@ class TransaksiController extends GetxController {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Berhasil menambahkan data!',
+                    'Berhasil memasukkan ke daftar hutang!',
                     style: TextStyle(fontSize: 20),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      final BottomBarController bottomBarController =
-                          Get.find();
-                      bottomBarController.resetToHome();
-                      Get.offAllNamed('/halaman_utama');
-                    },
-                    child: const Text('Halaman Utama'),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.back();
-                      Get.back();
-                      Get.back();
-                      Get.back();
-                    },
-                    child: const Text('Transaksi Kembali'),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 229, 135, 246),
+                          Color.fromARGB(255, 114, 94, 225),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      onPressed: () {
+                        final BottomBarController bottomBarController =
+                            Get.find();
+                        bottomBarController.resetToHome();
+                        Get.offAllNamed('/halaman_utama');
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.home,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            'Halaman Utama',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -831,24 +856,26 @@ class TransaksiController extends GetxController {
       }
     } catch (e) {
       // Gagal / Error
-        Get.snackbar('Error', '$e',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          borderRadius: 10,
-          margin: const EdgeInsets.all(10),
-          snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.white),
-          duration: const Duration(seconds: 3),
-          snackStyle: SnackStyle.FLOATING,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        );
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 
@@ -864,5 +891,9 @@ class TransaksiController extends GetxController {
     totalBarang.value = 0;
     bayar.value = 0.0;
     kembali.value = 0.0;
+  }
+
+  void toggleButtonPress() {
+    isPressed.value = !isPressed.value;
   }
 }

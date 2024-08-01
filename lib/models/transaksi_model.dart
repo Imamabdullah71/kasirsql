@@ -8,6 +8,7 @@ class Transaksi {
   final int userId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  String? struk;  // Tambahkan properti ini
 
   Transaksi({
     this.id,
@@ -19,6 +20,7 @@ class Transaksi {
     required this.userId,
     required this.createdAt,
     required this.updatedAt,
+    this.struk,  // Tambahkan properti ini
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +34,7 @@ class Transaksi {
       'user_id': userId,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'struk': struk,  // Tambahkan properti ini
     };
   }
 
@@ -46,6 +49,7 @@ class Transaksi {
       userId: int.parse(json['user_id'].toString()),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      struk: json['struk'],  // Tambahkan properti ini
     );
   }
 }

@@ -37,13 +37,6 @@ class ManageTransaksi extends StatelessWidget {
               Get.toNamed("/riwayat_transaksi");
             },
           ),
-          ListTile(
-            leading: const Icon(BootstrapIcons.file_earmark_text),
-            title: const Text("Hutang"),
-            onTap: () {
-              Get.toNamed("/hutang_page");
-            },
-          ),
         ],
       ),
     );

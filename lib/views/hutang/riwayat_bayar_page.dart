@@ -32,20 +32,25 @@ class RiwayatBayarPage extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             return Obx(() {
+              // Sort the list based on tanggalBayar in descending order
+              var sortedRiwayatList = hutangController.riwayatList.toList();
+              sortedRiwayatList
+                  .sort((a, b) => b.tanggalBayar.compareTo(a.tanggalBayar));
+
               return ListView.builder(
-                itemCount: hutangController.riwayatList.length,
+                itemCount: sortedRiwayatList.length,
                 itemBuilder: (context, index) {
-                  var riwayat = hutangController.riwayatList[index];
+                  var riwayat = sortedRiwayatList[index];
                   return ListTile(
                     title: Text(formatTanggal(riwayat.tanggalBayar)),
                     subtitle: Text(
-                        'Sisa Hutang Sebelum: ${formatRupiah(riwayat.sisaHutangSebelum)}'),
+                        'Hutang ${formatRupiah(riwayat.sisaHutangSebelum)}'),
                     trailing: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('Jumlah Bayar: ${formatRupiah(riwayat.jumlahBayar)}'),
+                        Text('+ ${formatRupiah(riwayat.jumlahBayar)}'),
                         Text(
-                            'Sisa Hutang Sekarang: ${formatRupiah(riwayat.sisaHutangSekarang)}'),
+                            'Sisa Hutang ${formatRupiah(riwayat.sisaHutangSekarang)}'),
                       ],
                     ),
                   );
@@ -67,4 +72,3 @@ class RiwayatBayarPage extends StatelessWidget {
     return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
   }
 }
-

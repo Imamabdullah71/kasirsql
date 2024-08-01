@@ -1,9 +1,15 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:kasirsql/controllers/barang_controller/tambah_barang_controller.dart';
 import 'package:kasirsql/models/barang_model.dart';
 import 'dart:convert';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
+import 'package:path_provider/path_provider.dart';
 
 class BarangController extends GetxController {
   var isLoading = false.obs;
@@ -14,6 +20,8 @@ class BarangController extends GetxController {
   var selectedBarang = Rxn<Barang>();
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_barang.php';
   final UserController userController = Get.find<UserController>();
+  final TambahBarangController tambahBarangController =
+      Get.find<TambahBarangController>();
 
   @override
   void onInit() {
@@ -119,8 +127,57 @@ class BarangController extends GetxController {
     }
   }
 
-  void editBarang(Barang barang) async {
+  Future<String?> uploadImageNew(Uint8List imageBytes) async {
+    final tempDir = await getTemporaryDirectory();
+    final fileName =
+        '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+    final file = File('${tempDir.path}/$fileName')
+      ..writeAsBytesSync(imageBytes);
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
+    request.files.add(await http.MultipartFile.fromPath('image', file.path));
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      var result = json.decode(responseData);
+      if (result['status'] == 'success') {
+        return result['path'];
+      } else {
+        _showErrorSnackbar('Gagal mengunggah gambar');
+        return null;
+      }
+    } else {
+      _showErrorSnackbar('Gagal mengunggah gambar');
+      return null;
+    }
+  }
+
+  void editBarang(Barang barang, {Uint8List? newImage}) async {
+    isLoading.value = true;
     try {
+      String? newImagePath;
+
+      if (newImage != null) {
+        // Unggah gambar baru
+        newImagePath = await uploadImageNew(newImage);
+
+        // Hapus gambar lama jika ada gambar baru
+        if (newImagePath != null &&
+            barang.gambar != null &&
+            barang.gambar!.isNotEmpty) {
+          final response = await http.post(
+            Uri.parse('$apiUrl?action=delete_image'),
+            body: {'path': barang.gambar},
+          );
+
+          if (response.statusCode != 200) {
+            _showErrorSnackbar('Gagal menghapus gambar lama');
+          }
+        }
+      }
+
       final response = await http.post(
         Uri.parse('$apiUrl?action=update_barang'),
         body: {
@@ -129,7 +186,7 @@ class BarangController extends GetxController {
           'kode_barang': barang.kodeBarang.toString(),
           'stok_barang': barang.stokBarang.toString(),
           'kategori_id': barang.kategoriId.toString(),
-          'gambar': barang.gambar ?? '',
+          'gambar': newImagePath ?? barang.gambar ?? '',
           'harga_jual': barang.hargaJual.toString(),
           'harga_beli': barang.hargaBeli.toString(),
           'updated_at': DateTime.now().toIso8601String(),
@@ -140,6 +197,7 @@ class BarangController extends GetxController {
         var responseData = json.decode(response.body);
         if (responseData['status'] == 'success') {
           fetchBarang();
+          Get.back();
           Get.back();
           Get.snackbar(
             'Success',
@@ -161,6 +219,8 @@ class BarangController extends GetxController {
       }
     } catch (e) {
       _showErrorSnackbar('$e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

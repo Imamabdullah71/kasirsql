@@ -137,11 +137,13 @@ class TambahBarangController extends GetxController {
 
   Future<String?> uploadImage(Uint8List imageBytes) async {
     final tempDir = await getTemporaryDirectory();
-    final fileName = '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
+    final fileName =
+        '${DateFormat('yyyyMMddHHmmss').format(DateTime.now())}.jpg';
     final file = File('${tempDir.path}/$fileName')
       ..writeAsBytesSync(imageBytes);
 
-    var request = http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
     request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
     var response = await request.send();

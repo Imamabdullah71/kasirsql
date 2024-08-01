@@ -35,10 +35,16 @@ class HutangPage extends StatelessWidget {
         if (hutangController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
+
+        // Sort the list based on tanggalMulai in descending order
+        var sortedHutangList = hutangController.hutangList.toList();
+        sortedHutangList
+            .sort((a, b) => b.tanggalMulai.compareTo(a.tanggalMulai));
+
         return ListView.builder(
-          itemCount: hutangController.hutangList.length,
+          itemCount: sortedHutangList.length,
           itemBuilder: (context, index) {
-            var hutang = hutangController.hutangList[index];
+            var hutang = sortedHutangList[index];
             return Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),

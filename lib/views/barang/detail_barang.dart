@@ -14,14 +14,16 @@ class BarangDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
-          'Detail Barang',
-          style: TextStyle(color: Colors.white),
+          "Detail Barang",
+          style: TextStyle(
+              color: Color.fromARGB(255, 114, 94, 225),
+              fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -143,7 +145,7 @@ class BarangDetailPage extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.toNamed('/barang-edit', arguments: barang);
+                      Get.toNamed('/edit_barang', arguments: barang);
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,

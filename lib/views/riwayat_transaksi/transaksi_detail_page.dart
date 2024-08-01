@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/transaksi_controller/riwayat_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
+import 'tampil_struk_page.dart';
 
 class TransaksiDetailPage extends StatelessWidget {
   final Transaksi transaksi;
@@ -96,7 +97,8 @@ class TransaksiDetailPage extends StatelessWidget {
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('${detail.jumlahBarang} x ${detail.hargaBarang}'),
+                              Text(
+                                  '${detail.jumlahBarang} x ${detail.hargaBarang}'),
                               Text(controller.formatRupiah(detail.jumlahHarga)),
                             ],
                           ),
@@ -116,11 +118,22 @@ class TransaksiDetailPage extends StatelessWidget {
                   },
                   onTapUp: (_) {
                     controller.toggleButtonPress();
-                    // Add the functionality to display the receipt here
+                    if (transaksi.struk != null &&
+                        transaksi.struk!.isNotEmpty) {
+                      Get.to(
+                          () => TampilStrukPage(gambarStruk: transaksi.struk!));
+                    } else {
+                      Get.snackbar(
+                        "Error",
+                        "Struk tidak tersedia",
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    }
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 40),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30.0),
                       gradient: controller.isPressed.value
@@ -136,6 +149,16 @@ class TransaksiDetailPage extends StatelessWidget {
                                 Color.fromARGB(255, 229, 135, 246),
                               ],
                             ),
+                      boxShadow: controller.isPressed.value
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                     ),
                     child: const Text(
                       'Tampilkan Struk',
