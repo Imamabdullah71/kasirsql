@@ -27,11 +27,13 @@ import 'package:kasirsql/views/transaksi/payment_page.dart';
 import 'package:kasirsql/views/transaksi/transaksi_page.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final UserController userController = Get.put(UserController());
   await userController.loadUserFromPreferences();
+  await initializeDateFormatting('id_ID', null);
   runApp(const MyApp());
 }
 
@@ -110,7 +112,7 @@ class MyApp extends StatelessWidget {
               // Kelola Stok Barang
               GetPage(
                   name: "/kelola_stok_page",
-                  page: () => KelolaStokPage(),
+                  page: () => KelolaStok(),
                   binding: DataBindings(),
                   middlewares: [AuthMiddleware()]),
               GetPage(

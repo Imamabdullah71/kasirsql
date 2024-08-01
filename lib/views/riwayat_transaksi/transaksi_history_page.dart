@@ -17,23 +17,26 @@ class TransaksiHistoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Riwayat Transaksi",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        elevation: 0,
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {
               _showSortOptions(context);
             },
             icon: const Icon(BootstrapIcons.three_dots_vertical),
-          ),
+          )
         ],
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Column(
         children: [

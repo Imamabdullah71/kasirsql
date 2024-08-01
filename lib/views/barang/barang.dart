@@ -34,6 +34,8 @@ class BarangPage extends StatelessWidget {
             icon: const Icon(BootstrapIcons.three_dots_vertical),
           )
         ],
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Column(
         children: [

@@ -69,6 +69,8 @@ class RiwayatBayarPage extends StatelessWidget {
   }
 
   String formatRupiah(double amount) {
-    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
+    // Menggunakan nilai absolut untuk menghilangkan simbol minus
+    double absoluteAmount = amount.abs();
+    return 'Rp ${absoluteAmount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
   }
 }

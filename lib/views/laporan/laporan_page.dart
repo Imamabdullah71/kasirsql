@@ -12,7 +12,20 @@ class LaporanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Laporan Transaksi'),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 114, 94, 225),
+        ),
+        title: const Text(
+          "Laporan Transaksi",
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,12 +44,27 @@ class LaporanPage extends StatelessWidget {
               selectedItem: 'Laporan hari ini',
             ),
             const SizedBox(height: 20),
-            Obx(() => Text(
-                'Total Pemasukan: ${laporanController.formatRupiah(laporanController.totalPemasukan.value)}')),
-            Obx(() => Text(
-                'Total Pengeluaran: ${laporanController.formatRupiah(laporanController.totalPengeluaran.value)}')),
-            Obx(() => Text(
-                'Laba Bersih: ${laporanController.formatRupiah(laporanController.labaBersih.value)}')),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              elevation: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Obx(() => Text(
+                        'Total Pemasukan: ${laporanController.formatRupiah(laporanController.totalPemasukan.value)}')),
+                    const Divider(),
+                    Obx(() => Text(
+                        'Total Pengeluaran: ${laporanController.formatRupiah(laporanController.totalPengeluaran.value)}')),
+                    const Divider(),
+                    Obx(() => Text(
+                        'Laba Bersih: ${laporanController.formatRupiah(laporanController.labaBersih.value)}')),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

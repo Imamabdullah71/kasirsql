@@ -10,15 +10,20 @@ class ManageBarang extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        title: Text(
-          "Manajemen".toUpperCase(),
-          style: const TextStyle(
-            color: Colors.white,
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 114, 94, 225),
+        ),
+        title: const Text(
+          "MANAJEMEN",
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
@@ -58,12 +63,6 @@ class ManageBarang extends StatelessWidget {
             onTap: () => Get.toNamed("/testing_page"),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed("/infaq_page");
-        },
-        child: const Icon(BootstrapIcons.plus_lg),
       ),
     );
   }

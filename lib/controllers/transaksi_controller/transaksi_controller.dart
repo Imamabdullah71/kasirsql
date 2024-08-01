@@ -4,6 +4,7 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:kasirsql/controllers/bottom_bar_controller.dart';
 import 'package:kasirsql/controllers/transaksi_controller/generate_receipt_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
@@ -229,6 +230,7 @@ class TransaksiController extends GetxController {
         ),
         barrierDismissible: false,
       );
+
       var response = await http.post(
         Uri.parse('$apiUrl?action=create_transaksi'),
         headers: {"Content-Type": "application/json"},
@@ -236,6 +238,7 @@ class TransaksiController extends GetxController {
       );
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
@@ -282,8 +285,10 @@ class TransaksiController extends GetxController {
             await Get.find<GenerateReceiptController>()
                 .generateReceipt(transaksi, detailTransaksiList, transaksiId);
 
+            String formattedDate =
+                DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
             File receiptFile = File(
-                '${(await getApplicationDocumentsDirectory()).path}/receipt_$transaksiId.png');
+                '${(await getApplicationDocumentsDirectory()).path}/$formattedDate.png');
 
             var uri = Uri.parse('$apiUrl?action=upload_struk');
             var request = http.MultipartRequest('POST', uri)
@@ -604,14 +609,10 @@ class TransaksiController extends GetxController {
             Get.back();
 
             Get.defaultDialog(
-              title: 'Berhasil',
+              title: 'Berhasil memasukkan ke laporan hutang!',
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Berhasil memasukkan ke daftar hutang!',
-                    style: TextStyle(fontSize: 20),
-                  ),
                   const SizedBox(height: 16),
                   DecoratedBox(
                     decoration: BoxDecoration(
@@ -774,6 +775,7 @@ class TransaksiController extends GetxController {
       sisaHutang: sisaHutang,
       status: 'belum lunas',
       tanggalMulai: DateTime.now(),
+      tanggalSelesai: DateTime.now(),
     );
 
     print(jsonEncode(hutang.toJson()));

@@ -29,7 +29,7 @@ class DataBindings extends Bindings {
     Get.lazyPut<BarangController>(() => BarangController());
     Get.lazyPut<TambahBarangController>(() => TambahBarangController());
     // Kelola Stok
-    Get.lazyPut<KelolaStokPageController>(() => KelolaStokPageController());
+    Get.lazyPut<KelolaStokController>(() => KelolaStokController());
     // Kategori
     Get.lazyPut<KategoriController>(() => KategoriController());
     // Supplier

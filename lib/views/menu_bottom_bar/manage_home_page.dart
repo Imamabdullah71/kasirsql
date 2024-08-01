@@ -9,15 +9,20 @@ class ManageHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        title: Text(
-          "Halaman Utama".toUpperCase(),
-          style: const TextStyle(
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 114, 94, 225),
+        ),
+        title: const Text(
+          "HALAMAN UTAMA",
+          style: TextStyle(
             color: Color.fromARGB(255, 114, 94, 225),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Container(
         decoration: const BoxDecoration(

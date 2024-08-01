@@ -6,6 +6,8 @@ import 'package:kasirsql/models/riwayat_pembayaran_model.dart';
 
 class HutangController extends GetxController {
   var hutangList = <Hutang>[].obs;
+  var allHutangList = <Hutang>[].obs;
+  var allLunasList = <Hutang>[].obs;
   var lunasList = <Hutang>[].obs;
   var isLoading = false.obs;
   var riwayatList = <RiwayatPembayaran>[].obs;
@@ -25,8 +27,11 @@ class HutangController extends GetxController {
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
-          hutangList.value =
+          var data =
               (result['data'] as List).map((e) => Hutang.fromJson(e)).toList();
+          data.sort((a, b) => b.tanggalMulai.compareTo(a.tanggalMulai));
+          allHutangList.value = data; // Menyimpan semua data hutang
+          hutangList.value = data; // Menyimpan data yang ditampilkan
         }
       }
     } finally {
@@ -42,13 +47,21 @@ class HutangController extends GetxController {
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
-          lunasList.value =
+          var hutangList =
               (result['data'] as List).map((e) => Hutang.fromJson(e)).toList();
+              hutangList.sort((a, b) => b.tanggalSelesai.compareTo(a.tanggalSelesai));
+          lunasList.value = hutangList;
+          allLunasList.value = hutangList; // Menyimpan data asli
         }
       }
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Metode tambahan untuk mengembalikan data ke keadaan awal jika diperlukan
+  void resetLunasList() {
+    lunasList.value = allLunasList;
   }
 
   Future<void> updateHutang(int id, double inputBayar, double sisaHutangSebelum,
@@ -113,5 +126,4 @@ class HutangController extends GetxController {
       isLoading.value = false;
     }
   }
-
 }

@@ -83,7 +83,7 @@ class RiwayatController extends GetxController {
   }
 
   String formatTanggal(DateTime date) {
-    final DateFormat formatter = DateFormat('dd-MM-yyyy HH:mm');
+    final DateFormat formatter = DateFormat('dd MMMM yyyy HH:mm', 'id_ID');
     return formatter.format(date);
   }
 

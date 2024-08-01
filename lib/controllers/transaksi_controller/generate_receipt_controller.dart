@@ -1,17 +1,19 @@
 import 'dart:io';
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
 import 'package:kasirsql/models/transaksi_model.dart';
 import 'package:kasirsql/models/detail_transaksi_model.dart';
+import 'package:intl/intl.dart';
 
 class GenerateReceiptController extends GetxController {
   final UserController userController = Get.find<UserController>();
 
-  Future<void> generateReceipt(Transaksi transaksi, List<DetailTransaksi> detailTransaksiList, int transaksiId) async {
-    final recorder = PictureRecorder();
+  Future<void> generateReceipt(Transaksi transaksi,
+      List<DetailTransaksi> detailTransaksiList, int transaksiId) async {
+    final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
     final paint = Paint();
 
@@ -26,7 +28,8 @@ class GenerateReceiptController extends GetxController {
 
       // Nama Toko dan Alamat
       const textStyle = TextStyle(color: Colors.black, fontSize: 12);
-      String tokoInfo = '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}';
+      String tokoInfo =
+          '${user?.namaToko ?? 'Toko'}\n${user?.alamat ?? 'Alamat'}';
       double tokoInfoHeight = calculateTextHeight(tokoInfo, textStyle, width);
 
       // Waktu
@@ -34,7 +37,8 @@ class GenerateReceiptController extends GetxController {
       double waktuHeight = calculateTextHeight(waktu, textStyle, width);
 
       // Garis pembatas
-      String garis = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
+      String garis =
+          '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n';
       double garisHeight = calculateTextHeight(garis, textStyle, width);
 
       // Detail Barang
@@ -45,7 +49,8 @@ class GenerateReceiptController extends GetxController {
         detailHeight += calculateTextHeight(itemName, textStyle, width);
 
         // Jumlah x Harga Barang dan Harga Total
-        final itemDetail = '${detail.jumlahBarang} x ${formatRupiahNoRP(detail.hargaBarang)}';
+        final itemDetail =
+            '${detail.jumlahBarang} x ${formatRupiahNoRP(detail.hargaBarang)}';
         detailHeight += calculateTextHeight(itemDetail, textStyle, width);
 
         // Add extra space
@@ -53,21 +58,32 @@ class GenerateReceiptController extends GetxController {
       }
 
       // Subtotal, Bayar, Kembali
-      String pembayaran = 'Subtotal : ${formatRupiahWithRP(transaksi.totalHarga)}\nBayar : ${formatRupiahWithRP(transaksi.bayar)}\nKembali : ${formatRupiahWithRP(transaksi.kembali)}\n';
-      double pembayaranHeight = calculateTextHeight(pembayaran, textStyle, width);
+      String pembayaran =
+          'Subtotal : ${formatRupiahWithRP(transaksi.totalHarga)}\nBayar : ${formatRupiahWithRP(transaksi.bayar)}\nKembali : ${formatRupiahWithRP(transaksi.kembali)}\n';
+      double pembayaranHeight =
+          calculateTextHeight(pembayaran, textStyle, width);
 
       // Nomor Telepon dan Ucapan Terima Kasih
       String terimaKasih = '${user?.noTelepon ?? 'No Telepon'}\nTerima Kasih\n';
-      double terimaKasihHeight = calculateTextHeight(terimaKasih, textStyle, width);
+      double terimaKasihHeight =
+          calculateTextHeight(terimaKasih, textStyle, width);
 
       // Calculate total height
-      height = tokoInfoHeight + waktuHeight + garisHeight + detailHeight + garisHeight + pembayaranHeight + terimaKasihHeight + 50;
+      height = tokoInfoHeight +
+          waktuHeight +
+          garisHeight +
+          detailHeight +
+          garisHeight +
+          pembayaranHeight +
+          terimaKasihHeight +
+          50;
 
       // Draw canvas background
-      canvas.drawRect(Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
+      canvas.drawRect(
+          Rect.fromLTWH(0, 0, width, height), paint..color = Colors.white);
 
       final textPainter = TextPainter(
-        textDirection: TextDirection.ltr,
+        textDirection: ui.TextDirection.ltr,
         textAlign: TextAlign.left,
       );
 
@@ -116,7 +132,8 @@ class GenerateReceiptController extends GetxController {
         yOffset += calculateTextHeight(itemName, textStyle, width);
 
         // Jumlah x Harga Barang dan Harga Total
-        final itemDetail = '${detail.jumlahBarang} x ${formatRupiahNoRP(detail.hargaBarang)}';
+        final itemDetail =
+            '${detail.jumlahBarang} x ${formatRupiahNoRP(detail.hargaBarang)}';
         textPainter.textAlign = TextAlign.left; // Ensure left alignment
         textPainter.text = TextSpan(
           text: itemDetail,
@@ -132,9 +149,11 @@ class GenerateReceiptController extends GetxController {
           style: textStyle,
         );
         textPainter.layout(minWidth: width - itemDetailWidth - 20);
-        textPainter.paint(canvas, Offset(width - itemDetailWidth - 10, yOffset));
-        
-        yOffset += calculateTextHeight(itemDetail, textStyle, itemDetailWidth) + 10; // Added extra space
+        textPainter.paint(
+            canvas, Offset(width - itemDetailWidth - 10, yOffset));
+
+        yOffset += calculateTextHeight(itemDetail, textStyle, itemDetailWidth) +
+            10; // Added extra space
       }
 
       // Garis pembatas
@@ -168,14 +187,15 @@ class GenerateReceiptController extends GetxController {
 
       final picture = recorder.endRecording();
       final img = await picture.toImage(width.toInt(), height.toInt());
-      final byteData = await img.toByteData(format: ImageByteFormat.png);
+      final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
       final buffer = byteData!.buffer.asUint8List();
 
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/receipt_$transaksiId.png');
+      String formattedDate =
+          DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      final file = File('${directory.path}/$formattedDate.png');
       await file.writeAsBytes(buffer);
       print('Receipt saved: ${file.path}');
-
     } catch (e) {
       print('Error generating receipt: $e');
       Get.defaultDialog(
@@ -192,7 +212,7 @@ class GenerateReceiptController extends GetxController {
   double calculateTextHeight(String text, TextStyle style, double width) {
     final TextPainter tp = TextPainter(
       text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
     );
     tp.layout(minWidth: width);
     return tp.height;

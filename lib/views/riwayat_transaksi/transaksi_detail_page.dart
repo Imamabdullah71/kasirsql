@@ -41,12 +41,6 @@ class TransaksiDetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'ID Transaksi: ${transaksi.id}',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
                         'Total Barang: ${transaksi.totalBarang}',
                         style: const TextStyle(fontSize: 16),
                       ),
@@ -76,6 +70,12 @@ class TransaksiDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            const Center(
+              child: Text(
+                'Detail Barang',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
             Expanded(
               child: Obx(() {
                 if (controller.detailTransaksiList.isEmpty) {
@@ -92,7 +92,7 @@ class TransaksiDetailPage extends StatelessWidget {
                         elevation: 5,
                         margin: const EdgeInsets.symmetric(vertical: 8.0),
                         child: ListTile(
-                          contentPadding: const EdgeInsets.all(16.0),
+                          contentPadding: const EdgeInsets.all(8.0),
                           title: Text(detail.namaBarang),
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

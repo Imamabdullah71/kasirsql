@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/kategori_controller/kategori_controller.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddKategoriPage extends StatelessWidget {
   AddKategoriPage({super.key});
@@ -30,92 +28,6 @@ class AddKategoriPage extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              Obx(() {
-                if (kategoriController.selectedImagePath.value == '') {
-                  return Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey[300],
-                    ),
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      color: Colors.grey,
-                      size: 60,
-                    ),
-                  );
-                } else {
-                  return Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey[300],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(kategoriController.selectedImagePath.value),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                }
-              }),
-              const SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    ),
-                    onPressed: () {
-                      kategoriController.pickImage(ImageSource.camera);
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.camera_alt_rounded,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          'Kamera',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    ),
-                    onPressed: () {
-                      kategoriController.pickImage(ImageSource.gallery);
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.image,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          'Galeri',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(

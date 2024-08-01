@@ -5,6 +5,7 @@ class Hutang {
   final double sisaHutang;
   final String status;
   final DateTime tanggalMulai;
+  final DateTime tanggalSelesai;
 
   Hutang({
     this.id,
@@ -13,6 +14,7 @@ class Hutang {
     required this.sisaHutang,
     this.status = 'belum lunas',
     required this.tanggalMulai,
+    required this.tanggalSelesai,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class Hutang {
       'sisa_hutang': sisaHutang,
       'status': status,
       'tanggal_mulai': tanggalMulai.toIso8601String(),
+      'tanggal_selesai': tanggalMulai.toIso8601String(),
     };
   }
 
@@ -34,6 +37,7 @@ class Hutang {
       sisaHutang: double.parse(json['sisa_hutang'].toString()),
       status: json['status'] ?? 'belum lunas',
       tanggalMulai: DateTime.parse(json['tanggal_mulai']),
+      tanggalSelesai: DateTime.parse(json['tanggal_selesai']),
     );
   }
 }

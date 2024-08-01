@@ -21,14 +21,19 @@ class PaymentPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Pembayaran",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -36,58 +41,62 @@ class PaymentPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(() {
-              return Text(
-                'Total Harga: ${transaksiController.formatRupiah(transaksiController.totalHarga.value)}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              );
-            }),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: uangDibayarController,
-              decoration: InputDecoration(
-                prefixText: 'Rp ',
-                labelText: 'Uang Dibayar',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 114, 94, 225),
+            Center(
+              child: Obx(() {
+                return Text(
+                  'Total Harga: ${transaksiController.formatRupiah(transaksiController.totalHarga.value)}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey.shade400,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 20,
-                ),
-              ),
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                RupiahInputFormatter(),
-              ],
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Pembayaran tidak boleh kosong';
-                }
-                if (double.tryParse(value.replaceAll('.', '')) == null) {
-                  return 'Pembayaran harus berupa angka';
-                }
-                return null;
-              },
+                );
+              }),
             ),
+            const SizedBox(height: 16),
+            Obx(() => TextFormField(
+                  controller: uangDibayarController,
+                  decoration: InputDecoration(
+                    prefixText: 'Rp ',
+                    labelText: switchController.isSwitched.value
+                        ? 'Uang yang baru dibayar'
+                        : 'Uang dibayar',
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 114, 94, 225),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 20,
+                    ),
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    RupiahInputFormatter(),
+                  ],
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Pembayaran tidak boleh kosong';
+                    }
+                    if (double.tryParse(value.replaceAll('.', '')) == null) {
+                      return 'Pembayaran harus berupa angka';
+                    }
+                    return null;
+                  },
+                )),
             const SizedBox(height: 20),
             Obx(
               () => Row(
@@ -166,7 +175,7 @@ class PaymentPage extends StatelessWidget {
                     },
                     child: Text(
                       switchController.isSwitched.value
-                          ? 'Masukkan ke daftar'
+                          ? 'Masukkan ke hutang'
                           : 'Bayar',
                       style: const TextStyle(color: Colors.white),
                     ),

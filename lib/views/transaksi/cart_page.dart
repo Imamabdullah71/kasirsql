@@ -1,3 +1,4 @@
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/transaksi_controller/transaksi_controller.dart';
@@ -5,22 +6,27 @@ import 'package:kasirsql/models/barang_model.dart';
 
 class CartPage extends StatelessWidget {
   CartPage({super.key});
-  final TransaksiController transaksiController = Get.find<TransaksiController>();
+  final TransaksiController transaksiController =
+      Get.find<TransaksiController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
-        title: Obx(() => Text(
-          'Total Harga: ${transaksiController.formatRupiah(transaksiController.totalHarga.value)}',
-          style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-        )),
+        title: const Text(
+          "Keranjang",
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Obx(() {
         if (transaksiController.selectedBarangList.isEmpty) {
@@ -37,15 +43,18 @@ class CartPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'Total Barang: ${transaksiController.totalBarang.value}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 itemCount: transaksiController.selectedBarangList.length,
                 itemBuilder: (context, index) {
-                  final detailBarang = transaksiController.selectedBarangList[index];
+                  final detailBarang =
+                      transaksiController.selectedBarangList[index];
                   return Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -53,7 +62,8 @@ class CartPage extends StatelessWidget {
                     elevation: 3,
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
-                      leading: detailBarang['gambar'] != null && detailBarang['gambar'].isNotEmpty
+                      leading: detailBarang['gambar'] != null &&
+                              detailBarang['gambar'].isNotEmpty
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
@@ -66,11 +76,13 @@ class CartPage extends StatelessWidget {
                           : const Icon(Icons.broken_image),
                       title: Text(
                         detailBarang['nama_barang'],
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       subtitle: Text(
                         '${transaksiController.formatRupiah(detailBarang['harga_barang'])} x ${detailBarang['jumlah_barang']} = ${transaksiController.formatRupiah(detailBarang['jumlah_harga'])}',
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -116,12 +128,14 @@ class CartPage extends StatelessWidget {
                           ),
                           Text(
                             detailBarang['jumlah_barang'].toString(),
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add),
                             onPressed: () {
-                              if (detailBarang['jumlah_barang'] < detailBarang['stok_barang']) {
+                              if (detailBarang['jumlah_barang'] <
+                                  detailBarang['stok_barang']) {
                                 transaksiController.updateBarangQuantity(
                                   Barang(
                                     id: detailBarang['id'],
@@ -142,12 +156,14 @@ class CartPage extends StatelessWidget {
                                 Get.snackbar(
                                   'Stok Tidak Cukup',
                                   'Tidak bisa melebihi stok barang.',
-                                  backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 235, 218, 63),
                                   colorText: Colors.black,
                                   borderRadius: 10,
                                   margin: const EdgeInsets.all(10),
                                   snackPosition: SnackPosition.TOP,
-                                  icon: const Icon(Icons.error, color: Colors.black),
+                                  icon: const Icon(Icons.error,
+                                      color: Colors.black),
                                   duration: const Duration(seconds: 3),
                                   snackStyle: SnackStyle.FLOATING,
                                   boxShadows: [
@@ -184,9 +200,24 @@ class CartPage extends StatelessWidget {
               ),
             ),
             onPressed: () => Get.toNamed("/payment_page"),
-            child: Text(
-              'Lanjut ke Pembayaran (${transaksiController.totalBarang.value})',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  BootstrapIcons.wallet,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Pembayaran (${transaksiController.formatRupiah(transaksiController.totalHarga.value)})',
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ],
             ),
           );
         }),

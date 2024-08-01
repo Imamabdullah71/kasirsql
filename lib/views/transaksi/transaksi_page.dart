@@ -19,16 +19,15 @@ class TransaksiPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
-          "Transaksi",
+          "Pilih Barang",
           style: TextStyle(
-              color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        elevation: 0,
         actions: [
           IconButton(
             onPressed: () {
@@ -37,6 +36,10 @@ class TransaksiPage extends StatelessWidget {
             icon: const Icon(BootstrapIcons.three_dots_vertical),
           )
         ],
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Column(
         children: [
