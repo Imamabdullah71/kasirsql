@@ -384,6 +384,7 @@ class HutangPage extends StatelessWidget {
                 controller: inputBayarController,
                 decoration: InputDecoration(
                   labelText: 'Uang bayar',
+                  prefixText: 'Rp ',
                   filled: true,
                   fillColor: Colors.white,
                   border: const OutlineInputBorder(

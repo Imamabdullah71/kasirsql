@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/kategori_controller/kategori_controller.dart';
 import 'package:kasirsql/models/kategori_model.dart';
-import 'package:kasirsql/views/kategori/add_kategori.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 
 class CategoriesPage extends StatelessWidget {
@@ -16,21 +15,23 @@ class CategoriesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Kelola Kategori",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {
               _showSortOptions(context);
             },
             icon: const Icon(BootstrapIcons.three_dots_vertical),
-          ),
+          )
         ],
         elevation: 10.0,
         shadowColor: Colors.black.withOpacity(0.5),
@@ -53,6 +54,7 @@ class CategoriesPage extends StatelessWidget {
                 ],
               ),
               child: TextField(
+                keyboardType: TextInputType.text,
                 controller: searchController,
                 decoration: InputDecoration(
                   prefixIcon: ShaderMask(
@@ -93,16 +95,29 @@ class CategoriesPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final Kategori kategori =
                       kategoriController.kategoriList[index];
-                  return ListTile(
-                    title: Text(kategori.namaKategori),
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 4.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
-                      onPressed: () {
-                        kategoriController.deleteKategori(kategori.id);
-                      },
+                      elevation: 3,
+                      child: ListTile(
+                        title: Text(kategori.namaKategori),
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(context, kategori.id);
+                          },
+                        ),
+                        onTap: () {
+                          _showEditDialog(context, kategori);
+                        },
+                      ),
                     ),
                   );
                 },
@@ -122,8 +137,7 @@ class CategoriesPage extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           ),
-          onPressed: () => Get.to(
-              () => AddKategoriPage()), // Pindah ke halaman tambah kategori
+          onPressed: () => _showAddKategoriDialog(context),
           child: const Text(
             "Tambah Kategori",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -206,5 +220,154 @@ class CategoriesPage extends StatelessWidget {
     }
 
     kategoriController.kategoriList.value = filtered;
+  }
+
+  void _showEditDialog(BuildContext context, Kategori kategori) {
+    final TextEditingController namaKategoriController =
+        TextEditingController(text: kategori.namaKategori);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Kategori'),
+          content: TextFormField(
+            controller: namaKategoriController,
+            decoration: InputDecoration(
+              labelText: 'Nama Kategori',
+              filled: true,
+              fillColor: Colors.white,
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30),
+                ),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 114, 94, 225),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey.shade500,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+              ),
+              contentPadding: const EdgeInsets.only(left: 20),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Nama Kategori tidak boleh kosong';
+              }
+              return null;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                kategoriController.createKategori(namaKategoriController.text);
+                Get.back();
+              },
+              child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAddKategoriDialog(BuildContext context) {
+    final TextEditingController namaKategoriController =
+        TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Tambah Kategori'),
+          content: TextFormField(
+            controller: namaKategoriController,
+            decoration: InputDecoration(
+              labelText: 'Nama Kategori',
+              filled: true,
+              fillColor: Colors.white,
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30),
+                ),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 114, 94, 225),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey.shade500,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+              ),
+              contentPadding: const EdgeInsets.only(left: 20),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Nama Kategori tidak boleh kosong';
+              }
+              return null;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                kategoriController.createKategori(namaKategoriController.text);
+              },
+              child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Penghapusan'),
+          content:
+              const Text('Apakah Anda yakin ingin menghapus kategori ini?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                kategoriController.deleteKategori(id);
+                Get.back();
+              },
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

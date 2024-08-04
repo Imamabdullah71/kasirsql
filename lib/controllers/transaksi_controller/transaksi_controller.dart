@@ -568,7 +568,6 @@ class TransaksiController extends GetxController {
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
-
           var transaksiId = result['transaksi_id'];
           if (transaksiId != null) {
             await _saveDetailTransaksi(transaksiId);
@@ -789,6 +788,15 @@ class TransaksiController extends GetxController {
                 offset: const Offset(0, 3),
               ),
             ],
+          );
+          Get.defaultDialog(
+            title: 'Berhasil disimpan',
+            textConfirm: 'Halaman Utama',
+            onConfirm: () {
+              final BottomBarController bottomBarController = Get.find();
+              bottomBarController.resetToHome(); // Reset to Home page
+              Get.offAllNamed('/halaman_utama');
+            },
           );
         } else {
           // Gagal / Error

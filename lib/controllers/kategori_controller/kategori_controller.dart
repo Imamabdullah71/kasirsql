@@ -25,6 +25,7 @@ class KategoriController extends GetxController {
         var data = json.decode(response.body) as List;
         allKategoriList.value =
             data.map((kategori) => Kategori.fromJson(kategori)).toList();
+        allKategoriList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         kategoriList.value = List.from(allKategoriList);
       } else {
         Get.snackbar(

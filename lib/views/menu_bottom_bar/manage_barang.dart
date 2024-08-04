@@ -47,20 +47,15 @@ class ManageBarang extends StatelessWidget {
             title: const Text("Manajemen stok"),
             onTap: () => Get.toNamed("/kelola_stok_page"),
           ),
-          ListTile(
-            leading: const Icon(BootstrapIcons.cart4),
-            title: const Text("Pembelian barang"),
-            onTap: () => Get.toNamed("/buy_stuff_page"),
-          ),
+          // ListTile(
+          //   leading: const Icon(BootstrapIcons.cart4),
+          //   title: const Text("Pembelian barang"),
+          //   onTap: () => Get.toNamed("/buy_stuff_page"),
+          // ),
           ListTile(
             leading: const Icon(BootstrapIcons.person_vcard),
             title: const Text("Supplier"),
             onTap: () => Get.toNamed("/page_supplier"),
-          ),
-          ListTile(
-            leading: const Icon(BootstrapIcons.bug_fill),
-            title: const Text("TESTING"),
-            onTap: () => Get.toNamed("/testing_page"),
           ),
         ],
       ),

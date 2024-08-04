@@ -66,7 +66,7 @@ class PaymentPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Obx(() => TextFormField(
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   controller: uangDibayarController,
                   decoration: InputDecoration(
                     prefixText: 'Rp ',

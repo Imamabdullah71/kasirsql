@@ -13,14 +13,18 @@ class AddKategoriPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Tambah Kategori",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0,
+        shadowColor: Colors.black.withOpacity(0.5),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
@@ -32,7 +36,29 @@ class AddKategoriPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: namaKategoriController,
-                  decoration: const InputDecoration(labelText: 'Nama Kategori'),
+                  decoration: InputDecoration(
+                    labelText: 'Nama Kategori',
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 114, 94, 225),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade500,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(30)),
+                    ),
+                    contentPadding: const EdgeInsets.only(left: 20),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Nama Kategori tidak boleh kosong';

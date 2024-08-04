@@ -148,7 +148,7 @@ class TambahBarangController extends GetxController {
 
     var request =
         http.MultipartRequest('POST', Uri.parse('$apiUrl?action=upload_image'));
-    request.files.add(await http.MultipartFile.fromPath('image', file.path));
+    request.files.add(await http.MultipartFile.fromPath('image', file.path)); 
 
     var response = await request.send();
     if (response.statusCode == 200) {

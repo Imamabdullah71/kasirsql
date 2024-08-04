@@ -10,13 +10,11 @@ import 'package:kasirsql/views/barang/barang.dart';
 import 'package:kasirsql/views/barang/detail_barang.dart';
 import 'package:kasirsql/views/barang/edit_barang.dart';
 import 'package:kasirsql/views/barang/tambah_barang.dart';
-import 'package:kasirsql/views/barang/testting_page.dart';
 import 'package:kasirsql/views/hutang/hutang_page.dart';
 import 'package:kasirsql/views/kategori/kategori_page.dart';
 import 'package:kasirsql/views/kelola_stok/kelola_stok.dart';
 import 'package:kasirsql/views/laporan/laporan_page.dart';
 import 'package:kasirsql/views/page_landing/main_landing.dart';
-import 'package:kasirsql/views/pembelian_barang/buy_stuff.dart';
 import 'package:kasirsql/views/profile/edit_profile_page.dart';
 import 'package:kasirsql/views/profile/profile_page.dart';
 import 'package:kasirsql/views/riwayat_transaksi/transaksi_history_page.dart';
@@ -69,11 +67,6 @@ class MyApp extends StatelessWidget {
                 binding: DataBindings(),
               ),
               GetPage(name: "/register", page: () => RegisterPage()),
-              GetPage(
-                  name: "/testing_page",
-                  page: () => const TesttingPage(),
-                  binding: DataBindings(),
-                  middlewares: [AuthMiddleware()]),
               GetPage(
                   name: "/halaman_utama",
                   page: () => BottomBar(),
@@ -166,11 +159,11 @@ class MyApp extends StatelessWidget {
                   binding: DataBindings(),
                   middlewares: [AuthMiddleware()]),
               // Pembelian Barang
-              GetPage(
-                  name: "/buy_stuff_page",
-                  page: () => BuyStuff(),
-                  binding: DataBindings(),
-                  middlewares: [AuthMiddleware()]),
+              // GetPage(
+              //     name: "/buy_stuff_page",
+              //     page: () => BuyStuff(),
+              //     binding: DataBindings(),
+              //     middlewares: [AuthMiddleware()]),
               // Hutang
               GetPage(
                   name: "/hutang_page",

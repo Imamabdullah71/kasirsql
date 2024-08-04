@@ -14,14 +14,19 @@ class RiwayatBayarPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Riwayat Pembayaran",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: FutureBuilder(
         future: hutangController.fetchRiwayatPembayaran(hutangId),
@@ -41,17 +46,41 @@ class RiwayatBayarPage extends StatelessWidget {
                 itemCount: sortedRiwayatList.length,
                 itemBuilder: (context, index) {
                   var riwayat = sortedRiwayatList[index];
-                  return ListTile(
-                    title: Text(formatTanggal(riwayat.tanggalBayar)),
-                    subtitle: Text(
-                        'Hutang ${formatRupiah(riwayat.sisaHutangSebelum)}'),
-                    trailing: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text('+ ${formatRupiah(riwayat.jumlahBayar)}'),
-                        Text(
-                            'Sisa Hutang ${formatRupiah(riwayat.sisaHutangSekarang)}'),
-                      ],
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              formatTanggal(riwayat.tanggalBayar),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Hutang Sebelum: ${formatRupiah(riwayat.sisaHutangSebelum)}',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              '+ ${formatRupiah(riwayat.jumlahBayar)}',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.green),
+                            ),
+                            Text(
+                              'Sisa Hutang: ${formatRupiah(riwayat.sisaHutangSekarang)}',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -64,12 +93,11 @@ class RiwayatBayarPage extends StatelessWidget {
   }
 
   String formatTanggal(DateTime date) {
-    final DateFormat formatter = DateFormat('dd-MM-yyyy HH:mm');
+    final DateFormat formatter = DateFormat('dd MMMM yyyy HH:mm', 'id_ID');
     return formatter.format(date);
   }
 
   String formatRupiah(double amount) {
-    // Menggunakan nilai absolut untuk menghilangkan simbol minus
     double absoluteAmount = amount.abs();
     return 'Rp ${absoluteAmount.toStringAsFixed(0).replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => '.')}';
   }
