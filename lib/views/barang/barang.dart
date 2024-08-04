@@ -7,6 +7,8 @@ class BarangPage extends StatelessWidget {
   BarangPage({super.key});
   final BarangController barangController = Get.find<BarangController>();
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController categorySearchController =
+      TextEditingController();
   final RxList<String> selectedCategories = <String>[].obs;
   final Rxn<DateTimeRange> selectedDateRange = Rxn<DateTimeRange>();
   final RxString sortOrder = ''.obs;
@@ -19,7 +21,7 @@ class BarangPage extends StatelessWidget {
           color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
-          "Daftar Barang",
+          "Data Barang",
           style: TextStyle(
             color: Color.fromARGB(255, 114, 94, 225),
           ),
@@ -183,8 +185,41 @@ class BarangPage extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (barangController.filteredBarangList.isEmpty) {
-                return const Center(child: Text('Tidak ada barang.'));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 229, 135, 246),
+                              Color.fromARGB(255, 114, 94, 225),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds);
+                        },
+                        child: const Icon(
+                          BootstrapIcons.box_seam,
+                          size: 80,
+                          color: Colors
+                              .white, // Warna dasar ikon harus diatur menjadi putih
+                        ),
+                      ),
+                      const Text(
+                        'Barang belum ditambahkan',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
+
               return ListView.builder(
                 itemCount: barangController.filteredBarangList.length,
                 itemBuilder: (context, index) {
@@ -251,10 +286,25 @@ class BarangPage extends StatelessWidget {
                             size: 50,
                             color: Colors.grey,
                           ),
-                    title: Text(barang.namaBarang),
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          barang.namaBarang,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '${barang.barcodeBarang}',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
                     subtitle: Text(
                         'Harga Beli : ${barangController.formatRupiah(barang.hargaBeli)}'),
                     trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text('Stok : ${barang.stokBarang}'),
                         Text(barangController.formatRupiah(barang.hargaJual)),
@@ -309,41 +359,105 @@ class BarangPage extends StatelessWidget {
   }
 
   void _showFilterModal(BuildContext context) {
-    showDialog(
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Pilih Kategori'),
-          content: SingleChildScrollView(
-            child: Obx(() {
-              return Wrap(
-                spacing: 8.0,
-                children: barangController.kategoriList.map((kategori) {
-                  return FilterChip(
-                    label: Text(kategori),
-                    selected: selectedCategories.contains(kategori),
-                    onSelected: (bool selected) {
-                      if (selected) {
-                        selectedCategories.add(kategori);
-                      } else {
-                        selectedCategories.remove(kategori);
-                      }
-                      _filterBarang();
-                    },
-                  );
-                }).toList(),
-              );
-            }),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text('Selesai'),
+      // isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      showDragHandle: true,
+      builder: (BuildContext context) {
+        return Obx(() {
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: categorySearchController,
+                      decoration: InputDecoration(
+                        prefixIcon: ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 229, 135, 246),
+                                Color.fromARGB(255, 114, 94, 225)
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ).createShader(bounds);
+                          },
+                          child: const Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          ),
+                        ),
+                        hintText: "Cari kategori...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        barangController.filterCategories(value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 8.0,
+                        ),
+                        itemCount: barangController.kategoriList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final kategori = barangController.kategoriList[index];
+                          return Obx(() => FilterChip(
+                                label: Text(kategori),
+                                selected: selectedCategories.contains(kategori),
+                                onSelected: (bool selected) {
+                                  if (selected) {
+                                    selectedCategories.add(kategori);
+                                  } else {
+                                    selectedCategories.remove(kategori);
+                                  }
+                                  _filterBarang();
+                                },
+                              ));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        );
+          );
+        });
       },
     );
   }

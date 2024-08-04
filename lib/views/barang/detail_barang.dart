@@ -88,11 +88,11 @@ class BarangDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Expanded(
-                  child: Text("Kode Barang", style: TextStyle(fontSize: 18)),
+                  child: Text("Barcode Barang", style: TextStyle(fontSize: 18)),
                 ),
                 const Text(": ", style: TextStyle(fontSize: 18)),
                 Expanded(
-                  child: Text('${barang.kodeBarang}',
+                  child: Text('${barang.barcodeBarang}',
                       style: const TextStyle(fontSize: 18)),
                 ),
               ],

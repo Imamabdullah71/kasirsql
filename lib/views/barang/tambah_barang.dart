@@ -3,6 +3,7 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/barang_controller/rupiah_input_formatter.dart';
 import 'package:kasirsql/controllers/barang_controller/tambah_barang_controller.dart';
@@ -241,72 +242,92 @@ class TambahBarang extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                controller: kodeBarangController,
-                decoration: InputDecoration(
-                  labelText: 'Barcode Barang',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: stokBarangController,
+                        decoration: InputDecoration(
+                          labelText: 'Stok ',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 114, 94, 225),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade500,
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30)),
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 20),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Stok tidak boleh kosong';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    borderSide: BorderSide(
-                      color: Color.fromARGB(255, 114, 94, 225),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      flex: 2,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: kodeBarangController,
+                        decoration: InputDecoration(
+                          labelText: 'Barcode Barang',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 114, 94, 225),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade500,
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30)),
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 20),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Barcode Barang tidak boleh kosong';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade500,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
-                  ),
-                  contentPadding: const EdgeInsets.only(left: 20),
+                    IconButton(
+                        onPressed: () async {
+                          await scanBarcode();
+                        },
+                        icon: const Icon(BootstrapIcons.upc_scan))
+                  ],
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Kode Barang tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                controller: stokBarangController,
-                decoration: InputDecoration(
-                  labelText: 'Stok Barang',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30),
-                    ),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    borderSide: BorderSide(
-                      color: Color.fromARGB(255, 114, 94, 225),
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade500,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
-                  ),
-                  contentPadding: const EdgeInsets.only(left: 20),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Stok Barang tidak boleh kosong';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 20),
               Padding(
@@ -396,10 +417,11 @@ class TambahBarang extends StatelessWidget {
                           if (value == null || value.isEmpty) {
                             return 'Harga Jual tidak boleh kosong';
                           }
-                          final hargaJual = double.tryParse(
-                              value.replaceAll('.', ''));
+                          final hargaJual =
+                              double.tryParse(value.replaceAll('.', ''));
                           final hargaBeli = double.tryParse(
-                              hargaBeliInputController.text.replaceAll('.', ''));
+                              hargaBeliInputController.text
+                                  .replaceAll('.', ''));
                           if (hargaJual == null || hargaJual <= 0) {
                             return 'Harga Jual harus berupa angka positif';
                           }
@@ -463,5 +485,19 @@ class TambahBarang extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> scanBarcode() async {
+    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+      '#ff6666', // Warna garis untuk scanning
+      'Cancel', // Teks tombol batal
+      true, // Apakah harus menampilkan flash kamera
+      ScanMode.BARCODE, // Mode scan (BARCODE atau QR)
+    );
+
+    if (barcodeScanRes != '-1') {
+      tambahBarangController.setBarcode(barcodeScanRes);
+      kodeBarangController.text = barcodeScanRes;
+    }
   }
 }

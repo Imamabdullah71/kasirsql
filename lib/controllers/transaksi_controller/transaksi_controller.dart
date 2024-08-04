@@ -40,7 +40,7 @@ class TransaksiController extends GetxController {
           'harga_barang': barang.hargaJual,
           'jumlah_barang': 1,
           'jumlah_harga': barang.hargaJual,
-          'kode_barang': barang.kodeBarang,
+          'barcode_barang': barang.barcodeBarang,
           'stok_barang': barang.stokBarang,
           'kategori_id': barang.kategoriId,
           'nama_kategori': barang.namaKategori,
@@ -568,26 +568,6 @@ class TransaksiController extends GetxController {
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         if (result['status'] == 'success') {
-          Get.snackbar(
-            'Success',
-            'Transaksi berhasil dilakukan',
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            borderRadius: 10,
-            margin: const EdgeInsets.all(10),
-            snackPosition: SnackPosition.TOP,
-            icon: const Icon(Icons.check_circle, color: Colors.white),
-            duration: const Duration(seconds: 3),
-            snackStyle: SnackStyle.FLOATING,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          );
 
           var transaksiId = result['transaksi_id'];
           if (transaksiId != null) {

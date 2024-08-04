@@ -276,7 +276,7 @@ class TransaksiPage extends StatelessWidget {
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                         subtitle: Text(
-                          barang.kodeBarang.toString(),
+                          barang.barcodeBarang.toString(),
                           style:
                               const TextStyle(fontSize: 14, color: Colors.grey),
                         ),
@@ -299,32 +299,40 @@ class TransaksiPage extends StatelessWidget {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            shape: RoundedRectangleBorder(
+        child: InkWell(
+          onTap: () => Get.toNamed("/cart_page"),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 229, 135, 246),
+                  Color.fromARGB(255, 114, 94, 225),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius: BorderRadius.circular(30.0),
             ),
-          ),
-          onPressed: () => Get.toNamed("/cart_page"),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                BootstrapIcons.cart3,
-                color: Colors.white,
-              ),
-              Obx(() {
-                return Text(
-                  " (${transaksiController.totalBarang.value})",
-                  style: const TextStyle(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  BootstrapIcons.cart3,
+                  color: Colors.white,
+                ),
+                Obx(() {
+                  return Text(
+                    " (${transaksiController.totalBarang.value})",
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                );
-              }),
-            ],
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }),
+              ],
+            ),
           ),
         ),
       ),

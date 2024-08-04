@@ -30,10 +30,37 @@ class CartPage extends StatelessWidget {
       ),
       body: Obx(() {
         if (transaksiController.selectedBarangList.isEmpty) {
-          return const Center(
-            child: Text(
-              'Keranjang kosong',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return const LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 229, 135, 246),
+                        Color.fromARGB(255, 114, 94, 225),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ).createShader(bounds);
+                  },
+                  child: const Icon(
+                    BootstrapIcons.cart3,
+                    size: 80,
+                    color: Colors
+                        .white, // Warna dasar ikon harus diatur menjadi putih
+                  ),
+                ),
+                const Text(
+                  'Keranjang kosong',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -96,7 +123,8 @@ class CartPage extends StatelessWidget {
                                     id: detailBarang['id'],
                                     namaBarang: detailBarang['nama_barang'],
                                     hargaJual: detailBarang['harga_barang'],
-                                    kodeBarang: detailBarang['kode_barang'],
+                                    barcodeBarang:
+                                        detailBarang['barcode_barang'],
                                     stokBarang: detailBarang['stok_barang'],
                                     kategoriId: detailBarang['kategori_id'],
                                     namaKategori: detailBarang['nama_kategori'],
@@ -113,7 +141,8 @@ class CartPage extends StatelessWidget {
                                     id: detailBarang['id'],
                                     namaBarang: detailBarang['nama_barang'],
                                     hargaJual: detailBarang['harga_barang'],
-                                    kodeBarang: detailBarang['kode_barang'],
+                                    barcodeBarang:
+                                        detailBarang['barcode_barang'],
                                     stokBarang: detailBarang['stok_barang'],
                                     kategoriId: detailBarang['kategori_id'],
                                     namaKategori: detailBarang['nama_kategori'],
@@ -141,7 +170,8 @@ class CartPage extends StatelessWidget {
                                     id: detailBarang['id'],
                                     namaBarang: detailBarang['nama_barang'],
                                     hargaJual: detailBarang['harga_barang'],
-                                    kodeBarang: detailBarang['kode_barang'],
+                                    barcodeBarang:
+                                        detailBarang['barcode_barang'],
                                     stokBarang: detailBarang['stok_barang'],
                                     kategoriId: detailBarang['kategori_id'],
                                     namaKategori: detailBarang['nama_kategori'],
@@ -190,16 +220,21 @@ class CartPage extends StatelessWidget {
       }),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Obx(() {
-          return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
+        child: InkWell(
+          onTap: () => Get.toNamed("/payment_page"),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 229, 135, 246),
+                  Color.fromARGB(255, 114, 94, 225),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
+              borderRadius: BorderRadius.circular(30.0),
             ),
-            onPressed: () => Get.toNamed("/payment_page"),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -210,18 +245,55 @@ class CartPage extends StatelessWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                Text(
-                  'Pembayaran (${transaksiController.formatRupiah(transaksiController.totalHarga.value)})',
-                  style: const TextStyle(
-                      fontSize: 18,
+                Obx(() {
+                  return Text(
+                    '(Rp ${transaksiController.formatRupiah(transaksiController.totalHarga.value)})',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
+                    ),
+                  );
+                }),
               ],
             ),
-          );
-        }),
+          ),
+        ),
       ),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: Obx(() {
+      //     return ElevatedButton(
+      //       style: ElevatedButton.styleFrom(
+      //         backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+      //         padding: const EdgeInsets.symmetric(vertical: 15),
+      //         shape: RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.circular(30.0),
+      //         ),
+      //       ),
+      //       onPressed: () => Get.toNamed("/payment_page"),
+      //       child: Row(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           const Icon(
+      //             BootstrapIcons.wallet,
+      //             color: Colors.white,
+      //           ),
+      //           const SizedBox(
+      //             width: 5,
+      //           ),
+      //           Text(
+      //             'Pembayaran (${transaksiController.formatRupiah(transaksiController.totalHarga.value)})',
+      //             style: const TextStyle(
+      //                 fontSize: 18,
+      //                 fontWeight: FontWeight.bold,
+      //                 color: Colors.white),
+      //           ),
+      //         ],
+      //       ),
+      //     );
+      //   }),
+      // ),
       backgroundColor: Colors.grey[100],
     );
   }

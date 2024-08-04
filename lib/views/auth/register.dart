@@ -116,6 +116,7 @@ class RegisterPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         TextField(
+                          keyboardType: TextInputType.number,
                           controller: userController.noTeleponController,
                           decoration: InputDecoration(
                             labelText: 'No Telepon',

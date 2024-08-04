@@ -50,7 +50,7 @@ class TransactionSuccessPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Transaksi Berhasil Dilakukan!',
+                'Transaksi berhasil !',
                 style: TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 16),

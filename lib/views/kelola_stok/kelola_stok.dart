@@ -2,11 +2,13 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
+import 'package:kasirsql/controllers/kelola_stok_controller/kelola_stok_page_controller.dart';
+import 'package:kasirsql/models/barang_model.dart';
 
 class KelolaStok extends StatelessWidget {
   KelolaStok({super.key});
   final BarangController barangController = Get.find<BarangController>();
-  final BarangController kelolaC = Get.find<BarangController>();
+  final KelolaStokController kelolaC = Get.find<KelolaStokController>();
   final TextEditingController searchController = TextEditingController();
   final RxList<String> selectedCategories = <String>[].obs;
   final Rxn<DateTimeRange> selectedDateRange = Rxn<DateTimeRange>();
@@ -262,7 +264,7 @@ class KelolaStok extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      Get.defaultDialog(title: 'Tambah stok \n / Kurangi stok');
+                      _showUpdateStokDialog(context, barang);
                     },
                   );
                 },
@@ -271,6 +273,140 @@ class KelolaStok extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showUpdateStokDialog(BuildContext context, Barang barang) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Kelola Stok - ${barang.namaBarang}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                  _showTambahStokDialog(context, barang);
+                },
+                child: const Text('Tambah Stok'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                  _showKurangiStokDialog(context, barang);
+                },
+                child: const Text('Kurangi Stok'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTambahStokDialog(BuildContext context, Barang barang) {
+    final TextEditingController inputController = TextEditingController();
+    int currentValue = 0;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Tambah Stok'),
+          content: Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  currentValue = (int.tryParse(inputController.text) ?? 0) - 1;
+                  inputController.text = currentValue.toString();
+                },
+                icon: const Icon(Icons.remove),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: inputController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: '0',
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  currentValue = (int.tryParse(inputController.text) ?? 0) + 1;
+                  inputController.text = currentValue.toString();
+                },
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                int input = int.tryParse(inputController.text) ?? 0;
+                int newStok = barang.stokBarang + input;
+                kelolaC.updateStokBarang(barang.id, newStok, 'tambah');
+                Get.back();
+              },
+              child: const Text('Tambah'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showKurangiStokDialog(BuildContext context, Barang barang) {
+    final TextEditingController inputController = TextEditingController();
+    int currentValue = 0;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Kurangi Stok'),
+          content: Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  currentValue = (int.tryParse(inputController.text) ?? 0) - 1;
+                  inputController.text = currentValue.toString();
+                },
+                icon: const Icon(Icons.remove),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: inputController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: '0',
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  currentValue = (int.tryParse(inputController.text) ?? 0) + 1;
+                  inputController.text = currentValue.toString();
+                },
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                int input = int.tryParse(inputController.text) ?? 0;
+                int newStok = barang.stokBarang - input;
+                kelolaC.updateStokBarang(barang.id, newStok, 'kurangi');
+                Get.back();
+              },
+              child: const Text('Kurangi'),
+            ),
+          ],
+        );
+      },
     );
   }
 

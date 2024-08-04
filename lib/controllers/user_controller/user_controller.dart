@@ -1,3 +1,4 @@
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -68,7 +69,9 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       if (data['status'] == 'success') {
-        Get.snackbar('Success', data['message'],
+        Get.snackbar(
+          'Success',
+          data['message'],
           backgroundColor: Colors.green,
           colorText: Colors.white,
           borderRadius: 10,
@@ -87,8 +90,32 @@ class UserController extends GetxController {
           ],
         );
         Get.to(() => LoginPage());
+      } else if (data['message'] == 'Email sudah terdaftar') {
+        Get.snackbar(
+          'Peringatan',
+          'Email sudah terdaftar.',
+          backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+          colorText: Colors.black,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+              color: Colors.black),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       } else {
-        Get.snackbar('Error', data['message'],
+        Get.snackbar(
+          'Error',
+          data['message'],
           backgroundColor: Colors.red,
           colorText: Colors.white,
           borderRadius: 10,
@@ -108,7 +135,9 @@ class UserController extends GetxController {
         );
       }
     } else {
-      Get.snackbar('Error', 'Failed to register',
+      Get.snackbar(
+        'Error',
+        'Failed to register',
         backgroundColor: Colors.red,
         colorText: Colors.white,
         borderRadius: 10,
@@ -182,7 +211,9 @@ class UserController extends GetxController {
           );
           return true;
         } else {
-          Get.snackbar('Error', data['message'],
+          Get.snackbar(
+            'Error',
+            data['message'],
             backgroundColor: Colors.red,
             colorText: Colors.white,
             borderRadius: 10,
@@ -204,7 +235,9 @@ class UserController extends GetxController {
         }
       } else {
         // Gagal / Error
-        Get.snackbar('Error', 'Gagal Login',
+        Get.snackbar(
+          'Error',
+          'Gagal Login',
           backgroundColor: Colors.red,
           colorText: Colors.white,
           borderRadius: 10,
@@ -225,7 +258,9 @@ class UserController extends GetxController {
         return false;
       }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred: $e',
+      Get.snackbar(
+        'Error',
+        'An error occurred: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
         borderRadius: 10,

@@ -1,3 +1,4 @@
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -32,8 +33,8 @@ class PaymentPage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        elevation: 10.0, // Add this line to set the shadow
-        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
+        elevation: 10.0,
+        shadowColor: Colors.black.withOpacity(0.5),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -43,17 +44,29 @@ class PaymentPage extends StatelessWidget {
           children: [
             Center(
               child: Obx(() {
-                return Text(
-                  'Total Harga: ${transaksiController.formatRupiah(transaksiController.totalHarga.value)}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                return Column(
+                  children: [
+                    const Text(
+                      'Total Harga',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Rp ${transaksiController.formatRupiah(transaksiController.totalHarga.value)}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 );
               }),
             ),
             const SizedBox(height: 16),
             Obx(() => TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: uangDibayarController,
                   decoration: InputDecoration(
                     prefixText: 'Rp ',
@@ -62,37 +75,40 @@ class PaymentPage extends StatelessWidget {
                         : 'Uang dibayar',
                     filled: true,
                     fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      borderSide: BorderSide(
                         color: Color.fromARGB(255, 114, 94, 225),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
-                        color: Colors.grey.shade400,
+                        color: Colors.grey.shade500,
                       ),
+                      borderRadius: const BorderRadius.all(Radius.circular(30)),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: 20,
-                    ),
+                    contentPadding: const EdgeInsets.only(left: 20),
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     RupiahInputFormatter(),
                   ],
-                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Pembayaran tidak boleh kosong';
                     }
-                    if (double.tryParse(value.replaceAll('.', '')) == null) {
+                    double? jumlah = double.tryParse(value.replaceAll('.', ''));
+                    if (jumlah == null) {
                       return 'Pembayaran harus berupa angka';
+                    }
+                    if (switchController.isSwitched.value &&
+                        jumlah >= transaksiController.totalHarga.value) {
+                      return 'Pembayaran harus lebih rendah dari total harga';
                     }
                     return null;
                   },
@@ -111,73 +127,79 @@ class PaymentPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Obx(
-              () {
-                if (switchController.isSwitched.value) {
-                  return TextFormField(
-                    controller: daftarController,
-                    decoration: InputDecoration(
-                      labelText: 'Nama penghutang',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 114, 94, 225),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade400,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
+            Obx(() {
+              if (switchController.isSwitched.value) {
+                return TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: daftarController,
+                  decoration: InputDecoration(
+                    labelText: 'Nama penghutang',
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
                       ),
                     ),
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 114, 94, 225),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade500,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(30)),
+                    ),
+                    contentPadding: const EdgeInsets.only(left: 20),
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            }),
             const SizedBox(height: 20),
             Obx(
               () {
                 return Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
+                  child: InkWell(
+                    onTap: () {
+                      if (switchController.isSwitched.value) {
+                        masukkanKeDaftar(context);
+                      } else {
+                        bayar();
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 135, 246),
+                            Color.fromARGB(255, 114, 94, 225),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: const EdgeInsets.symmetric(
                         vertical: 12,
                         horizontal: 20,
                       ),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      child: Center(
+                        child: Text(
+                          switchController.isSwitched.value
+                              ? 'Masukkan ke hutang'
+                              : 'Bayar',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      if (switchController.isSwitched.value) {
-                        masukkanKeDaftar();
-                      } else {
-                        bayar();
-                      }
-                    },
-                    child: Text(
-                      switchController.isSwitched.value
-                          ? 'Masukkan ke hutang'
-                          : 'Bayar',
-                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 );
@@ -190,16 +212,91 @@ class PaymentPage extends StatelessWidget {
   }
 
   void bayar() {
-    transaksiController.bayar.value =
-        double.parse(uangDibayarController.text.replaceAll('.', ''));
-    transaksiController.kembali.value =
-        transaksiController.bayar.value - transaksiController.totalHarga.value;
-    transaksiController.createTransaksi();
+    double bayar = double.parse(uangDibayarController.text.replaceAll('.', ''));
+    double totalHarga = transaksiController.totalHarga.value;
+
+    if (bayar < totalHarga) {
+      Get.snackbar(
+        'Peringatan',
+        'Uang harus lebih tinggi dari total harga.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+            color: Colors.black),
+        duration: const Duration(seconds: 2),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+      Get.snackbar(
+        'Peringatan',
+        'Uang dibayar kurang harus dimasukkan ke hutang.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+            color: Colors.black),
+        duration: const Duration(seconds: 2),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+    } else {
+      transaksiController.bayar.value = bayar;
+      transaksiController.kembali.value = bayar - totalHarga;
+      transaksiController.createTransaksi();
+    }
   }
 
-  void masukkanKeDaftar() async {
-    transaksiController.bayar.value =
+  void masukkanKeDaftar(BuildContext context) async {
+    double jumlahBayar =
         double.parse(uangDibayarController.text.replaceAll('.', ''));
+    if (jumlahBayar >= transaksiController.totalHarga.value) {
+      // Tampilkan pesan error
+
+      Get.snackbar(
+        'Peringatan Hutang',
+        'Uang harus lebih rendah dari total harga.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+            color: Colors.black),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+
+      return; // Hentikan eksekusi fungsi
+    }
+
+    transaksiController.bayar.value = jumlahBayar;
     transaksiController.kembali.value =
         transaksiController.bayar.value - transaksiController.totalHarga.value;
 

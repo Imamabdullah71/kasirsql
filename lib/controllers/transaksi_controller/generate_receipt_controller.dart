@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:kasirsql/controllers/transaksi_controller/riwayat_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 
 class GenerateReceiptController extends GetxController {
   final UserController userController = Get.find<UserController>();
+  final RiwayatController riwayatC = Get.find<RiwayatController>();
 
   Future<void> generateReceipt(Transaksi transaksi,
       List<DetailTransaksi> detailTransaksiList, int transaksiId) async {
@@ -33,7 +35,7 @@ class GenerateReceiptController extends GetxController {
       double tokoInfoHeight = calculateTextHeight(tokoInfo, textStyle, width);
 
       // Waktu
-      String waktu = '${transaksi.createdAt}\n';
+      String waktu = '${riwayatC.formatTanggal(transaksi.createdAt)}\n';
       double waktuHeight = calculateTextHeight(waktu, textStyle, width);
 
       // Garis pembatas

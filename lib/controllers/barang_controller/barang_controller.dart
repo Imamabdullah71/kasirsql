@@ -16,6 +16,7 @@ class BarangController extends GetxController {
   var allBarangList = <Barang>[].obs; // Semua barang asli
   var filteredBarangList = <Barang>[].obs; // Barang yang difilter
   var kategoriList = <String>[].obs; // Daftar kategori
+  var originalKategoriList = <String>[].obs; // Daftar kategori asli
   var selectedBarang = Rxn<Barang>();
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_barang.php';
   final UserController userController = Get.find<UserController>();
@@ -64,6 +65,7 @@ class BarangController extends GetxController {
         kategoriList.value = data
             .map((kategori) => kategori['nama_kategori'] as String)
             .toList();
+        originalKategoriList.value = List.from(kategoriList);
       } else {
         _showErrorSnackbar('Gagal Mengambil Data Kategori');
       }
@@ -182,7 +184,7 @@ class BarangController extends GetxController {
         body: {
           'id': barang.id.toString(),
           'nama_barang': barang.namaBarang,
-          'kode_barang': barang.kodeBarang.toString(),
+          'barcode_barang': barang.barcodeBarang.toString(),
           'stok_barang': barang.stokBarang.toString(),
           'kategori_id': barang.kategoriId.toString(),
           'gambar': newImagePath ?? barang.gambar ?? '',
@@ -244,5 +246,16 @@ class BarangController extends GetxController {
 
   void toggleButtonPress() {
     isPressed.value = !isPressed.value;
+  }
+  
+  void filterCategories(String query) {
+    if (query.isEmpty) {
+      kategoriList.value = List.from(originalKategoriList);
+    } else {
+      kategoriList.value = originalKategoriList
+          .where((kategori) =>
+              kategori.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
   }
 }

@@ -1,7 +1,7 @@
 class Barang {
   int id;
   String namaBarang;
-  int kodeBarang;
+  int barcodeBarang;
   int stokBarang;
   int kategoriId;
   String namaKategori;
@@ -14,7 +14,7 @@ class Barang {
   Barang({
     required this.id,
     required this.namaBarang,
-    required this.kodeBarang,
+    required this.barcodeBarang,
     required this.stokBarang,
     required this.kategoriId,
     required this.namaKategori,
@@ -29,7 +29,7 @@ class Barang {
     return Barang(
       id: int.parse(json['id'].toString()),
       namaBarang: json['nama_barang'],
-      kodeBarang: int.parse(json['kode_barang'].toString()),
+      barcodeBarang: int.parse(json['barcode_barang'].toString()),
       stokBarang: int.parse(json['stok_barang'].toString()),
       kategoriId: int.parse(json['kategori_id'].toString()),
       namaKategori: json['nama_kategori'],
@@ -45,7 +45,7 @@ class Barang {
     return {
       'id': id,
       'nama_barang': namaBarang,
-      'kode_barang': kodeBarang,
+      'barcode_barang': barcodeBarang,
       'stok_barang': stokBarang,
       'kategori_id': kategoriId,
       'nama_kategori': namaKategori,

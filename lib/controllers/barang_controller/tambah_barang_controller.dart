@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:kasirsql/controllers/barang_controller/barang_controller.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart';
+import 'package:kasirsql/models/barang_model.dart';
 import 'package:kasirsql/models/harga_model.dart';
 import 'package:kasirsql/models/kategori_model.dart';
 import 'package:kasirsql/views/barang/crop_image_barang.dart';
@@ -22,6 +24,8 @@ class TambahBarangController extends GetxController {
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_barang.php';
   final ImagePicker _picker = ImagePicker();
   final UserController userController = Get.find<UserController>();
+  var barcodeUntukBarang = <Barang>[].obs;
+  final TextEditingController kodeBarangController = TextEditingController();
 
   @override
   void onInit() {
@@ -200,7 +204,7 @@ class TambahBarangController extends GetxController {
     }
   }
 
-  void createBarang(String namaBarang, int kodeBarang, int stokBarang,
+  void createBarang(String namaBarang, int barcodeBarang, int stokBarang,
       int kategoriId, double hargaJual, double hargaBeli) async {
     isLoading.value = true;
     Get.defaultDialog(
@@ -224,19 +228,20 @@ class TambahBarangController extends GetxController {
         Uri.parse('$apiUrl?action=create_barang'),
         body: {
           'nama_barang': namaBarang,
-          'kode_barang': kodeBarang.toString(),
+          'barcode_barang': barcodeBarang.toString(),
           'stok_barang': stokBarang.toString(),
           'kategori_id': kategoriId.toString(),
           'gambar': gambar ?? '',
         },
       );
 
-      if (response.statusCode == 200) {
-        var createdBarangId = json.decode(response.body)['id'];
+      var responseData = json.decode(response.body);
+      if (response.statusCode == 200 && responseData['status'] == 'success') {
+        var createdBarangId = responseData['id'];
         createHarga(hargaJual, hargaBeli, createdBarangId);
         Get.find<BarangController>().fetchBarang();
-        Get.back();
-        Get.back();
+        Get.back(); // Menutup dialog loading pertama
+        Get.back(); // Menutup halaman tambah barang
         Get.snackbar(
           'Success',
           'Berhasil menambahkan data barang',
@@ -259,7 +264,32 @@ class TambahBarangController extends GetxController {
         );
 
         await Future.delayed(const Duration(seconds: 3));
+      } else if (responseData['status'] == 'error' &&
+          responseData['message'] == 'Barcode sudah tersedia') {
+        Get.back(); // Menutup dialog loading pertama
+        Get.snackbar(
+          'Peringatan',
+          'Barcode sudah tersedia.',
+          backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+          colorText: Colors.black,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(BootstrapIcons.exclamation_triangle_fill,
+              color: Colors.black),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
       } else {
+        Get.back(); // Menutup dialog loading pertama
         Get.snackbar(
           'Error',
           'Gagal menambahkan data barang',
@@ -282,6 +312,7 @@ class TambahBarangController extends GetxController {
         );
       }
     } catch (e) {
+      Get.back(); // Menutup dialog loading pertama
       Get.snackbar(
         'Error',
         '$e',
@@ -304,7 +335,6 @@ class TambahBarangController extends GetxController {
       );
     } finally {
       isLoading.value = false;
-      Get.back();
     }
   }
 
@@ -364,5 +394,9 @@ class TambahBarangController extends GetxController {
         ],
       );
     }
+  }
+
+  void setBarcode(String barcode) {
+    kodeBarangController.text = barcode;
   }
 }
