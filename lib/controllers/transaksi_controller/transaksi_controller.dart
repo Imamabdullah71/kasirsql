@@ -789,14 +789,51 @@ class TransaksiController extends GetxController {
               ),
             ],
           );
-          Get.defaultDialog(
-            title: 'Berhasil disimpan',
-            textConfirm: 'Halaman Utama',
-            onConfirm: () {
-              final BottomBarController bottomBarController = Get.find();
-              bottomBarController.resetToHome(); // Reset to Home page
-              Get.offAllNamed('/halaman_utama');
-            },
+          Get.dialog(
+            AlertDialog(
+              title: const Text('Berhasil disimpan'),
+              actions: [
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 229, 135, 246),
+                          Color.fromARGB(255, 114, 94, 225),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(30), // Mengatur sudut bundar
+                    ),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.transparent, // Membuat tombol transparan
+                        shadowColor:
+                            Colors.transparent, // Menghilangkan bayangan
+                      ),
+                      onPressed: () {
+                        final BottomBarController bottomBarController =
+                            Get.find();
+                        bottomBarController.resetToHome(); // Reset to Home page
+                        Get.offAllNamed('/halaman_utama');
+                      },
+                      icon: const Icon(
+                        Icons.home,
+                        color: Colors.white,
+                      ), // Ikon rumah
+                      label: const Text(
+                        'Halaman Utama',
+                        style: TextStyle(color: Colors.white),
+                      ), // Label tombol
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            barrierDismissible: false, // Menambahkan properti ini
           );
         } else {
           // Gagal / Error

@@ -29,14 +29,18 @@ class TambahBarang extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Tambah Barang",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -70,59 +74,88 @@ class TambahBarang extends StatelessWidget {
                   );
                 }
               }),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                    ),
-                    onPressed: () {
-                      tambahBarangController.pickImage(ImageSource.camera);
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.camera_alt_rounded,
-                          size: 18,
-                          color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 135, 246),
+                            Color.fromARGB(255, 114, 94, 225),
+                          ],
                         ),
-                        SizedBox(width: 5),
-                        Text(
-                          'Kamera',
-                          style: TextStyle(color: Colors.white),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                    ),
-                    onPressed: () {
-                      tambahBarangController.pickImage(ImageSource.gallery);
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.image,
-                          size: 18,
-                          color: Colors.white,
+                        onPressed: () {
+                          tambahBarangController.pickImage(ImageSource.camera);
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.camera_alt_rounded,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              'Kamera',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 5),
-                        Text(
-                          'Galeri',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 135, 246),
+                            Color.fromARGB(255, 114, 94, 225),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                        ),
+                        onPressed: () {
+                          tambahBarangController.pickImage(ImageSource.gallery);
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(Icons.image, size: 18, color: Colors.white),
+                            SizedBox(width: 5),
+                            Text(
+                              'Galeri',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -439,45 +472,60 @@ class TambahBarang extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                  minimumSize: const Size(
-                    double.infinity, // Lebar
-                    10, // Tinggi
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 229, 135, 246),
+                      Color.fromARGB(255, 114, 94, 225),
+                    ],
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate() &&
-                      selectedKategoriId.value != 0) {
-                    if (tambahBarangController.croppedImage.value != null) {
-                      await tambahBarangController.uploadImage(
-                          tambahBarangController.croppedImage.value!);
-                    } else {
-                      Get.snackbar('Error', 'Please select an image');
-                      return;
-                    }
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    minimumSize: const Size(
+                      double.infinity, // Lebar
+                      10, // Tinggi
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate() &&
+                        selectedKategoriId.value != 0) {
+                      if (tambahBarangController.croppedImage.value != null) {
+                        await tambahBarangController.uploadImage(
+                            tambahBarangController.croppedImage.value!);
+                      } else {
+                        Get.snackbar('Error', 'Please select an image');
+                        return;
+                      }
 
-                    tambahBarangController.createBarang(
-                      namaBarangController.text,
-                      int.parse(kodeBarangController.text),
-                      int.parse(stokBarangController.text),
-                      selectedKategoriId.value,
-                      double.parse(
-                          hargaJualInputController.text.replaceAll('.', '')),
-                      double.parse(
-                          hargaBeliInputController.text.replaceAll('.', '')),
-                    );
-                  } else {
-                    Get.snackbar('Error',
-                        'Please fill all fields and select a category');
-                  }
-                },
-                child: const Text(
-                  "Tambahkan",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                      tambahBarangController.createBarang(
+                        namaBarangController.text,
+                        int.parse(kodeBarangController.text),
+                        int.parse(stokBarangController.text),
+                        selectedKategoriId.value,
+                        double.parse(
+                            hargaJualInputController.text.replaceAll('.', '')),
+                        double.parse(
+                            hargaBeliInputController.text.replaceAll('.', '')),
+                      );
+                    } else {
+                      Get.snackbar('Error',
+                          'Please fill all fields and select a category');
+                    }
+                  },
+                  child: const Text(
+                    'Tambahkan',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                 ),
               ),
             ],

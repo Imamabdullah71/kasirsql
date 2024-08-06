@@ -1,11 +1,64 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:kasirsql/models/supplier_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:get/get.dart';
 
 class SupplierDetailPage extends StatelessWidget {
   final Supplier supplier;
 
   const SupplierDetailPage({required this.supplier, super.key});
+
+  String _formatPhoneNumber(String phoneNumber) {
+    if (phoneNumber.startsWith('0')) {
+      phoneNumber = '+62${phoneNumber.substring(1)}';
+    }
+    return phoneNumber;
+  }
+
+  _launchWhat() async {
+    var whatsapp = "+6282257514936";
+    var whatsappAndroid = Uri.parse("https://wa.me/$whatsapp");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      Get.snackbar(
+        'Peringatan',
+        'Nomor WA tidak terdaftar.',
+        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
+        colorText: Colors.black,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.black),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+    }
+  }
+
+  Future<void> _launchWhatsApp(String phoneNumber) async {
+    final formattedPhoneNumber = _formatPhoneNumber(phoneNumber);
+    final Uri url = Uri.parse('https://wa.me/$formattedPhoneNumber');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _testPhoneNumber(String phoneNumber) async {
+    final formattedPhoneNumber = _formatPhoneNumber(phoneNumber);
+    print('Formatted Phone Number: $formattedPhoneNumber');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +73,17 @@ class SupplierDetailPage extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _launchWhat();
+            },
+            icon: const Icon(
+              BootstrapIcons.bug,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -83,7 +147,36 @@ class SupplierDetailPage extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
-                    onPressed: () {}, icon: const Icon(BootstrapIcons.whatsapp))
+                  onPressed: () {
+                    final phoneNumber = supplier.noTelepon;
+                    if (phoneNumber != null && phoneNumber.isNotEmpty) {
+                      _launchWhatsApp(phoneNumber);
+                    } else {
+                      Get.snackbar(
+                        'Peringatan',
+                        'Nomor WA tidak terdaftar.',
+                        backgroundColor:
+                            const Color.fromARGB(255, 235, 218, 63),
+                        colorText: Colors.black,
+                        borderRadius: 10,
+                        margin: const EdgeInsets.all(10),
+                        snackPosition: SnackPosition.TOP,
+                        icon: const Icon(Icons.error, color: Colors.black),
+                        duration: const Duration(seconds: 3),
+                        snackStyle: SnackStyle.FLOATING,
+                        boxShadows: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                  icon: const Icon(BootstrapIcons.whatsapp),
+                )
               ],
             ),
             const SizedBox(height: 8),
@@ -98,7 +191,10 @@ class SupplierDetailPage extends StatelessWidget {
                   supplier.email ?? '-',
                   style: const TextStyle(fontSize: 16),
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.email))
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.email),
+                ),
               ],
             ),
           ],

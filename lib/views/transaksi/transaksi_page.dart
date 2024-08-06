@@ -275,10 +275,21 @@ class TransaksiPage extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
-                        subtitle: Text(
-                          barang.barcodeBarang.toString(),
-                          style:
-                              const TextStyle(fontSize: 14, color: Colors.grey),
+                        subtitle: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              barang.barcodeBarang.toString(),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                            ),
+                            Text(
+                              barangController.formatRupiah(barang.hargaJual),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                            ),
+                          ],
                         ),
                         trailing: Text(
                           "X${detailBarang['jumlah_barang'] ?? 0}",

@@ -18,14 +18,19 @@ class TransactionSuccessPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Transaksi Berhasil",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0,
+        shadowColor: Colors.black.withOpacity(0.5),
         actions: [
           IconButton(
               onPressed: () {

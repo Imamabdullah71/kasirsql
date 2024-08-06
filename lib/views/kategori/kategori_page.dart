@@ -128,19 +128,34 @@ class CategoriesPage extends StatelessWidget {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 30),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-            minimumSize: const Size(
-              double.infinity, // Lebar
-              48, // Tinggi
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [
+                Color.fromARGB(255, 229, 135, 246),
+                Color.fromARGB(255, 114, 94, 225),
+              ],
             ),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            borderRadius: BorderRadius.circular(30),
           ),
-          onPressed: () => _showAddKategoriDialog(context),
-          child: const Text(
-            "Tambah Kategori",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              minimumSize: const Size(
+                double.infinity, // Lebar
+                10, // Tinggi
+              ),
+            ),
+            onPressed: () => _showAddKategoriDialog(context),
+            child: const Text(
+              'Tambah Kategori',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           ),
         ),
       ),
