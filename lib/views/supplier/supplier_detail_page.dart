@@ -3,46 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:kasirsql/models/supplier_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
+import 'package:kasirsql/controllers/supplier_controller/supplier_controller.dart';
+import 'edit_supplier_page.dart';
 
 class SupplierDetailPage extends StatelessWidget {
   final Supplier supplier;
+  final SupplierController supplierController = Get.find<SupplierController>();
 
-  const SupplierDetailPage({required this.supplier, super.key});
+  SupplierDetailPage({required this.supplier, super.key});
 
   String _formatPhoneNumber(String phoneNumber) {
     if (phoneNumber.startsWith('0')) {
       phoneNumber = '+62${phoneNumber.substring(1)}';
     }
     return phoneNumber;
-  }
-
-  _launchWhat() async {
-    var whatsapp = "+6282257514936";
-    var whatsappAndroid = Uri.parse("https://wa.me/$whatsapp");
-    if (await canLaunchUrl(whatsappAndroid)) {
-      await launchUrl(whatsappAndroid);
-    } else {
-      Get.snackbar(
-        'Peringatan',
-        'Nomor WA tidak terdaftar.',
-        backgroundColor: const Color.fromARGB(255, 235, 218, 63),
-        colorText: Colors.black,
-        borderRadius: 10,
-        margin: const EdgeInsets.all(10),
-        snackPosition: SnackPosition.TOP,
-        icon: const Icon(Icons.error, color: Colors.black),
-        duration: const Duration(seconds: 3),
-        snackStyle: SnackStyle.FLOATING,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      );
-    }
   }
 
   Future<void> _launchWhatsApp(String phoneNumber) async {
@@ -55,35 +29,24 @@ class SupplierDetailPage extends StatelessWidget {
     }
   }
 
-  Future<void> _testPhoneNumber(String phoneNumber) async {
-    final formattedPhoneNumber = _formatPhoneNumber(phoneNumber);
-    print('Formatted Phone Number: $formattedPhoneNumber');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Detail Supplier",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _launchWhat();
-            },
-            icon: const Icon(
-              BootstrapIcons.bug,
-              color: Colors.white,
-            ),
-          ),
-        ],
+        backgroundColor: Colors.white,
+        elevation: 10.0,
+        shadowColor: Colors.black.withOpacity(0.5),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -116,84 +79,154 @@ class SupplierDetailPage extends StatelessWidget {
                     ),
             ),
             const SizedBox(height: 16),
-            Text(
-              supplier.namaSupplier,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              supplier.namaTokoSupplier ?? '-',
-              style: const TextStyle(fontSize: 18),
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Nama Supplier :',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      supplier.namaSupplier,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Nama Toko :',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      supplier.namaTokoSupplier ?? '-',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Alamat :',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      supplier.alamat ?? '-',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'No Telepon :',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          supplier.noTelepon ?? '-',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            final phoneNumber = supplier.noTelepon;
+                            if (phoneNumber != null && phoneNumber.isNotEmpty) {
+                              _launchWhatsApp(phoneNumber);
+                            } else {
+                              Get.snackbar(
+                                'Peringatan',
+                                'Nomor WA tidak terdaftar.',
+                                backgroundColor:
+                                    const Color.fromARGB(255, 235, 218, 63),
+                                colorText: Colors.black,
+                                borderRadius: 10,
+                                margin: const EdgeInsets.all(10),
+                                snackPosition: SnackPosition.TOP,
+                                icon: const Icon(Icons.error,
+                                    color: Colors.black),
+                                duration: const Duration(seconds: 3),
+                                snackStyle: SnackStyle.FLOATING,
+                                boxShadows: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
+                          icon: const Icon(BootstrapIcons.whatsapp),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Alamat:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              supplier.alamat ?? '-',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'No Telepon:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  supplier.noTelepon ?? '-',
-                  style: const TextStyle(fontSize: 16),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(() => EditSupplierPage(supplier: supplier));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 135, 246),
+                            Color.fromARGB(255, 114, 94, 225),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Edit Supplier',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    final phoneNumber = supplier.noTelepon;
-                    if (phoneNumber != null && phoneNumber.isNotEmpty) {
-                      _launchWhatsApp(phoneNumber);
-                    } else {
-                      Get.snackbar(
-                        'Peringatan',
-                        'Nomor WA tidak terdaftar.',
-                        backgroundColor:
-                            const Color.fromARGB(255, 235, 218, 63),
-                        colorText: Colors.black,
-                        borderRadius: 10,
-                        margin: const EdgeInsets.all(10),
-                        snackPosition: SnackPosition.TOP,
-                        icon: const Icon(Icons.error, color: Colors.black),
-                        duration: const Duration(seconds: 3),
-                        snackStyle: SnackStyle.FLOATING,
-                        boxShadows: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 1,
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                  icon: const Icon(BootstrapIcons.whatsapp),
-                )
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Email:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  supplier.email ?? '-',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.email),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      supplierController.deleteSupplier(supplier.id);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 135, 246),
+                            Color.fromARGB(255, 114, 94, 225),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Hapus Supplier',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

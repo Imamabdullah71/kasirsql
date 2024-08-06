@@ -6,12 +6,13 @@ import 'package:kasirsql/controllers/supplier_controller/add_supplier_controller
 
 class AddSupplierPage extends StatelessWidget {
   AddSupplierPage({super.key});
-  final AddSupplierController addSupplierController = Get.find<AddSupplierController>();
+  final AddSupplierController addSupplierController =
+      Get.find<AddSupplierController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController namaSupplierController = TextEditingController();
-  final TextEditingController namaTokoSupplierController = TextEditingController();
+  final TextEditingController namaTokoSupplierController =
+      TextEditingController();
   final TextEditingController noTeleponController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController alamatController = TextEditingController();
 
   @override
@@ -75,7 +76,8 @@ class AddSupplierPage extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
                     ),
                     onPressed: () {
                       addSupplierController.pickImage(ImageSource.camera);
@@ -99,7 +101,8 @@ class AddSupplierPage extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
                     ),
                     onPressed: () {
                       addSupplierController.pickImage(ImageSource.gallery);
@@ -138,7 +141,8 @@ class AddSupplierPage extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: namaTokoSupplierController,
-                  decoration: const InputDecoration(labelText: 'Nama Toko Supplier'),
+                  decoration:
+                      const InputDecoration(labelText: 'Nama Toko Supplier'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Nama Toko Supplier tidak boleh kosong';
@@ -152,13 +156,6 @@ class AddSupplierPage extends StatelessWidget {
                 child: TextFormField(
                   controller: noTeleponController,
                   decoration: const InputDecoration(labelText: 'No Telepon'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
                 ),
               ),
               Padding(
@@ -189,7 +186,6 @@ class AddSupplierPage extends StatelessWidget {
                 namaSupplierController.text,
                 namaTokoSupplierController.text,
                 noTeleponController.text,
-                emailController.text,
                 alamatController.text,
               );
             }

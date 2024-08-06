@@ -5,7 +5,7 @@ class Supplier {
   final String namaSupplier;
   final String? namaTokoSupplier;
   final String? noTelepon;
-  final String? email;
+
   final String? alamat;
   final int userId;
   final DateTime createdAt;
@@ -17,7 +17,6 @@ class Supplier {
     required this.namaSupplier,
     this.namaTokoSupplier,
     this.noTelepon,
-    this.email,
     this.alamat,
     required this.userId,
     required this.createdAt,
@@ -31,9 +30,10 @@ class Supplier {
       namaSupplier: json['nama_supplier'],
       namaTokoSupplier: json['nama_toko_supplier'],
       noTelepon: json['no_telepon'],
-      email: json['email'],
       alamat: json['alamat'],
-      userId: json['user_id'] is String ? int.parse(json['user_id']) : json['user_id'],
+      userId: json['user_id'] is String
+          ? int.parse(json['user_id'])
+          : json['user_id'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -46,7 +46,6 @@ class Supplier {
       'nama_supplier': namaSupplier,
       'nama_toko_supplier': namaTokoSupplier,
       'no_telepon': noTelepon,
-      'email': email,
       'alamat': alamat,
       'user_id': userId, // Tambahkan userId
       'created_at': createdAt.toIso8601String(),

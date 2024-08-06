@@ -153,7 +153,7 @@ class AddSupplierController extends GetxController {
   }
 
   void createSupplier(String namaSupplier, String namaTokoSupplier,
-      String noTelepon, String email, String alamat) async {
+      String noTelepon, String alamat) async {
     try {
       String? gambar;
       if (croppedImage.value != null) {
@@ -166,7 +166,6 @@ class AddSupplierController extends GetxController {
           'nama_supplier': namaSupplier,
           'nama_toko_supplier': namaTokoSupplier,
           'no_telepon': noTelepon,
-          'email': email,
           'alamat': alamat,
           'gambar': gambar ?? '',
           'user_id': userController.currentUser.value?.id.toString(),

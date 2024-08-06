@@ -33,7 +33,7 @@ class ManagePengaturan extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(BootstrapIcons.person_fill),
-            title: const Text("Profile"),
+            title: const Text("Profil"),
             onTap: () {
               Get.toNamed("/profile");
             },

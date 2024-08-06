@@ -6,10 +6,12 @@ import 'package:kasirsql/models/supplier_model.dart';
 import 'package:kasirsql/controllers/user_controller/user_controller.dart'; // Import UserController
 
 class SupplierController extends GetxController {
-  var supplierList = <Supplier>[].obs;
   final String apiUrl = 'http://10.10.10.129/flutterapi/api_supplier.php';
   final UserController userController =
       Get.find<UserController>(); // Dapatkan UserController
+  var supplierList = <Supplier>[].obs;
+  var allSupplierList = <Supplier>[].obs;
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -18,18 +20,94 @@ class SupplierController extends GetxController {
   }
 
   void fetchSupplier() async {
+    isLoading.value = true;
     try {
       final response = await http.get(Uri.parse(
-          '$apiUrl?action=read_supplier&user_id=${userController.currentUser.value?.id}')); // Gunakan user_id
+          '$apiUrl?action=read_supplier&user_id=${userController.currentUser.value?.id}'));
       if (response.statusCode == 200) {
         var data = json.decode(response.body) as List;
-        supplierList.value =
+        allSupplierList.value =
             data.map((supplier) => Supplier.fromJson(supplier)).toList();
+        allSupplierList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        supplierList.value = allSupplierList;
       } else {
-        // Gagal / Error
+        // Handle error
+      }
+    } catch (e) {
+      // Handle error
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void searchSupplier(String query) {
+    if (query.isEmpty) {
+      supplierList.value = allSupplierList;
+    } else {
+      supplierList.value = allSupplierList.where((supplier) {
+        return (supplier.namaSupplier
+                .toLowerCase()
+                .contains(query.toLowerCase())) ||
+            (supplier.namaTokoSupplier
+                    ?.toLowerCase()
+                    .contains(query.toLowerCase()) ??
+                false) ||
+            (supplier.noTelepon?.toLowerCase().contains(query.toLowerCase()) ??
+                false);
+      }).toList();
+    }
+  }
+
+  void sortSupplierList(String order) {
+    switch (order) {
+      case 'name_asc':
+        supplierList.sort((a, b) => a.namaSupplier.compareTo(b.namaSupplier));
+        break;
+      case 'name_desc':
+        supplierList.sort((a, b) => b.namaSupplier.compareTo(a.namaSupplier));
+        break;
+    }
+  }
+
+  void updateSupplier(int id, String namaSupplier, String namaTokoSupplier,
+      String noTelepon, String alamat) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$apiUrl?action=update_supplier'),
+        body: {
+          'id': id.toString(),
+          'nama_supplier': namaSupplier,
+          'nama_toko_supplier': namaTokoSupplier,
+          'no_telepon': noTelepon,
+          'alamat': alamat,
+        },
+      );
+      if (response.statusCode == 200) {
+        fetchSupplier();
+        Get.snackbar(
+          'Success',
+          'Supplier berhasil diupdate',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          borderRadius: 10,
+          margin: const EdgeInsets.all(10),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          duration: const Duration(seconds: 3),
+          snackStyle: SnackStyle.FLOATING,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        );
+      } else {
         Get.snackbar(
           'Error',
-          'Gagal menampilkan Supplier',
+          'Gagal mengupdate supplier',
           backgroundColor: Colors.red,
           colorText: Colors.white,
           borderRadius: 10,
@@ -49,7 +127,6 @@ class SupplierController extends GetxController {
         );
       }
     } catch (e) {
-      // Gagal / Error
       Get.snackbar(
         'Error',
         '$e',
@@ -160,24 +237,26 @@ class SupplierController extends GetxController {
       );
     } catch (e) {
       // Gagal / Error
-        Get.snackbar('Error', '$e',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          borderRadius: 10,
-          margin: const EdgeInsets.all(10),
-          snackPosition: SnackPosition.TOP,
-          icon: const Icon(Icons.error, color: Colors.white),
-          duration: const Duration(seconds: 3),
-          snackStyle: SnackStyle.FLOATING,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        );
+      Get.snackbar(
+        'Error',
+        '$e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
     }
   }
 }
