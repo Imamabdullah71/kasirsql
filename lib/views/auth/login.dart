@@ -28,17 +28,17 @@ class LoginPage extends StatelessWidget {
                 end: Alignment.bottomCenter,
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 60,
-                bottom: 120,
-              ),
-              child: Image.asset(
-                'assets/logo/flutter_logo.png',
-                height: 100,
-                width: 100,
-              ),
-            ),
+            // child: Padding(
+            //   padding: const EdgeInsets.only(
+            //     top: 60,
+            //     bottom: 120,
+            //   ),
+            //   child: Image.asset(
+            //     'assets/logo/flutter_logo.png',
+            //     height: 100,
+            //     width: 100,
+            //   ),
+            // ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      "SIGN IN",
+                      "LOGIN",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Obx(() => CheckboxListTile(
-                          title: const Text("Remember me"),
+                          title: const Text("Ingat saya"),
                           value: rememberMe.value,
                           activeColor: const Color(0xFF9C27B0),
                           onChanged: (newValue) {
@@ -91,18 +91,18 @@ class LoginPage extends StatelessWidget {
                           },
                           controlAffinity: ListTileControlAffinity.leading,
                         )),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                            color: Color(0xFF9C27B0),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: TextButton(
+                    //     onPressed: () {},
+                    //     child: const Text(
+                    //       "Forgot Password?",
+                    //       style: TextStyle(
+                    //         color: Color(0xFF9C27B0),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                     Obx(() {
                       if (userController.isLoading.value) {
@@ -126,7 +126,7 @@ class LoginPage extends StatelessWidget {
                                 vertical: 10, horizontal: 20),
                           ),
                           child: const Text(
-                            "SIGN IN",
+                            "LOGIN",
                             style: TextStyle(color: Colors.white),
                           ),
                         );

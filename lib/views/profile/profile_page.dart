@@ -14,14 +14,16 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Profil",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () => Get.toNamed("/edit_profile"),
@@ -31,6 +33,8 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
         ],
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Obx(() {
         if (profileController.user == null) {
@@ -41,41 +45,31 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: const Color.fromARGB(255, 114, 94, 225),
-                    child: Text(
-                      profileController.user!.name[0],
-                      style: const TextStyle(
-                        fontSize: 40,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                // Center(
+                //   child: CircleAvatar(
+                //     radius: 50,
+                //     backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+                //     child: Text(
+                //       profileController.user!.name[0],
+                //       style: const TextStyle(
+                //         fontSize: 40,
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(height: 20),
+                // const SizedBox(height: 10),
                 Card(
-                  color:
-                      const Color.fromARGB(255, 114, 94, 225).withOpacity(0.1),
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: const Text(
-                      "ID",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 114, 94, 225),
-                      ),
-                    ),
-                    subtitle: Text("${profileController.user!.id}"),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Card(
-                  color:
-                      const Color.fromARGB(255, 114, 94, 225).withOpacity(0.1),
-                  child: ListTile(
-                    title: const Text(
-                      "Name",
+                      "Nama",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 114, 94, 225),
@@ -86,8 +80,12 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color:
-                      const Color.fromARGB(255, 114, 94, 225).withOpacity(0.1),
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: const Text(
                       "Email",
@@ -101,8 +99,12 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color:
-                      const Color.fromARGB(255, 114, 94, 225).withOpacity(0.1),
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: const Text(
                       "Nama Toko",
@@ -116,8 +118,12 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color:
-                      const Color.fromARGB(255, 114, 94, 225).withOpacity(0.1),
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: const Text(
                       "Alamat",
@@ -131,8 +137,12 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Card(
-                  color:
-                      const Color.fromARGB(255, 114, 94, 225).withOpacity(0.1),
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     title: const Text(
                       "No Telepon",

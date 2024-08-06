@@ -14,14 +14,18 @@ class TampilStrukPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(
-            color: Colors.white,
+            color: Color.fromARGB(255, 114, 94, 225),
           ),
           title: const Text(
-            "Tampilkan Struk",
-            style: TextStyle(color: Colors.white),
+            "Struk",
+            style: TextStyle(
+              color: Color.fromARGB(255, 114, 94, 225),
+            ),
           ),
           centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+          backgroundColor: Colors.white,
+          elevation: 10.0, // Add this line to set the shadow
+          shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,

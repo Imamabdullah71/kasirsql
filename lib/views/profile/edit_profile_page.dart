@@ -27,14 +27,18 @@ class EditProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Edit Profil",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -46,7 +50,7 @@ class EditProfilePage extends StatelessWidget {
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: 'Name',
+                  labelText: 'Nama',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -155,7 +159,7 @@ class EditProfilePage extends StatelessWidget {
                     }
                   },
                   child: const Text(
-                    'Save Changes',
+                    'Simpan',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

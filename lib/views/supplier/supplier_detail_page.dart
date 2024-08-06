@@ -82,14 +82,8 @@ class SupplierDetailPage extends StatelessWidget {
                   supplier.noTelepon ?? '-',
                   style: const TextStyle(fontSize: 16),
                 ),
-                Row(
-                  children: [
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.phone)),
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(BootstrapIcons.whatsapp)),
-                  ],
-                )
+                IconButton(
+                    onPressed: () {}, icon: const Icon(BootstrapIcons.whatsapp))
               ],
             ),
             const SizedBox(height: 8),

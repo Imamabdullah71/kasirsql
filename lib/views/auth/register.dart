@@ -39,24 +39,39 @@ class RegisterPage extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Image.asset(
-                          'assets/logo/flutter_logo.png',
-                          height: 100,
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          "SIGN UP",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF9C27B0),
-                          ),
+                        // Image.asset(
+                        //   'assets/logo/flutter_logo.png',
+                        //   height: 100,
+                        // ),
+                        // const SizedBox(height: 20),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () => Get.back(),
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.black,
+                                )),
+                            const Text(
+                              "DAFTAR",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF9C27B0),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 40,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 20),
                         TextField(
                           controller: userController.nameController,
                           decoration: InputDecoration(
-                            labelText: 'Name',
+                            labelText: 'Nama',
                             contentPadding: const EdgeInsets.only(left: 20),
                             prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
@@ -142,7 +157,7 @@ class RegisterPage extends StatelessWidget {
                                     vertical: 10, horizontal: 20),
                               ),
                               child: const Text(
-                                "SIGN UP",
+                                "DAFTAR",
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

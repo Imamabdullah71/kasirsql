@@ -15,14 +15,18 @@ class TransaksiDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Color.fromARGB(255, 114, 94, 225),
         ),
         title: const Text(
           "Detail Transaksi",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 114, 94, 225),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 114, 94, 225),
+        backgroundColor: Colors.white,
+        elevation: 10.0, // Add this line to set the shadow
+        shadowColor: Colors.black.withOpacity(0.5), // Customize shadow color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -94,14 +98,10 @@ class TransaksiDetailPage extends StatelessWidget {
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(8.0),
                           title: Text(detail.namaBarang),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  '${detail.jumlahBarang} x ${detail.hargaBarang}'),
+                          subtitle: Text(
+                              '${detail.jumlahBarang} x ${detail.hargaBarang}'),
+                          trailing:
                               Text(controller.formatRupiah(detail.jumlahHarga)),
-                            ],
-                          ),
                         ),
                       );
                     },

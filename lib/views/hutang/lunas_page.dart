@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kasirsql/controllers/hutang_controller/hutang_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:kasirsql/models/hutang_model.dart';
+import 'package:kasirsql/views/hutang/riwayat_bayar_page.dart';
 
 class LunasPage extends StatelessWidget {
   final HutangController hutangController = Get.find();
@@ -347,6 +348,45 @@ class LunasPage extends StatelessWidget {
             ],
           ),
           actions: [
+            Center(
+              child: Obx(() {
+                return GestureDetector(
+                  onTapDown: (_) {
+                    isPressed.value = true;
+                  },
+                  onTapUp: (_) {
+                    isPressed.value = false;
+                    Get.to(() => RiwayatBayarPage(hutangId: hutang.id!));
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 40),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      gradient: isPressed.value
+                          ? const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 229, 135, 246),
+                                Color.fromARGB(255, 114, 94, 225),
+                              ],
+                            )
+                          : const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 114, 94, 225),
+                                Color.fromARGB(255, 229, 135, 246),
+                              ],
+                            ),
+                    ),
+                    child: const Text(
+                      'Riwayat Bayar',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                );
+              }),
+            ),
+            const SizedBox(height: 5),
             Center(
               child: Obx(() {
                 return GestureDetector(
