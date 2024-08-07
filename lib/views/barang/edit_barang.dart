@@ -94,7 +94,21 @@ class EditBarangPage extends StatelessWidget {
                     bottom: 0,
                     right: 0,
                     child: IconButton(
-                      icon: const Icon(BootstrapIcons.pencil),
+                      icon: ShaderMask(
+                        blendMode: BlendMode.srcIn,
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                            colors: <Color>[
+                              Color.fromARGB(255, 229, 135, 246),
+                              Color.fromARGB(255, 114, 94, 225),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds);
+                        },
+                        child: const Icon(BootstrapIcons.pencil,
+                            color: Colors.white),
+                      ),
                       color: Colors.white,
                       onPressed: () {
                         isEditingImage.value = !isEditingImage.value;
