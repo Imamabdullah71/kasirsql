@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 PageViewModel viewOne() {
   return PageViewModel(
-    // titleWidget: Text("title widget"),
     useScrollView: true,
     decoration: const PageDecoration(
       footerFit: FlexFit.tight,
       fullScreen: true,
-      // pageColor: Colors.red,
       imageFlex: 2,
       titlePadding: EdgeInsets.only(
         top: 30,
@@ -18,8 +17,9 @@ PageViewModel viewOne() {
         top: 30,
       ),
     ),
-    title: "Selamat Datang di Tim Kasir",
-    body: "Welcome to the app! This is a description of how it works.",
+    title: "Selamat Datang di TransaksiKu",
+    body:
+        "Aplikasi ini membantu Anda dalam pencatatan transaksi dan stok barang dengan mudah.",
     image: Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 40),
@@ -28,20 +28,14 @@ PageViewModel viewOne() {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  // color: Colors.amber,
+                const SizedBox(
                   height: 25,
                   width: 25,
-                  // child: Image.asset(
-                  //   'assets/images/logo/logoTimKasir.png',
-                  //   fit: BoxFit.cover,
-                  // ),
                 ),
                 const SizedBox(width: 5),
                 Text(
-                  "Tim Kasir",
+                  "TransaksiKu",
                   style: GoogleFonts.lato(
-                    // textStyle: Theme.of(context).textTheme.displayLarge,
                     fontSize: 25,
                     fontWeight: FontWeight.w400,
                     fontStyle: FontStyle.italic,
@@ -49,15 +43,14 @@ PageViewModel viewOne() {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 60),
             SizedBox(
-              height: 450,
-              width: double.infinity,
-              // color: Colors.amber,
-              // child: Image.asset(
-              //   'assets/images/kasir2.png',
-              //   fit: BoxFit.cover,
-              // ),
+              height: 300,
+              width: 300,
+              child: Lottie.asset(
+                'assets/lotties/welcome1.json',
+                fit: BoxFit.contain,
+              ),
             ),
           ],
         ),

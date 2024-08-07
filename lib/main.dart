@@ -158,12 +158,6 @@ class MyApp extends StatelessWidget {
                   page: () => LaporanPage(),
                   binding: DataBindings(),
                   middlewares: [AuthMiddleware()]),
-              // Pembelian Barang
-              // GetPage(
-              //     name: "/buy_stuff_page",
-              //     page: () => BuyStuff(),
-              //     binding: DataBindings(),
-              //     middlewares: [AuthMiddleware()]),
               // Hutang
               GetPage(
                   name: "/hutang_page",

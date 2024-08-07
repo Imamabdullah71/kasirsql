@@ -57,6 +57,11 @@ class ManageBarang extends StatelessWidget {
             title: const Text("Supplier"),
             onTap: () => Get.toNamed("/page_supplier"),
           ),
+          ListTile(
+            leading: const Icon(BootstrapIcons.bug),
+            title: const Text("TESTING"),
+            onTap: () => Get.toNamed("/introduction"),
+          ),
         ],
       ),
     );
