@@ -30,7 +30,7 @@ class ManageLaporan extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(BootstrapIcons.graph_up),
-            title: const Text("Laporan Laba Rugi"),
+            title: const Text("Laporan Transaksi"),
             onTap: () => Get.toNamed("/laporan_page"),
           ),
           ListTile(
